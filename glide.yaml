@@ -1,0 +1,23 @@
+package: github.com/Mirantis/virtlet
+import:
+- package: github.com/golang/glog
+- package: golang.org/x/net
+  subpackages:
+  - context
+- package: google.golang.org/grpc
+- package: k8s.io/kubernetes
+  version: v1.5.1
+  repo: git://github.com/kubernetes/kubernetes.git
+  vcs: git
+  subpackages:
+  - pkg/kubelet/api/v1alpha1/runtime
+  - api/v1alpha/runtime
+- package: github.com/davecgh/go-spew
+  version: ~1.0.0
+- package: go.universe.tf/netboot
+  subpackages:
+  - dhcp4
+- package: github.com/containernetworking/cni
+  version: ~0.3.0
+- package: github.com/vishvananda/netlink
+  version: a4f22d8ad2327663017dbb309b5e3f8b6f348020
