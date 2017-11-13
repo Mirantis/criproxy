@@ -1,0 +1,14 @@
+version: 2
+jobs:
+  build:
+    docker:
+      - image: ishvedunov/criproxy-build:0.0.1
+    steps:
+      - checkout
+      - run:
+          name: Build package
+          command: |
+            rm -rf /go/src/github.com/Mirantis/criproxy
+            cp -av . /go/src/github.com/Mirantis/criproxy
+            cd /go/src/github.com/Mirantis/criproxy
+            ./build-package.sh

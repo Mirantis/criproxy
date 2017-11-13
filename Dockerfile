@@ -15,4 +15,4 @@ RUN apt-get update -y && \
 ADD . /go/src/github.com/Mirantis/criproxy
 WORKDIR /go/src/github.com/Mirantis/criproxy
 
-ENTRYPOINT ["./build-package.sh"]
+# ENTRYPOINT ["./build-package.sh"]

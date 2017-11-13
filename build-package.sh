@@ -15,5 +15,5 @@ fi
 go build 1>&2
 dpkg-buildpackage -us -uc -b 1>&2
 
-(cd ../ && tar -c criproxy*deb)
+# (cd ../ && tar -c criproxy*deb)
 
