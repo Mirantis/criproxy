@@ -345,7 +345,7 @@ func (r *RuntimeProxy) fixStreamingUrl(url string) string {
 	if strings.HasPrefix(url, "/") {
 		// XXX: FIXME!!! Don't hardcode!
 		// 10.192.0.3 is only for testing w/kubeadm-dind-cluster (kube-node-1)
-		return "http://10.192.0.3:10999" + url
+		return "http://10.192.0.3:11250" + url
 	}
 	return url
 }
