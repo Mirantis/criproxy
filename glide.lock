@@ -1,50 +1,33 @@
 hash: 3e506bbc65b2c6aaaf872f0699e5d431aaa5115862b0ae0e091f28e9675d8b82
-updated: 2017-11-08T20:48:45.293842526+03:00
+updated: 2017-11-13T12:28:10.922929763+03:00
 imports:
 - name: github.com/davecgh/go-spew
   version: 5215b55f46b2b919f50a1df0eaa5886afe4e3b3d
   subpackages:
   - spew
 - name: github.com/gogo/protobuf
-  version: c0656edd0d9eab7c66d1eb0c568f9039345796f7
+  version: 616a82ed12d78d24d4839363e8f3c5d3f20627cf
   subpackages:
   - gogoproto
-  - plugin/compare
-  - plugin/defaultcheck
-  - plugin/description
-  - plugin/embedcheck
-  - plugin/enumstringer
-  - plugin/equal
-  - plugin/face
-  - plugin/gostring
-  - plugin/marshalto
-  - plugin/oneofcheck
-  - plugin/populate
-  - plugin/size
-  - plugin/stringer
-  - plugin/testgen
-  - plugin/union
-  - plugin/unmarshal
   - proto
   - protoc-gen-gogo/descriptor
-  - protoc-gen-gogo/generator
-  - protoc-gen-gogo/grpc
-  - protoc-gen-gogo/plugin
   - sortkeys
-  - vanity
-  - vanity/command
 - name: github.com/golang/glog
   version: 23def4e6c14b4da8ac2ed8007337bc5eb5007998
 - name: github.com/golang/protobuf
-  version: 130e6b02ab059e7b717a096f397c5b60111cae74
+  version: 1643683e1b54a9e88ad26d98f81400c8c9d9f4f9
   subpackages:
   - proto
+  - ptypes
+  - ptypes/any
+  - ptypes/duration
+  - ptypes/timestamp
 - name: github.com/pmezard/go-difflib
   version: 792786c7400a136282c1664665ae0a8db921c6c2
   subpackages:
   - difflib
 - name: golang.org/x/net
-  version: f2499483f923065a842d38eb4c7f1927e6fc6e6d
+  version: a337091b0525af65de94df2eb7e98bd9962dcbe2
   subpackages:
   - context
   - http2
@@ -53,23 +36,38 @@ imports:
   - internal/timeseries
   - lex/httplex
   - trace
-- name: google.golang.org/grpc
-  version: 777daa17ff9b5daef1cfdf915088a2ada3332bf0
+- name: golang.org/x/text
+  version: 88f656faf3f37f690df1a32515b479415e1a6769
   subpackages:
+  - secure/bidirule
+  - transform
+  - unicode/bidi
+  - unicode/norm
+- name: google.golang.org/genproto
+  version: 11c7f9e547da6db876260ce49ea7536985904c9b
+  subpackages:
+  - googleapis/rpc/status
+- name: google.golang.org/grpc
+  version: de2209a968d48e8970546c8a710189f7461370f7
+  subpackages:
+  - balancer
+  - balancer/roundrobin
   - codes
+  - connectivity
   - credentials
+  - encoding
+  - grpclb/grpc_lb_v1/messages
   - grpclog
   - internal
+  - keepalive
   - metadata
   - naming
   - peer
+  - resolver
+  - resolver/dns
+  - resolver/passthrough
+  - stats
+  - status
+  - tap
   - transport
-- name: k8s.io/kubernetes
-  version: d3ada0119e776222f11ec7945e6d860061339aad
-  subpackages:
-  - pkg/kubelet/apis/cri/v1alpha1/runtime
-testImports:
-- name: github.com/Mirantis/virtlet
-  version: d2bb6831dd58e37110b1efc52bf3312d01edf0fd
-  subpackages:
-  - pkg/criproxy/testing
+testImports: []

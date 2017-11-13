@@ -26,13 +26,13 @@ import (
 	"testing"
 	"time"
 
+	runtimeapi "github.com/Mirantis/criproxy/pkg/runtimeapi/v1_7"
 	"github.com/golang/glog"
 	"github.com/pmezard/go-difflib/difflib"
 	"golang.org/x/net/context"
 	"google.golang.org/grpc"
-	runtimeapi "k8s.io/kubernetes/pkg/kubelet/apis/cri/v1alpha1/runtime"
 
-	proxytest "github.com/Mirantis/virtlet/pkg/criproxy/testing"
+	proxytest "github.com/Mirantis/criproxy/pkg/proxy/testing"
 )
 
 const (

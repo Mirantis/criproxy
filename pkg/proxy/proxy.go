@@ -45,12 +45,13 @@ import (
 	"syscall"
 	"time"
 
+	// XXX: TODO: support v1_8 methods
+	runtimeapi "github.com/Mirantis/criproxy/pkg/runtimeapi/v1_7"
 	"github.com/davecgh/go-spew/spew"
 	"github.com/golang/glog"
 	"golang.org/x/net/context"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/codes"
-	runtimeapi "k8s.io/kubernetes/pkg/kubelet/apis/cri/v1alpha1/runtime"
 )
 
 type clientState int
