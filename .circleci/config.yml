@@ -2,22 +2,62 @@ version: 2
 jobs:
   build:
     docker:
-      - image: ishvedunov/criproxy-build:0.0.1
+    - image: ishvedunov/criproxy-build:0.0.1
     steps:
-      - checkout
-      - run:
-          name: Place the source
-          command: |
-            rm -rf /go/src/github.com/Mirantis/criproxy
-            cp -av . /go/src/github.com/Mirantis/criproxy
-            cd /go/src/github.com/Mirantis/criproxy
-      - run:
-          name: Build package
-          command: |
-            cd /go/src/github.com/Mirantis/criproxy
-            ./build-package.sh
-      - run:
-          name: Run tests
-          command: |
-            cd /go/src/github.com/Mirantis/criproxy
-            go test -v ./pkg/...
+    - checkout
+    - run:
+        name: Place the source
+        command: |
+          rm -rf /go/src/github.com/Mirantis/criproxy
+          cp -av . /go/src/github.com/Mirantis/criproxy
+          cd /go/src/github.com/Mirantis/criproxy
+    - run:
+        name: Build package
+        command: |
+          cd /go/src/github.com/Mirantis/criproxy
+          ./build-package.sh
+          mkdir -p _output/
+          mv ../criproxy*.deb _output/
+          mv criproxy _output/
+    - run:
+        name: Run tests
+        command: |
+          cd /go/src/github.com/Mirantis/criproxy
+          go test -v ./pkg/...
+    - persist_to_workspace:
+        root: /go/src/github.com/Mirantis/criproxy/_output
+        paths:
+        - criproxy*.deb
+        - criproxy
+
+  publish:
+    docker:
+    - image: ishvedunov/criproxy-build:0.0.1
+    steps:
+    - checkout
+    - attach_workspace:
+        at: _output
+    - run:
+        name: Publish packages and binaries
+        command: |
+          ghr -u Mirantis -delete "${CIRCLE_TAG}" _output/
+
+workflows:
+  version: 2
+  build-test-and-publish:
+    jobs:
+    - build:
+        filters:
+          tags:
+            only: /^v[0-9].*/
+          branches:
+            only: /.*/
+    - publish:
+        requires:
+        - build
+        filters:
+          tags:
+            only: /^v[0-9].*/
+          branches:
+            ignore: /.*/
+

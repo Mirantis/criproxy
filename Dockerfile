@@ -10,7 +10,9 @@ RUN apt-get update -y && \
     apt-get upgrade -y && \
     apt-get autoremove -y && \
     apt-get clean && \
-    rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
+    rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/* && \
+    go get github.com/tcnksm/ghr && \
+    go get github.com/Masterminds/glide
 
 ADD . /go/src/github.com/Mirantis/criproxy
 WORKDIR /go/src/github.com/Mirantis/criproxy
