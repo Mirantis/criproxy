@@ -1,0 +1,23 @@
+Source: criproxy
+Section: misc
+Priority: optional
+Maintainer: Ivan Shvedunov <ishvedunov@mirantis.com>
+Build-Depends: curl, ca-certificates, debhelper (>= 8.0.0)
+Standards-Version: 3.9.4
+Homepage: https://github.com/Mirantis/criproxy
+Vcs-Git: https://github.com/Mirantis/criproxy.git
+Vcs-Browser: https://github.com/Mirantis/criproxy
+
+Package: criproxy
+Architecture: amd64
+Depends: kubelet (>= 1.7.0), ${misc:Depends}
+Conflicts: criproxy-nodeps
+Description: CRI Proxy
+ A tool for using multiple CRI implementations on single node
+
+Package: criproxy-nodeps
+Architecture: amd64
+Depends: ${misc:Depends}
+Conflicts: criproxy
+Description: CRI Proxy (no deps)
+ A tool for using multiple CRI implementations on single node

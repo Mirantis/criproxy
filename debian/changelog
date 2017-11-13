@@ -1,0 +1,6 @@
+criproxy (0.0.1) stable; urgency=optional
+
+  * https://github.com/Mirantis/criproxy
+
+ -- Ivan Shvedunov <ishvedunov@mirantis.com>  Mon, 13 Nov 2017 11:38:01 +0300
+
