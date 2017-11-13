@@ -6,9 +6,18 @@ jobs:
     steps:
       - checkout
       - run:
-          name: Build package
+          name: Place the source
           command: |
             rm -rf /go/src/github.com/Mirantis/criproxy
             cp -av . /go/src/github.com/Mirantis/criproxy
             cd /go/src/github.com/Mirantis/criproxy
+      - run:
+          name: Build package
+          command: |
+            cd /go/src/github.com/Mirantis/criproxy
             ./build-package.sh
+      - run:
+          name: Run tests
+          command: |
+            cd /go/src/github.com/Mirantis/criproxy
+            go test -v ./pkg/...
