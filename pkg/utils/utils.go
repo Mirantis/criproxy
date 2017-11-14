@@ -13,10 +13,9 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 */
-package criproxy
+package utils
 
 import (
-	"context"
 	"net"
 	"os"
 	"time"
@@ -26,26 +25,24 @@ import (
 )
 
 const (
+	// FIXME: make the following configurable
+	// connect timeout when waiting for the socket to become available
+	connectWaitTimeout     = 500 * time.Millisecond
 	connectAttemptInterval = 500 * time.Millisecond
 )
 
-// getContextWithTimeout returns a context with timeout.
-func getContextWithTimeout(timeout time.Duration) (context.Context, context.CancelFunc) {
-	return context.WithTimeout(context.Background(), timeout)
-}
-
 // dial creates a net.Conn by unix socket addr.
-func dial(addr string, timeout time.Duration) (net.Conn, error) {
+func Dial(addr string, timeout time.Duration) (net.Conn, error) {
 	return net.DialTimeout("unix", addr, timeout)
 }
 
-func waitForSocket(path string, maxAttempts int, extraCheck func() error) error {
+func WaitForSocket(path string, maxAttempts int, extraCheck func() error) error {
 	var err error
 	var conn net.Conn
 	for n := 0; maxAttempts < 0 || n < maxAttempts; n++ {
 		if _, err = os.Stat(path); err != nil {
 			glog.V(1).Infof("attempt %d: %q is not here yet: %v", n, path, err)
-		} else if conn, err = dial(path, connectWaitTimeout); err != nil {
+		} else if conn, err = Dial(path, connectWaitTimeout); err != nil {
 			glog.V(1).Infof("attempt %d: can't connect to %q yet: %v", n, path, err)
 		} else {
 			conn.Close()

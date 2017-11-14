@@ -14,7 +14,7 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-package criproxy
+package proxy
 
 import (
 	"encoding/json"
@@ -33,6 +33,7 @@ import (
 	"google.golang.org/grpc"
 
 	proxytest "github.com/Mirantis/criproxy/pkg/proxy/testing"
+	"github.com/Mirantis/criproxy/pkg/utils"
 )
 
 const (
@@ -50,6 +51,7 @@ const (
 	containerId1              = podSandboxId1 + "_container1_0"
 	containerId2              = podSandboxId2 + "_container2_0"
 	numGrpcConnectAttempts    = 600
+	imageFsUUID               = "e4080efe-834f-4c1e-a455-656bbcef7486"
 )
 
 type ServerWithReadinessFeedback interface {
@@ -93,11 +95,13 @@ func puint64(v uint64) *uint64 {
 }
 
 type proxyTester struct {
-	hookCallCount int
-	journal       *proxytest.SimpleJournal
-	servers       []*proxytest.FakeCriServer
-	proxy         *RuntimeProxy
-	conn          *grpc.ClientConn
+	hookCallCount   int
+	journal         *proxytest.SimpleJournal
+	servers         []*proxytest.FakeCriServer
+	proxy           *RuntimeProxy
+	conn            *grpc.ClientConn
+	containerStats  []*runtimeapi.ContainerStats
+	filesystemUsage []*runtimeapi.FilesystemUsage
 }
 
 func newProxyTester(t *testing.T) *proxyTester {
@@ -115,12 +119,29 @@ func newProxyTester(t *testing.T) *proxyTester {
 	servers[1].SetFakeImageSize(fakeImageSize2)
 	servers[1].SetFakeImages(fakeImageNames2)
 
+	containerStats := []*runtimeapi.ContainerStats{
+		proxytest.MakeFakeContainerStats(containerId1, &runtimeapi.ContainerMetadata{
+			Name: "container1",
+		}, imageFsUUID),
+		proxytest.MakeFakeContainerStats(containerId2, &runtimeapi.ContainerMetadata{
+			Name: "container2",
+		}, imageFsUUID),
+	}
+	servers[0].SetFakeContainerStats(containerStats)
+
+	filesystemUsage := []*runtimeapi.FilesystemUsage{
+		proxytest.MakeFakeImageFsUsage(imageFsUUID),
+	}
+	servers[0].SetFakeFilesystemUsage(filesystemUsage)
+
 	tester := &proxyTester{
-		journal: journal,
-		servers: servers,
+		journal:         journal,
+		servers:         servers,
+		containerStats:  containerStats,
+		filesystemUsage: filesystemUsage,
 	}
 	var err error
-	tester.proxy, err = NewRuntimeProxy([]string{fakeCriSocketPath1, altSocketSpec}, connectionTimeoutForTests, func() {
+	tester.proxy, err = NewRuntimeProxy(&CRI17{}, []string{fakeCriSocketPath1, altSocketSpec}, connectionTimeoutForTests, func() {
 		tester.hookCallCount++
 	})
 	if err != nil {
@@ -147,7 +168,7 @@ func (tester *proxyTester) startProxy(t *testing.T) {
 }
 
 func (tester *proxyTester) connectToProxy(t *testing.T) {
-	conn, err := grpc.Dial(criProxySocketForTests, grpc.WithInsecure(), grpc.WithTimeout(connectionTimeoutForTests), grpc.WithDialer(dial))
+	conn, err := grpc.Dial(criProxySocketForTests, grpc.WithInsecure(), grpc.WithTimeout(connectionTimeoutForTests), grpc.WithDialer(utils.Dial))
 	if err != nil {
 		t.Fatalf("Connect remote runtime %s failed: %v", criProxySocketForTests, err)
 	}

@@ -15,13 +15,14 @@ limitations under the License.
 */
 
 // TODO: credits
-// (based on fake_image_service.go from k8s)
+// (based on fake_image_service.go and cri_stats_provider_test.go from k8s)
 package testing
 
 import (
-	"errors"
+	"math/rand"
 	"sort"
 	"sync"
+	"time"
 
 	runtimeapi "github.com/Mirantis/criproxy/pkg/runtimeapi/v1_7"
 	"golang.org/x/net/context"
@@ -33,6 +34,8 @@ type FakeImageServer struct {
 	journal       Journal
 	FakeImageSize uint64
 	Images        map[string]*runtimeapi.Image
+
+	FakeFilesystemUsage []*runtimeapi.FilesystemUsage
 }
 
 func (r *FakeImageServer) SetFakeImages(images []string) {
@@ -50,6 +53,13 @@ func (r *FakeImageServer) SetFakeImageSize(size uint64) {
 	defer r.Unlock()
 
 	r.FakeImageSize = size
+}
+
+func (r *FakeImageServer) SetFakeFilesystemUsage(usage []*runtimeapi.FilesystemUsage) {
+	r.Lock()
+	defer r.Unlock()
+
+	r.FakeFilesystemUsage = usage
 }
 
 func NewFakeImageServer(journal Journal) *FakeImageServer {
@@ -151,6 +161,14 @@ func (r *FakeImageServer) ImageFsInfo(ctx context.Context, in *runtimeapi.ImageF
 
 	r.journal.Record("ImageFsInfo")
 
-	// TODO: implement this
-	return nil, errors.New("ImageFsInfo() not implemented")
+	return &runtimeapi.ImageFsInfoResponse{ImageFilesystems: r.FakeFilesystemUsage}, nil
+}
+
+func MakeFakeImageFsUsage(fsUUID string) *runtimeapi.FilesystemUsage {
+	return &runtimeapi.FilesystemUsage{
+		Timestamp:  time.Now().UnixNano(),
+		StorageId:  &runtimeapi.StorageIdentifier{Uuid: fsUUID},
+		UsedBytes:  &runtimeapi.UInt64Value{Value: rand.Uint64()},
+		InodesUsed: &runtimeapi.UInt64Value{Value: rand.Uint64()},
+	}
 }

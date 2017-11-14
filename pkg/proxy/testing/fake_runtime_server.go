@@ -1,5 +1,5 @@
 /*
-Copyright 2016 Mirantis
+Copyright 2017 Mirantis
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -13,10 +13,11 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 
-Based on fake_runtime_service.go from Kubernetes project.
+Based on fake_runtime_service.go and cri_stats_provider_test.go
+from Kubernetes project.
 Original copyright notice follows:
 
-Copyright 2016 The Kubernetes Authors.
+Copyright 2017 The Kubernetes Authors.
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -34,8 +35,8 @@ limitations under the License.
 package testing
 
 import (
-	"errors"
 	"fmt"
+	"math/rand"
 	"sort"
 	"sync"
 	"time"
@@ -71,9 +72,10 @@ type FakeRuntimeServer struct {
 
 	CurrentTime int64
 
-	FakeStatus *runtimeapi.RuntimeStatus
-	Containers map[string]*FakeContainer
-	Sandboxes  map[string]*FakePodSandbox
+	FakeStatus         *runtimeapi.RuntimeStatus
+	Containers         map[string]*FakeContainer
+	Sandboxes          map[string]*FakePodSandbox
+	FakeContainerStats map[string]*runtimeapi.ContainerStats
 }
 
 func (r *FakeRuntimeServer) SetFakeSandboxes(sandboxes []*FakePodSandbox) {
@@ -94,7 +96,16 @@ func (r *FakeRuntimeServer) SetFakeContainers(containers []*FakeContainer) {
 	for _, c := range containers {
 		r.Containers[c.Id] = c
 	}
+}
 
+func (r *FakeRuntimeServer) SetFakeContainerStats(containerStats []*runtimeapi.ContainerStats) {
+	r.Lock()
+	defer r.Unlock()
+
+	r.FakeContainerStats = make(map[string]*runtimeapi.ContainerStats)
+	for _, s := range containerStats {
+		r.FakeContainerStats[s.Attributes.Id] = s
+	}
 }
 
 func NewFakeRuntimeServer(journal Journal) *FakeRuntimeServer {
@@ -414,8 +425,27 @@ func (r *FakeRuntimeServer) ListContainerStats(ctx context.Context, in *runtimea
 
 	r.journal.Record("ListContainerStats")
 
-	// TODO: implement this
-	return nil, errors.New("ListContainerStats() not implemented")
+	var result []*runtimeapi.ContainerStats
+	for _, c := range r.Containers {
+		if in.Filter != nil {
+			if in.Filter.Id != "" && in.Filter.Id != c.Id {
+				continue
+			}
+			if in.Filter.PodSandboxId != "" && in.Filter.PodSandboxId != c.SandboxID {
+				continue
+			}
+			if in.Filter.LabelSelector != nil && !filterInLabels(in.Filter.LabelSelector, c.GetLabels()) {
+				continue
+			}
+		}
+		s, found := r.FakeContainerStats[c.Id]
+		if !found {
+			continue
+		}
+		result = append(result, s)
+	}
+
+	return &runtimeapi.ListContainerStatsResponse{Stats: result}, nil
 }
 
 func (r *FakeRuntimeServer) ContainerStats(ctx context.Context, in *runtimeapi.ContainerStatsRequest) (*runtimeapi.ContainerStatsResponse, error) {
@@ -424,6 +454,32 @@ func (r *FakeRuntimeServer) ContainerStats(ctx context.Context, in *runtimeapi.C
 
 	r.journal.Record("ContainerStats")
 
-	// TODO: implement this
-	return nil, errors.New("ContainerStats() not implemented")
+	s, found := r.FakeContainerStats[in.ContainerId]
+	if !found {
+		return nil, fmt.Errorf("no stats for container %q", in.ContainerId)
+	}
+	return &runtimeapi.ContainerStatsResponse{Stats: s}, nil
+}
+
+func MakeFakeContainerStats(id string, metadata *runtimeapi.ContainerMetadata, imageFsUUID string) *runtimeapi.ContainerStats {
+	return &runtimeapi.ContainerStats{
+		Attributes: &runtimeapi.ContainerAttributes{
+			Id:       id,
+			Metadata: metadata,
+		},
+		Cpu: &runtimeapi.CpuUsage{
+			Timestamp:            time.Now().UnixNano(),
+			UsageCoreNanoSeconds: &runtimeapi.UInt64Value{Value: rand.Uint64()},
+		},
+		Memory: &runtimeapi.MemoryUsage{
+			Timestamp:       time.Now().UnixNano(),
+			WorkingSetBytes: &runtimeapi.UInt64Value{Value: rand.Uint64()},
+		},
+		WritableLayer: &runtimeapi.FilesystemUsage{
+			Timestamp:  time.Now().UnixNano(),
+			StorageId:  &runtimeapi.StorageIdentifier{Uuid: imageFsUUID},
+			UsedBytes:  &runtimeapi.UInt64Value{Value: rand.Uint64()},
+			InodesUsed: &runtimeapi.UInt64Value{Value: rand.Uint64()},
+		},
+	}
 }

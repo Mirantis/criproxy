@@ -43,7 +43,7 @@ var (
 // runCriProxy starts CRI proxy
 func runCriProxy(connect, listen string) error {
 	addrs := strings.Split(connect, ",")
-	proxy, err := proxy.NewRuntimeProxy(addrs, connectionTimeout, nil)
+	proxy, err := proxy.NewRuntimeProxy(&proxy.CRI17{}, addrs, connectionTimeout, nil)
 	if err != nil {
 		return fmt.Errorf("Error starting CRI proxy: %v", err)
 	}
