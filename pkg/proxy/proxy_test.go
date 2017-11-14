@@ -74,26 +74,6 @@ func startServer(t *testing.T, s ServerWithReadinessFeedback, addr string) {
 	}
 }
 
-func pstr(s string) *string {
-	return &s
-}
-
-func pbool(b bool) *bool {
-	return &b
-}
-
-func pint32(v int32) *int32 {
-	return &v
-}
-
-func puint32(v uint32) *uint32 {
-	return &v
-}
-
-func puint64(v uint64) *uint64 {
-	return &v
-}
-
 type proxyTester struct {
 	hookCallCount   int
 	journal         *proxytest.SimpleJournal
