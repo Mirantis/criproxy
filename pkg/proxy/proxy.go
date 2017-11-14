@@ -21,12 +21,12 @@ import (
 	"fmt"
 	"net"
 	"os"
+	"regexp"
 	"strings"
 	"syscall"
 	"time"
 
-	// "github.com/davecgh/go-spew/spew"
-	// "github.com/golang/glog"
+	"github.com/davecgh/go-spew/spew"
 	"github.com/golang/glog"
 	"golang.org/x/net/context"
 	"google.golang.org/grpc"
@@ -96,15 +96,29 @@ func (r *RuntimeProxy) Stop() {
 }
 
 func (r *RuntimeProxy) intercept(ctx context.Context, req interface{}, info *grpc.UnaryServerInfo, handler grpc.UnaryHandler) (interface{}, error) {
+	if glog.V(3) {
+		glog.Infof("ENTER: %s(): %s", info.FullMethod, dump(req))
+	}
+	resp, err := r.doIntercept(ctx, req, info.FullMethod)
+	switch {
+	case err == nil:
+		glog.Infof("LEAVE: %s(): %s", info.FullMethod, dump(resp))
+	case bool(glog.V(2)):
+		glog.Infof("FAIL: %s(): %v", info.FullMethod, err)
+	}
+	return resp, err
+}
+
+func (r *RuntimeProxy) doIntercept(ctx context.Context, req interface{}, method string) (interface{}, error) {
 	wrappedReq, wrappedResp, err := r.criVersion.WrapObject(req)
 	if err != nil {
 		return nil, err
 	}
-	proxyHandler, found := dispatchTable[info.FullMethod]
+	proxyHandler, found := dispatchTable[method]
 	if !found {
-		return nil, fmt.Errorf("no handler for method %q", info.FullMethod)
+		return nil, fmt.Errorf("no handler for method %q", method)
 	}
-	resp, err := proxyHandler(r, ctx, info.FullMethod, wrappedReq, wrappedResp)
+	resp, err := proxyHandler(r, ctx, method, wrappedReq, wrappedResp)
 	if err != nil {
 		return nil, err
 	}
@@ -486,7 +500,13 @@ var dispatchTable map[string]methodInterceptor = map[string]methodInterceptor{
 	"/runtime.ImageService/ImageFsInfo":                (*RuntimeProxy).listObjects,
 }
 
-// TODO: tracing requests
+var replaceRx = regexp.MustCompile(`\(\*(runtime.\w+)\)\(0x[0-9a-f]+\)`)
+var rmRx = regexp.MustCompile(`(?: \(string\))? \(len=\d+(?: cap=\d+)?\)`)
+
+func dump(o interface{}) string {
+	// try to reduce the noise that's not relevant to CRI object structure
+	s := replaceRx.ReplaceAllString(spew.Sdump(o), "&$1")
+	return rmRx.ReplaceAllString(s, "")
+}
+
 // TODO: proper streaming url (+ test)
-// TODO: rm commented imports
-// TODO: make sure all the methods are there
