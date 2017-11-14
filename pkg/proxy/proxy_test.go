@@ -1229,6 +1229,15 @@ func TestCriProxy(t *testing.T) {
 			},
 			journal: []string{"1/image/ListImages", "2/image/ListImages"},
 		},
+		{
+			name:   "image fs info",
+			method: "/runtime.ImageService/ImageFsInfo",
+			in:     &runtimeapi.ImageFsInfoRequest{},
+			resp: &runtimeapi.ImageFsInfoResponse{
+				ImageFilesystems: tester.filesystemUsage,
+			},
+			journal: []string{"1/image/ImageFsInfo", "2/image/ImageFsInfo"},
+		},
 	}
 
 	nCalls := 0

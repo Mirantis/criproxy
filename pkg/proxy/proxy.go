@@ -482,10 +482,11 @@ var dispatchTable map[string]methodInterceptor = map[string]methodInterceptor{
 	"/runtime.ImageService/ImageStatus":           (*RuntimeProxy).handleImage,
 	"/runtime.ImageService/PullImage":             (*RuntimeProxy).handleImage,
 	"/runtime.ImageService/RemoveImage":           (*RuntimeProxy).handleImage,
+	"/runtime.ImageService/ImageFsInfo":           (*RuntimeProxy).listObjects,
 }
 
 // TODO: tracing requests
-// TODO: support ContainerStats, ListContainerStats, ImageFsInfo
 // TODO: switch to 1.8 + support UpdateContainerResources
 // TODO: proper streaming url (+ test)
 // TODO: rm commented imports
+// TODO: make sure all the methods are there

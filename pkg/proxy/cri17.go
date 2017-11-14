@@ -120,6 +120,14 @@ func (o *ContainerStats_17) SetId(id string) {
 
 // ---
 
+type FilesystemUsage_17 struct {
+	inner *runtimeapi.FilesystemUsage
+}
+
+func (o *FilesystemUsage_17) Unwrap() interface{} { return o.inner }
+
+// ---
+
 type VersionRequest_17 struct {
 	inner *runtimeapi.VersionRequest
 }
@@ -808,6 +816,39 @@ func (o *RemoveImageResponse_17) Unwrap() interface{} { return o.inner }
 
 // ---
 
+type ImageFsInfoRequest_17 struct {
+	inner *runtimeapi.ImageFsInfoRequest
+}
+
+var _ ImageFsInfoRequest = &ImageFsInfoRequest_17{}
+
+func (o *ImageFsInfoRequest_17) Unwrap() interface{} { return o.inner }
+
+// ---
+
+type ImageFsInfoResponse_17 struct {
+	inner *runtimeapi.ImageFsInfoResponse
+}
+
+var _ ImageFsInfoResponse = &ImageFsInfoResponse_17{}
+
+func (o *ImageFsInfoResponse_17) Unwrap() interface{} { return o.inner }
+func (o *ImageFsInfoResponse_17) Items() []CRIObject {
+	var r []CRIObject
+	for _, fs := range o.inner.ImageFilesystems {
+		r = append(r, &FilesystemUsage_17{fs})
+	}
+	return r
+}
+func (o *ImageFsInfoResponse_17) SetItems(items []CRIObject) {
+	o.inner.ImageFilesystems = nil
+	for _, wrapped := range items {
+		o.inner.ImageFilesystems = append(o.inner.ImageFilesystems, wrapped.Unwrap().(*runtimeapi.FilesystemUsage))
+	}
+}
+
+// ---
+
 type CRI17 struct{}
 
 var _ CRIVersion = &CRI17{}
@@ -879,6 +920,8 @@ func (c *CRI17) WrapObject(o interface{}) (CRIObject, CRIObject, error) {
 		return &PullImageRequest_17{v}, &PullImageResponse_17{&runtimeapi.PullImageResponse{}}, nil
 	case *runtimeapi.RemoveImageRequest:
 		return &RemoveImageRequest_17{v}, &RemoveImageResponse_17{&runtimeapi.RemoveImageResponse{}}, nil
+	case *runtimeapi.ImageFsInfoRequest:
+		return &ImageFsInfoRequest_17{v}, &ImageFsInfoResponse_17{&runtimeapi.ImageFsInfoResponse{}}, nil
 	default:
 		return nil, nil, fmt.Errorf("can't wrap %T", o)
 	}

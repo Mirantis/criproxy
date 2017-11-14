@@ -110,6 +110,10 @@ type ContainerStatus interface {
 	Copy() ContainerStatus
 }
 
+type FilesystemUsage interface {
+	CRIObject
+}
+
 type VersionRequest interface {
 	CRIObject
 }
@@ -339,6 +343,15 @@ type RemoveImageRequest interface {
 
 type RemoveImageResponse interface {
 	CRIObject
+}
+
+type ImageFsInfoRequest interface {
+	CRIObject
+}
+
+type ImageFsInfoResponse interface {
+	CRIObject
+	ObjectList
 }
 
 type CRIVersion interface {
