@@ -847,6 +847,28 @@ func (o *ImageFsInfoResponse_18) SetItems(items []CRIObject) {
 	}
 }
 
+// --- 1.8+ only ---
+
+type UpdateContainerResourcesRequest_18 struct {
+	inner *runtimeapi.UpdateContainerResourcesRequest
+}
+
+var _ UpdateContainerResourcesRequest = &UpdateContainerResourcesRequest_18{}
+
+func (o *UpdateContainerResourcesRequest_18) Unwrap() interface{}      { return o.inner }
+func (o *UpdateContainerResourcesRequest_18) ContainerId() string      { return o.inner.ContainerId }
+func (o *UpdateContainerResourcesRequest_18) SetContainerId(id string) { o.inner.ContainerId = id }
+
+// --- 1.8+ only ---
+
+type UpdateContainerResourcesResponse_18 struct {
+	inner *runtimeapi.UpdateContainerResourcesResponse
+}
+
+var _ UpdateContainerResourcesResponse = &UpdateContainerResourcesResponse_18{}
+
+func (o *UpdateContainerResourcesResponse_18) Unwrap() interface{} { return o.inner }
+
 // ---
 
 type CRI18 struct{}
@@ -922,6 +944,8 @@ func (c *CRI18) WrapObject(o interface{}) (CRIObject, CRIObject, error) {
 		return &RemoveImageRequest_18{v}, &RemoveImageResponse_18{&runtimeapi.RemoveImageResponse{}}, nil
 	case *runtimeapi.ImageFsInfoRequest:
 		return &ImageFsInfoRequest_18{v}, &ImageFsInfoResponse_18{&runtimeapi.ImageFsInfoResponse{}}, nil
+	case *runtimeapi.UpdateContainerResourcesRequest: // 1.8+ only
+		return &UpdateContainerResourcesRequest_18{v}, &UpdateContainerResourcesResponse_18{&runtimeapi.UpdateContainerResourcesResponse{}}, nil
 	default:
 		return nil, nil, fmt.Errorf("can't wrap %T", o)
 	}

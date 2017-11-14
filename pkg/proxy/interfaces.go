@@ -246,6 +246,15 @@ type RemoveContainerResponse interface {
 	CRIObject
 }
 
+type UpdateContainerResourcesRequest interface {
+	CRIObject
+	ContainerIdObject
+}
+
+type UpdateContainerResourcesResponse interface {
+	CRIObject
+}
+
 type ContainerStatusRequest interface {
 	CRIObject
 	ContainerIdObject

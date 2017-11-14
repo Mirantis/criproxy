@@ -127,7 +127,7 @@ func newProxyTester(t *testing.T) *proxyTester {
 		filesystemUsage: filesystemUsage,
 	}
 	var err error
-	tester.proxy, err = NewRuntimeProxy(&CRI17{}, []string{fakeCriSocketPath1, altSocketSpec}, connectionTimeoutForTests, func() {
+	tester.proxy, err = NewRuntimeProxy(&CRI18{}, []string{fakeCriSocketPath1, altSocketSpec}, connectionTimeoutForTests, func() {
 		tester.hookCallCount++
 	})
 	if err != nil {
@@ -859,6 +859,24 @@ func TestCriProxy(t *testing.T) {
 			},
 			resp:    &runtimeapi.StartContainerResponse{},
 			journal: []string{"2/runtime/StartContainer"},
+		},
+		{
+			name:   "update container resources 1 (1.8+)",
+			method: "/runtime.RuntimeService/UpdateContainerResources",
+			in: &runtimeapi.UpdateContainerResourcesRequest{
+				ContainerId: containerId1,
+			},
+			resp:    &runtimeapi.UpdateContainerResourcesResponse{},
+			journal: []string{"1/runtime/UpdateContainerResources"},
+		},
+		{
+			name:   "update container resources 2 (1.8+)",
+			method: "/runtime.RuntimeService/UpdateContainerResources",
+			in: &runtimeapi.UpdateContainerResourcesRequest{
+				ContainerId: containerId2,
+			},
+			resp:    &runtimeapi.UpdateContainerResourcesResponse{},
+			journal: []string{"2/runtime/UpdateContainerResources"},
 		},
 		{
 			name:   "stop container 1",
