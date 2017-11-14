@@ -27,6 +27,7 @@ import (
 
 	// "github.com/davecgh/go-spew/spew"
 	// "github.com/golang/glog"
+	"github.com/golang/glog"
 	"golang.org/x/net/context"
 	"google.golang.org/grpc"
 )
@@ -292,10 +293,12 @@ func (r *RuntimeProxy) listObjects(ctx context.Context, method string, req, resp
 		out.SetItems(nil)
 		_, err := client.invoke(ctx, method, req, resp)
 		if err != nil {
-			err = client.handleError(err, true)
 			// if the runtime server is gone, let's just skip it
+			err = client.handleError(err, true)
 			if err != nil {
-				return nil, err
+				// for more serious errors, log a warning but don't
+				// block the other runtimes by making List* fail
+				glog.Warningf("List request failed for runtime %q: %v", client.id, err)
 			}
 		}
 		for _, item := range out.Items() {
