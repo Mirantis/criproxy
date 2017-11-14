@@ -18,12 +18,14 @@ script_dir="$(cd $(dirname "$(readlinkf "${BASH_SOURCE}")"); pwd)"
 for ((i = 0; i < ${#TARGET_PKGS[@]}; i++)); do
   dir="pkg/runtimeapi/${TARGET_PKGS[${i}]}"
   tag="${K8S_TAGS[${i}]}"
-  # rm -rf "${script_dir}/${dir}"
   mkdir -p "${script_dir}/${dir}"
   for file in "${FILES[@]}"; do
     url="https://raw.githubusercontent.com/kubernetes/kubernetes/${tag}/pkg/kubelet/apis/cri/v1alpha1/runtime/${file}"
     subpath="${dir}/${file}"
     echo >&2 "Downloading ${url} -> ${subpath}"
     curl -sSL "${url}" >"${script_dir}/${subpath}"
+    if [[ ${file} = "api.pb.go" ]]; then
+      sed -i "s/^func init *() *{ *$/func RegisterCRI() {/" "${script_dir}/${subpath}"
+    fi
   done
 done

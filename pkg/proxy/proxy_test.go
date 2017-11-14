@@ -26,7 +26,7 @@ import (
 	"testing"
 	"time"
 
-	runtimeapi "github.com/Mirantis/criproxy/pkg/runtimeapi/v1_7"
+	runtimeapi "github.com/Mirantis/criproxy/pkg/runtimeapi/v1_8"
 	"github.com/golang/glog"
 	"github.com/pmezard/go-difflib/difflib"
 	"golang.org/x/net/context"

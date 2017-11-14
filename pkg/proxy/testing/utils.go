@@ -39,23 +39,12 @@ import (
 	"sort"
 	"sync"
 	"time"
-
-	runtimeapi "github.com/Mirantis/criproxy/pkg/runtimeapi/v1_7"
 )
 
 const (
 	journalWaitInterval = 1000 * time.Millisecond
 	journalWaitCount    = 1500
 )
-
-func BuildContainerName(metadata *runtimeapi.ContainerMetadata, sandboxID string) string {
-	// include the sandbox ID to make the container ID unique.
-	return fmt.Sprintf("%s_%s_%d", sandboxID, metadata.Name, metadata.Attempt)
-}
-
-func BuildSandboxName(metadata *runtimeapi.PodSandboxMetadata) string {
-	return fmt.Sprintf("%s_%s_%s_%d", metadata.Name, metadata.Namespace, metadata.Uid, metadata.Attempt)
-}
 
 func filterInLabels(filter, labels map[string]string) bool {
 	for k, v := range filter {

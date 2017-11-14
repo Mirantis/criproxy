@@ -41,7 +41,7 @@ import (
 	"sync"
 	"time"
 
-	runtimeapi "github.com/Mirantis/criproxy/pkg/runtimeapi/v1_7"
+	runtimeapi "github.com/Mirantis/criproxy/pkg/runtimeapi/v1_8"
 	"golang.org/x/net/context"
 )
 
@@ -51,6 +51,15 @@ var (
 	FakeRuntimeName  = "fakeRuntime"
 	FakePodSandboxIP = "192.168.192.168"
 )
+
+func BuildContainerName(metadata *runtimeapi.ContainerMetadata, sandboxID string) string {
+	// include the sandbox ID to make the container ID unique.
+	return fmt.Sprintf("%s_%s_%d", sandboxID, metadata.Name, metadata.Attempt)
+}
+
+func BuildSandboxName(metadata *runtimeapi.PodSandboxMetadata) string {
+	return fmt.Sprintf("%s_%s_%s_%d", metadata.Name, metadata.Namespace, metadata.Uid, metadata.Attempt)
+}
 
 type FakePodSandbox struct {
 	// PodSandboxStatus contains the runtime information for a sandbox.
@@ -392,6 +401,19 @@ func (r *FakeRuntimeServer) ContainerStatus(ctx context.Context, in *runtimeapi.
 	}
 
 	return &runtimeapi.ContainerStatusResponse{Status: &c.ContainerStatus}, nil
+}
+
+func (r *FakeRuntimeServer) UpdateContainerResources(ctx context.Context, in *runtimeapi.UpdateContainerResourcesRequest) (*runtimeapi.UpdateContainerResourcesResponse, error) {
+	r.Lock()
+	defer r.Unlock()
+
+	r.journal.Record("UpdateContainerResources")
+
+	if _, ok := r.Containers[in.ContainerId]; !ok {
+		return nil, fmt.Errorf("container %q not found", in.ContainerId)
+	}
+
+	return &runtimeapi.UpdateContainerResourcesResponse{}, nil
 }
 
 func (r *FakeRuntimeServer) ExecSync(ctx context.Context, in *runtimeapi.ExecSyncRequest) (*runtimeapi.ExecSyncResponse, error) {

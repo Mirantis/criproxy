@@ -3296,7 +3296,7 @@ func (m *MemoryUsage) GetWorkingSetBytes() *UInt64Value {
 	return nil
 }
 
-func init() {
+func RegisterCRI() {
 	proto.RegisterType((*VersionRequest)(nil), "runtime.VersionRequest")
 	proto.RegisterType((*VersionResponse)(nil), "runtime.VersionResponse")
 	proto.RegisterType((*DNSConfig)(nil), "runtime.DNSConfig")
