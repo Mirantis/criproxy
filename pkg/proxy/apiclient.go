@@ -231,6 +231,15 @@ func (c *apiClient) prefixContainer(unprefixedContainer Container) Container {
 	return container
 }
 
+func (c *apiClient) prefixContainerStats(unprefixedStats ContainerStats) ContainerStats {
+	if c.isPrimary() {
+		return unprefixedStats
+	}
+	stats := unprefixedStats.Copy()
+	stats.SetId(c.augmentId(unprefixedStats.Id()))
+	return stats
+}
+
 func (c *apiClient) prefixImage(unprefixedImage Image) Image {
 	if c.isPrimary() {
 		return unprefixedImage
@@ -251,6 +260,8 @@ func (c *apiClient) addPrefix(criObject CRIObject) CRIObject {
 		return c.prefixSandbox(o)
 	case Container:
 		return c.prefixContainer(o)
+	case ContainerStats:
+		return c.prefixContainerStats(o)
 	case Image:
 		return c.prefixImage(o)
 	default:

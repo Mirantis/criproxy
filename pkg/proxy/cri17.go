@@ -101,6 +101,25 @@ func (o *ContainerStatus_17) SetImage(image string) {
 
 // ---
 
+type ContainerStats_17 struct {
+	inner *runtimeapi.ContainerStats
+}
+
+var _ ContainerStats = &ContainerStats_17{}
+
+func (o *ContainerStats_17) Unwrap() interface{}  { return o.inner }
+func (o *ContainerStats_17) Copy() ContainerStats { r := *o.inner; return &ContainerStats_17{&r} }
+func (o *ContainerStats_17) Id() string           { return o.inner.Attributes.GetId() }
+func (o *ContainerStats_17) SetId(id string) {
+	if o.inner.Attributes == nil {
+		o.inner.Attributes = &runtimeapi.ContainerAttributes{Id: id}
+	} else {
+		o.inner.Attributes.Id = id
+	}
+}
+
+// ---
+
 type VersionRequest_17 struct {
 	inner *runtimeapi.VersionRequest
 }
@@ -394,6 +413,62 @@ func (o *ListContainersResponse_17) SetItems(items []CRIObject) {
 
 // ---
 
+type ListContainerStatsRequest_17 struct {
+	inner *runtimeapi.ListContainerStatsRequest
+}
+
+var _ ListContainerStatsRequest = &ListContainerStatsRequest_17{}
+
+func (o *ListContainerStatsRequest_17) Unwrap() interface{} { return o.inner }
+func (o *ListContainerStatsRequest_17) IdFilter() string {
+	return o.inner.Filter.GetId()
+}
+
+func (o *ListContainerStatsRequest_17) SetIdFilter(id string) {
+	if o.inner.Filter == nil {
+		o.inner.Filter = &runtimeapi.ContainerStatsFilter{Id: id}
+	} else {
+		o.inner.Filter.Id = id
+	}
+}
+
+func (o *ListContainerStatsRequest_17) PodSandboxIdFilter() string {
+	return o.inner.Filter.GetPodSandboxId()
+}
+
+func (o *ListContainerStatsRequest_17) SetPodSandboxIdFilter(podSandboxId string) {
+	if o.inner.Filter == nil {
+		o.inner.Filter = &runtimeapi.ContainerStatsFilter{Id: podSandboxId}
+	} else {
+		o.inner.Filter.PodSandboxId = podSandboxId
+	}
+}
+
+// ---
+
+type ListContainerStatsResponse_17 struct {
+	inner *runtimeapi.ListContainerStatsResponse
+}
+
+var _ ListContainerStatsResponse = &ListContainerStatsResponse_17{}
+
+func (o *ListContainerStatsResponse_17) Unwrap() interface{} { return o.inner }
+func (o *ListContainerStatsResponse_17) Items() []CRIObject {
+	var r []CRIObject
+	for _, stats := range o.inner.Stats {
+		r = append(r, &ContainerStats_17{stats})
+	}
+	return r
+}
+func (o *ListContainerStatsResponse_17) SetItems(items []CRIObject) {
+	o.inner.Stats = nil
+	for _, wrapped := range items {
+		o.inner.Stats = append(o.inner.Stats, wrapped.Unwrap().(*runtimeapi.ContainerStats))
+	}
+}
+
+// ---
+
 type StartContainerRequest_17 struct {
 	inner *runtimeapi.StartContainerRequest
 }
@@ -484,6 +559,34 @@ func (o *ContainerStatusResponse_17) Status() ContainerStatus {
 		return nil
 	}
 	return &ContainerStatus_17{o.inner.Status}
+}
+
+// ---
+
+type ContainerStatsRequest_17 struct {
+	inner *runtimeapi.ContainerStatsRequest
+}
+
+var _ ContainerStatsRequest = &ContainerStatsRequest_17{}
+
+func (o *ContainerStatsRequest_17) Unwrap() interface{}      { return o.inner }
+func (o *ContainerStatsRequest_17) ContainerId() string      { return o.inner.ContainerId }
+func (o *ContainerStatsRequest_17) SetContainerId(id string) { o.inner.ContainerId = id }
+
+// ---
+
+type ContainerStatsResponse_17 struct {
+	inner *runtimeapi.ContainerStatsResponse
+}
+
+var _ ContainerStatsResponse = &ContainerStatsResponse_17{}
+
+func (o *ContainerStatsResponse_17) Unwrap() interface{} { return o.inner }
+func (o *ContainerStatsResponse_17) Stats() ContainerStats {
+	if o.inner.Stats == nil {
+		return nil
+	}
+	return &ContainerStats_17{o.inner.Stats}
 }
 
 // ---
@@ -748,6 +851,8 @@ func (c *CRI17) WrapObject(o interface{}) (CRIObject, CRIObject, error) {
 		return &CreateContainerRequest_17{v}, &CreateContainerResponse_17{&runtimeapi.CreateContainerResponse{}}, nil
 	case *runtimeapi.ListContainersRequest:
 		return &ListContainersRequest_17{v}, &ListContainersResponse_17{&runtimeapi.ListContainersResponse{}}, nil
+	case *runtimeapi.ListContainerStatsRequest:
+		return &ListContainerStatsRequest_17{v}, &ListContainerStatsResponse_17{&runtimeapi.ListContainerStatsResponse{}}, nil
 	case *runtimeapi.StartContainerRequest:
 		return &StartContainerRequest_17{v}, &StartContainerResponse_17{&runtimeapi.StartContainerResponse{}}, nil
 	case *runtimeapi.StopContainerRequest:
@@ -756,6 +861,8 @@ func (c *CRI17) WrapObject(o interface{}) (CRIObject, CRIObject, error) {
 		return &RemoveContainerRequest_17{v}, &RemoveContainerResponse_17{&runtimeapi.RemoveContainerResponse{}}, nil
 	case *runtimeapi.ContainerStatusRequest:
 		return &ContainerStatusRequest_17{v}, &ContainerStatusResponse_17{&runtimeapi.ContainerStatusResponse{}}, nil
+	case *runtimeapi.ContainerStatsRequest:
+		return &ContainerStatsRequest_17{v}, &ContainerStatsResponse_17{&runtimeapi.ContainerStatsResponse{}}, nil
 	case *runtimeapi.ExecSyncRequest:
 		return &ExecSyncRequest_17{v}, &ExecSyncResponse_17{&runtimeapi.ExecSyncResponse{}}, nil
 	case *runtimeapi.ExecRequest:

@@ -421,6 +421,17 @@ func (r *RuntimeProxy) containerStatus(ctx context.Context, method string, req, 
 	return resp, nil
 }
 
+func (r *RuntimeProxy) containerStats(ctx context.Context, method string, req, resp CRIObject) (interface{}, error) {
+	client, err := r.invokeContainerMethod(ctx, method, req, resp)
+	if err != nil {
+		return nil, err
+	}
+	if stats := resp.(ContainerStatsResponse).Stats(); stats != nil {
+		stats.SetId(client.augmentId(stats.Id()))
+	}
+	return resp, nil
+}
+
 func (r *RuntimeProxy) handleImage(ctx context.Context, method string, req, resp CRIObject) (interface{}, error) {
 	in := req.(ImageObject)
 	client, unprefixed, err := r.clientForImage(in.Image(), true)
@@ -457,10 +468,12 @@ var dispatchTable map[string]methodInterceptor = map[string]methodInterceptor{
 	"/runtime.RuntimeService/PodSandboxStatus":    (*RuntimeProxy).podSandboxStatus,
 	"/runtime.RuntimeService/CreateContainer":     (*RuntimeProxy).createContainer,
 	"/runtime.RuntimeService/ListContainers":      (*RuntimeProxy).listObjects,
+	"/runtime.RuntimeService/ListContainerStats":  (*RuntimeProxy).listObjects,
 	"/runtime.RuntimeService/StartContainer":      (*RuntimeProxy).handleContainer,
 	"/runtime.RuntimeService/StopContainer":       (*RuntimeProxy).handleContainer,
 	"/runtime.RuntimeService/RemoveContainer":     (*RuntimeProxy).handleContainer,
 	"/runtime.RuntimeService/ContainerStatus":     (*RuntimeProxy).containerStatus,
+	"/runtime.RuntimeService/ContainerStats":      (*RuntimeProxy).containerStats,
 	"/runtime.RuntimeService/ExecSync":            (*RuntimeProxy).handleContainer,
 	"/runtime.RuntimeService/Exec":                (*RuntimeProxy).handleContainer,
 	"/runtime.RuntimeService/Attach":              (*RuntimeProxy).handleContainer,
@@ -472,7 +485,7 @@ var dispatchTable map[string]methodInterceptor = map[string]methodInterceptor{
 }
 
 // TODO: tracing requests
-// TODO: ContainerStats, ListContainerStats, ImageFsInfo
+// TODO: support ContainerStats, ListContainerStats, ImageFsInfo
+// TODO: switch to 1.8 + support UpdateContainerResources
 // TODO: proper streaming url (+ test)
-// TODO: try "flaky" test
 // TODO: rm commented imports

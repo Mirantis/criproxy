@@ -83,6 +83,12 @@ type Container interface {
 	Copy() Container
 }
 
+type ContainerStats interface {
+	CRIObject
+	IdObject
+	Copy() ContainerStats
+}
+
 type Image interface {
 	CRIObject
 	IdObject
@@ -94,12 +100,14 @@ type Image interface {
 type PodSandboxStatus interface {
 	CRIObject
 	IdObject
+	Copy() PodSandboxStatus
 }
 
 type ContainerStatus interface {
 	CRIObject
 	IdObject
 	ImageObject
+	Copy() ContainerStatus
 }
 
 type VersionRequest interface {
@@ -196,6 +204,17 @@ type ListContainersResponse interface {
 	ObjectList
 }
 
+type ListContainerStatsRequest interface {
+	CRIObject
+	IdFilterObject
+	PodSandboxIdFilterObject
+}
+
+type ListContainerStatsResponse interface {
+	CRIObject
+	ObjectList
+}
+
 type StartContainerRequest interface {
 	CRIObject
 	ContainerIdObject
@@ -231,6 +250,16 @@ type ContainerStatusRequest interface {
 type ContainerStatusResponse interface {
 	CRIObject
 	Status() ContainerStatus
+}
+
+type ContainerStatsRequest interface {
+	CRIObject
+	ContainerIdObject
+}
+
+type ContainerStatsResponse interface {
+	CRIObject
+	Stats() ContainerStats
 }
 
 type ExecSyncRequest interface {

@@ -47,11 +47,14 @@ const (
 	podUid1                   = "4bde9008-4663-4342-84ed-310cea787f95"
 	podSandboxId1             = "pod-1-1_default_" + podUid1 + "_0"
 	podUid2                   = "927a91df-f4d3-49a9-a257-5ca7f16f85fc"
-	podSandboxId2             = "alt__pod-2-1_default_" + podUid2 + "_0"
+	podSandboxId2unprefixed   = "pod-2-1_default_" + podUid2 + "_0"
+	podSandboxId2             = "alt__" + podSandboxId2unprefixed
 	containerId1              = podSandboxId1 + "_container1_0"
 	containerId2              = podSandboxId2 + "_container2_0"
+	containerId2unprefixed    = podSandboxId2unprefixed + "_container2_0"
 	numGrpcConnectAttempts    = 600
-	imageFsUUID               = "e4080efe-834f-4c1e-a455-656bbcef7486"
+	imageFsUUID1              = "e4080efe-834f-4c1e-a455-656bbcef7486"
+	imageFsUUID2              = "d3ba2199-0fa2-45f0-aea9-f4522e2cbb3f"
 )
 
 type ServerWithReadinessFeedback interface {
@@ -102,17 +105,20 @@ func newProxyTester(t *testing.T) *proxyTester {
 	containerStats := []*runtimeapi.ContainerStats{
 		proxytest.MakeFakeContainerStats(containerId1, &runtimeapi.ContainerMetadata{
 			Name: "container1",
-		}, imageFsUUID),
-		proxytest.MakeFakeContainerStats(containerId2, &runtimeapi.ContainerMetadata{
+		}, imageFsUUID1),
+		proxytest.MakeFakeContainerStats(containerId2unprefixed, &runtimeapi.ContainerMetadata{
 			Name: "container2",
-		}, imageFsUUID),
+		}, imageFsUUID2),
 	}
-	servers[0].SetFakeContainerStats(containerStats)
 
 	filesystemUsage := []*runtimeapi.FilesystemUsage{
-		proxytest.MakeFakeImageFsUsage(imageFsUUID),
+		proxytest.MakeFakeImageFsUsage(imageFsUUID1),
+		proxytest.MakeFakeImageFsUsage(imageFsUUID2),
 	}
-	servers[0].SetFakeFilesystemUsage(filesystemUsage)
+	for i := 0; i < 2; i++ {
+		servers[i].SetFakeContainerStats(containerStats[i : i+1])
+		servers[i].SetFakeFilesystemUsage(filesystemUsage[i : i+1])
+	}
 
 	tester := &proxyTester{
 		journal:         journal,
@@ -221,6 +227,19 @@ func TestCriProxy(t *testing.T) {
 	tester.startServers(t, -1)
 	tester.startProxy(t)
 	tester.connectToProxy(t)
+
+	containerStats1 := tester.containerStats[0]
+	containerStats2 := &runtimeapi.ContainerStats{
+		Attributes: &runtimeapi.ContainerAttributes{
+			Id:          containerId2,
+			Metadata:    tester.containerStats[1].Attributes.Metadata,
+			Labels:      tester.containerStats[1].Attributes.Labels,
+			Annotations: tester.containerStats[1].Attributes.Annotations,
+		},
+		Cpu:           tester.containerStats[1].Cpu,
+		Memory:        tester.containerStats[1].Memory,
+		WritableLayer: tester.containerStats[1].WritableLayer,
+	}
 
 	testCases := []struct {
 		name, method string
@@ -679,6 +698,82 @@ func TestCriProxy(t *testing.T) {
 			// note that runtimes' ListContainers() aren't even invoked in this case
 		},
 		{
+			name:   "list container stats",
+			method: "/runtime.RuntimeService/ListContainerStats",
+			in:     &runtimeapi.ListContainerStatsRequest{},
+			resp: &runtimeapi.ListContainerStatsResponse{
+				Stats: []*runtimeapi.ContainerStats{
+					containerStats1,
+					containerStats2,
+				},
+			},
+			journal: []string{"1/runtime/ListContainerStats", "2/runtime/ListContainerStats"},
+		},
+		{
+			name:   "list container stats with container filter 1",
+			method: "/runtime.RuntimeService/ListContainerStats",
+			ins: []interface{}{
+				&runtimeapi.ListContainerStatsRequest{
+					Filter: &runtimeapi.ContainerStatsFilter{Id: containerId1},
+				},
+				&runtimeapi.ListContainerStatsRequest{
+					Filter: &runtimeapi.ContainerStatsFilter{PodSandboxId: podSandboxId1},
+				},
+				&runtimeapi.ListContainerStatsRequest{
+					Filter: &runtimeapi.ContainerStatsFilter{
+						Id:           containerId1,
+						PodSandboxId: podSandboxId1,
+					},
+				},
+			},
+			resp: &runtimeapi.ListContainerStatsResponse{
+				Stats: []*runtimeapi.ContainerStats{containerStats1},
+			},
+			journal: []string{"1/runtime/ListContainerStats"},
+		},
+		{
+			name:   "list containers with container filter 2",
+			method: "/runtime.RuntimeService/ListContainerStats",
+			ins: []interface{}{
+				&runtimeapi.ListContainerStatsRequest{
+					Filter: &runtimeapi.ContainerStatsFilter{Id: containerId2},
+				},
+				&runtimeapi.ListContainerStatsRequest{
+					Filter: &runtimeapi.ContainerStatsFilter{PodSandboxId: podSandboxId2},
+				},
+				&runtimeapi.ListContainerStatsRequest{
+					Filter: &runtimeapi.ContainerStatsFilter{
+						Id:           containerId2,
+						PodSandboxId: podSandboxId2,
+					},
+				},
+			},
+			resp: &runtimeapi.ListContainerStatsResponse{
+				Stats: []*runtimeapi.ContainerStats{containerStats2},
+			},
+			journal: []string{"2/runtime/ListContainerStats"},
+		},
+		{
+			name:   "list containers with contradicting id+sandbox filters",
+			method: "/runtime.RuntimeService/ListContainerStats",
+			ins: []interface{}{
+				&runtimeapi.ListContainerStatsRequest{
+					Filter: &runtimeapi.ContainerStatsFilter{
+						Id:           containerId1,
+						PodSandboxId: podSandboxId2,
+					},
+				},
+				&runtimeapi.ListContainerStatsRequest{
+					Filter: &runtimeapi.ContainerStatsFilter{
+						Id:           containerId1,
+						PodSandboxId: podSandboxId2,
+					},
+				},
+			},
+			resp: &runtimeapi.ListContainerStatsResponse{},
+			// note that runtimes' ListContainerStats() aren't even invoked in this case
+		},
+		{
 			name:   "container status 1",
 			method: "/runtime.RuntimeService/ContainerStatus",
 			in: &runtimeapi.ContainerStatusRequest{
@@ -724,6 +819,28 @@ func TestCriProxy(t *testing.T) {
 				},
 			},
 			journal: []string{"2/runtime/ContainerStatus"},
+		},
+		{
+			name:   "container stats 1",
+			method: "/runtime.RuntimeService/ContainerStats",
+			in: &runtimeapi.ContainerStatsRequest{
+				ContainerId: containerId1,
+			},
+			resp: &runtimeapi.ContainerStatsResponse{
+				Stats: containerStats1,
+			},
+			journal: []string{"1/runtime/ContainerStats"},
+		},
+		{
+			name:   "container stats 2",
+			method: "/runtime.RuntimeService/ContainerStats",
+			in: &runtimeapi.ContainerStatsRequest{
+				ContainerId: containerId2,
+			},
+			resp: &runtimeapi.ContainerStatsResponse{
+				Stats: containerStats2,
+			},
+			journal: []string{"2/runtime/ContainerStats"},
 		},
 		{
 			name:   "start container 1",
