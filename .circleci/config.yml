@@ -51,16 +51,16 @@ workflows:
     jobs:
     - build:
         filters:
-          tags:
-            only: /^v[0-9].*/
+          # tags:
+          #   only: /^v[0-9].*/
           branches:
             only: /.*/
     - publish:
         requires:
         - build
         filters:
-          tags:
-            only: /^v[0-9].*/
+          # tags:
+          #   only: /^v[0-9].*/
           branches:
             ignore: /.*/
 
