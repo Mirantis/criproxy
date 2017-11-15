@@ -472,7 +472,7 @@ func (r *RuntimeProxy) handleImage(ctx context.Context, method string, req, resp
 	return resp, err
 }
 
-var dispatchTable map[string]methodInterceptor = map[string]methodInterceptor{
+var dispatchTable = map[string]methodInterceptor{
 	"/runtime.RuntimeService/Version":                  (*RuntimeProxy).passToPrimary,
 	"/runtime.RuntimeService/Status":                   (*RuntimeProxy).passToPrimary,
 	"/runtime.RuntimeService/UpdateRuntimeConfig":      (*RuntimeProxy).updateRuntimeConfig,
