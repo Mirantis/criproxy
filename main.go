@@ -23,8 +23,10 @@ import (
 	"strings"
 	"time"
 
-	proxy "github.com/Mirantis/criproxy/pkg/proxy"
 	"github.com/golang/glog"
+
+	proxy "github.com/Mirantis/criproxy/pkg/proxy"
+	"github.com/Mirantis/criproxy/pkg/utils"
 )
 
 const (
@@ -37,19 +39,24 @@ var (
 		"The unix socket to listen on, e.g. /run/virtlet.sock")
 	connect = flag.String("connect", "/var/run/dockershim.sock",
 		"CRI runtime ids and unix socket(s) to connect to, e.g. /var/run/dockershim.sock,alt:/var/run/another.sock")
+	streamPort    = flag.Int("streamPort", 11250, "streaming port of the default runtime")
 	apiServerHost = flag.String("apiserver", "", "apiserver URL")
 )
 
 // runCriProxy starts CRI proxy
 func runCriProxy(connect, listen string) error {
 	addrs := strings.Split(connect, ",")
-	proxy, err := proxy.NewRuntimeProxy(&proxy.CRI17{}, addrs, connectionTimeout, nil)
+	streamUrl, err := utils.GetStreamUrl(*streamPort)
 	if err != nil {
-		return fmt.Errorf("Error starting CRI proxy: %v", err)
+		return fmt.Errorf("can't get stream url: %v", err)
+	}
+	proxy, err := proxy.NewRuntimeProxy(&proxy.CRI17{}, addrs, connectionTimeout, streamUrl, nil)
+	if err != nil {
+		return fmt.Errorf("error starting CRI proxy: %v", err)
 	}
 	glog.V(1).Infof("Starting CRI proxy on socket %s", listen)
 	if err := proxy.Serve(listen, nil); err != nil {
-		return fmt.Errorf("Serving failed: %v", err)
+		return fmt.Errorf("serving failed: %v", err)
 	}
 	return nil
 }

@@ -20,6 +20,7 @@ import (
 	"encoding/json"
 	"flag"
 	"fmt"
+	"net/url"
 	"os"
 	"reflect"
 	"strings"
@@ -90,8 +91,8 @@ type proxyTester struct {
 func newProxyTester(t *testing.T) *proxyTester {
 	journal := proxytest.NewSimpleJournal()
 	servers := []*proxytest.FakeCriServer{
-		proxytest.NewFakeCriServer(proxytest.NewPrefixJournal(journal, "1/")),
-		proxytest.NewFakeCriServer(proxytest.NewPrefixJournal(journal, "2/")),
+		proxytest.NewFakeCriServer(proxytest.NewPrefixJournal(journal, "1/"), "/cri"),
+		proxytest.NewFakeCriServer(proxytest.NewPrefixJournal(journal, "2/"), "http://192.168.0.5:12345/stream"),
 	}
 
 	fakeImageNames1 := []string{"image1-1", "image1-2"}
@@ -126,8 +127,14 @@ func newProxyTester(t *testing.T) *proxyTester {
 		containerStats:  containerStats,
 		filesystemUsage: filesystemUsage,
 	}
-	var err error
-	tester.proxy, err = NewRuntimeProxy(&CRI18{}, []string{fakeCriSocketPath1, altSocketSpec}, connectionTimeoutForTests, func() {
+	// NOTE: in reality the loopback address should not be
+	// actually used for streaming unless you're absolutely sure
+	// that the only apiserver instance resides on this node
+	streamUrl, err := url.Parse("http://127.0.0.1:11250/")
+	if err != nil {
+		t.Fatalf("error parsing stream url: %v", err)
+	}
+	tester.proxy, err = NewRuntimeProxy(&CRI18{}, []string{fakeCriSocketPath1, altSocketSpec}, connectionTimeoutForTests, streamUrl, func() {
 		tester.hookCallCount++
 	})
 	if err != nil {
@@ -941,7 +948,9 @@ func TestCriProxy(t *testing.T) {
 				ContainerId: containerId1,
 				Cmd:         []string{"ls"},
 			},
-			resp:    &runtimeapi.ExecResponse{},
+			resp: &runtimeapi.ExecResponse{
+				Url: "http://127.0.0.1:11250/cri",
+			},
 			journal: []string{"1/runtime/Exec"},
 		},
 		{
@@ -951,7 +960,9 @@ func TestCriProxy(t *testing.T) {
 				ContainerId: containerId2,
 				Cmd:         []string{"ls"},
 			},
-			resp:    &runtimeapi.ExecResponse{},
+			resp: &runtimeapi.ExecResponse{
+				Url: "http://192.168.0.5:12345/stream",
+			},
 			journal: []string{"2/runtime/Exec"},
 		},
 		{
@@ -960,7 +971,9 @@ func TestCriProxy(t *testing.T) {
 			in: &runtimeapi.AttachRequest{
 				ContainerId: containerId1,
 			},
-			resp:    &runtimeapi.AttachResponse{},
+			resp: &runtimeapi.AttachResponse{
+				Url: "http://127.0.0.1:11250/cri",
+			},
 			journal: []string{"1/runtime/Attach"},
 		},
 		{
@@ -969,7 +982,9 @@ func TestCriProxy(t *testing.T) {
 			in: &runtimeapi.AttachRequest{
 				ContainerId: containerId2,
 			},
-			resp:    &runtimeapi.AttachResponse{},
+			resp: &runtimeapi.AttachResponse{
+				Url: "http://192.168.0.5:12345/stream",
+			},
 			journal: []string{"2/runtime/Attach"},
 		},
 		{
@@ -979,7 +994,9 @@ func TestCriProxy(t *testing.T) {
 				PodSandboxId: podSandboxId1,
 				Port:         []int32{80},
 			},
-			resp:    &runtimeapi.PortForwardResponse{},
+			resp: &runtimeapi.PortForwardResponse{
+				Url: "http://127.0.0.1:11250/cri",
+			},
 			journal: []string{"1/runtime/PortForward"},
 		},
 		{
@@ -989,7 +1006,9 @@ func TestCriProxy(t *testing.T) {
 				PodSandboxId: podSandboxId2,
 				Port:         []int32{80},
 			},
-			resp:    &runtimeapi.PortForwardResponse{},
+			resp: &runtimeapi.PortForwardResponse{
+				Url: "http://192.168.0.5:12345/stream",
+			},
 			journal: []string{"2/runtime/PortForward"},
 		},
 		{

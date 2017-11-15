@@ -76,11 +76,9 @@ type FakeContainer struct {
 
 type FakeRuntimeServer struct {
 	sync.Mutex
-
-	journal Journal
-
-	CurrentTime int64
-
+	streamUrl          string
+	journal            Journal
+	CurrentTime        int64
 	FakeStatus         *runtimeapi.RuntimeStatus
 	Containers         map[string]*FakeContainer
 	Sandboxes          map[string]*FakePodSandbox
@@ -117,11 +115,12 @@ func (r *FakeRuntimeServer) SetFakeContainerStats(containerStats []*runtimeapi.C
 	}
 }
 
-func NewFakeRuntimeServer(journal Journal) *FakeRuntimeServer {
+func NewFakeRuntimeServer(journal Journal, streamUrl string) *FakeRuntimeServer {
 	ready := true
 	runtimeReadyStr := runtimeapi.RuntimeReady
 	networkReadyStr := runtimeapi.NetworkReady
 	return &FakeRuntimeServer{
+		streamUrl:   streamUrl,
 		journal:     journal,
 		CurrentTime: time.Now().UnixNano(),
 		FakeStatus: &runtimeapi.RuntimeStatus{
@@ -423,17 +422,17 @@ func (r *FakeRuntimeServer) ExecSync(ctx context.Context, in *runtimeapi.ExecSyn
 
 func (r *FakeRuntimeServer) Exec(ctx context.Context, in *runtimeapi.ExecRequest) (*runtimeapi.ExecResponse, error) {
 	r.journal.Record("Exec")
-	return &runtimeapi.ExecResponse{}, nil
+	return &runtimeapi.ExecResponse{Url: r.streamUrl}, nil
 }
 
 func (r *FakeRuntimeServer) Attach(ctx context.Context, in *runtimeapi.AttachRequest) (*runtimeapi.AttachResponse, error) {
 	r.journal.Record("Attach")
-	return &runtimeapi.AttachResponse{}, nil
+	return &runtimeapi.AttachResponse{Url: r.streamUrl}, nil
 }
 
 func (r *FakeRuntimeServer) PortForward(ctx context.Context, in *runtimeapi.PortForwardRequest) (*runtimeapi.PortForwardResponse, error) {
 	r.journal.Record("PortForward")
-	return &runtimeapi.PortForwardResponse{}, nil
+	return &runtimeapi.PortForwardResponse{Url: r.streamUrl}, nil
 }
 
 func (r *FakeRuntimeServer) UpdateRuntimeConfig(ctx context.Context, in *runtimeapi.UpdateRuntimeConfigRequest) (*runtimeapi.UpdateRuntimeConfigResponse, error) {

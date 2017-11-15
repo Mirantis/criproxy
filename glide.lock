@@ -1,5 +1,5 @@
 hash: 3e506bbc65b2c6aaaf872f0699e5d431aaa5115862b0ae0e091f28e9675d8b82
-updated: 2017-11-13T12:28:10.922929763+03:00
+updated: 2017-11-15T03:15:50.017616697+03:00
 imports:
 - name: github.com/davecgh/go-spew
   version: 5215b55f46b2b919f50a1df0eaa5886afe4e3b3d
@@ -15,7 +15,7 @@ imports:
 - name: github.com/golang/glog
   version: 23def4e6c14b4da8ac2ed8007337bc5eb5007998
 - name: github.com/golang/protobuf
-  version: 1643683e1b54a9e88ad26d98f81400c8c9d9f4f9
+  version: 1e59b77b52bf8e4b449a57e6f79f21226d571845
   subpackages:
   - proto
   - ptypes
@@ -48,7 +48,7 @@ imports:
   subpackages:
   - googleapis/rpc/status
 - name: google.golang.org/grpc
-  version: de2209a968d48e8970546c8a710189f7461370f7
+  version: c1fc29613da668384b9a63e81b424d627f0b0a02
   subpackages:
   - balancer
   - balancer/roundrobin
@@ -70,4 +70,9 @@ imports:
   - status
   - tap
   - transport
+- name: k8s.io/apimachinery
+  version: 18a564baac720819100827c16fdebcadb05b2d0d
+  subpackages:
+  - pkg/util/net
+  - pkg/util/sets
 testImports: []

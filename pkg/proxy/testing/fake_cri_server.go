@@ -31,9 +31,9 @@ type FakeCriServer struct {
 	server *grpc.Server
 }
 
-func NewFakeCriServer(journal Journal) *FakeCriServer {
+func NewFakeCriServer(journal Journal, streamUrl string) *FakeCriServer {
 	s := &FakeCriServer{
-		FakeRuntimeServer: NewFakeRuntimeServer(NewPrefixJournal(journal, "runtime/")),
+		FakeRuntimeServer: NewFakeRuntimeServer(NewPrefixJournal(journal, "runtime/"), streamUrl),
 		FakeImageServer:   NewFakeImageServer(NewPrefixJournal(journal, "image/")),
 		server:            grpc.NewServer(),
 	}

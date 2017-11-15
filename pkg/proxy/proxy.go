@@ -20,6 +20,7 @@ import (
 	"errors"
 	"fmt"
 	"net"
+	"net/url"
 	"os"
 	"regexp"
 	"strings"
@@ -35,7 +36,7 @@ import (
 // RuntimeProxy is a gRPC implementation of internalapi.RuntimeService.
 type RuntimeProxy struct {
 	criVersion CRIVersion
-	timeout    time.Duration
+	streamUrl  url.URL
 	server     *grpc.Server
 	conn       *grpc.ClientConn
 	clients    []*apiClient
@@ -44,12 +45,12 @@ type RuntimeProxy struct {
 type methodInterceptor func(r *RuntimeProxy, ctx context.Context, method string, req, resp CRIObject) (interface{}, error)
 
 // NewRuntimeProxy creates a new internalapi.RuntimeService.
-func NewRuntimeProxy(criVersion CRIVersion, addrs []string, connectionTimout time.Duration, hook func()) (*RuntimeProxy, error) {
+func NewRuntimeProxy(criVersion CRIVersion, addrs []string, connectionTimout time.Duration, streamUrl *url.URL, hook func()) (*RuntimeProxy, error) {
 	if len(addrs) == 0 {
 		return nil, errors.New("no sockets specified to connect to")
 	}
 
-	r := &RuntimeProxy{criVersion: criVersion}
+	r := &RuntimeProxy{criVersion: criVersion, streamUrl: *streamUrl}
 	r.server = grpc.NewServer(grpc.UnaryInterceptor(func(ctx context.Context, req interface{}, info *grpc.UnaryServerInfo, handler grpc.UnaryHandler) (resp interface{}, err error) {
 		if hook != nil {
 			hook()
@@ -193,9 +194,9 @@ func (r *RuntimeProxy) clientForImage(image string, noErrorIfNotConnected bool) 
 
 func (r *RuntimeProxy) fixStreamingUrl(url string) string {
 	if strings.HasPrefix(url, "/") {
-		// XXX: FIXME!!! Don't hardcode!
-		// 10.192.0.3 is only for testing w/kubeadm-dind-cluster (kube-node-1)
-		return "http://10.192.0.3:11250" + url
+		u := r.streamUrl
+		u.Path = url
+		return u.String()
 	}
 	return url
 }
@@ -509,4 +510,4 @@ func dump(o interface{}) string {
 	return rmRx.ReplaceAllString(s, "")
 }
 
-// TODO: proper streaming url (+ test)
+// TODO: version selection via a command line flag

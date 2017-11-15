@@ -17,11 +17,14 @@ package utils
 
 import (
 	"net"
+	"net/url"
 	"os"
+	"strconv"
 	"time"
 
 	"github.com/davecgh/go-spew/spew"
 	"github.com/golang/glog"
+	knet "k8s.io/apimachinery/pkg/util/net"
 )
 
 const (
@@ -58,6 +61,17 @@ func WaitForSocket(path string, maxAttempts int, extraCheck func() error) error 
 		time.Sleep(connectAttemptInterval)
 	}
 	return err
+}
+
+func GetStreamUrl(port int) (*url.URL, error) {
+	bindAddress, err := knet.ChooseBindAddress(net.IP{0, 0, 0, 0})
+	if err != nil {
+		return nil, err
+	}
+	return &url.URL{
+		Scheme: "http",
+		Host:   net.JoinHostPort(bindAddress.String(), strconv.Itoa(port)),
+	}, nil
 }
 
 // TODO: remove this
