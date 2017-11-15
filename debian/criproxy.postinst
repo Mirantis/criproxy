@@ -33,6 +33,18 @@ case "$1" in
             rm -f /etc/systemd/system/dockershim.service.d/99-criproxy.conf
         fi
         sed -i 's@\(ExecStart.*kubelet\)@\1 --experimental-dockershim --port 11250@' /etc/systemd/system/dockershim.service
+        # FIXME: this is temporary hack before 'hyperkube kubelet --experimental-dockershim'
+        # fix lands in k8s 1.7 and k8s 1.8. See k8s issues / PRs:
+        # https://github.com/kubernetes/kubernetes/issues/54424
+        # https://github.com/kubernetes/kubernetes/pull/55250
+        # https://github.com/kubernetes/kubernetes/pull/55335
+        if [ -d /dind -a -x /k8s/hyperkube ]; then
+            k8s_version="$(/k8s/hyperkube --version|awk '{print $2}')"
+            rm -f /usr/bin/kubelet
+            curl "https://storage.googleapis.com/kubernetes-release/release/${k8s_version}/bin/linux/amd64/kubelet" >/usr/bin/kubelet
+            chmod +x /usr/bin/kubelet
+            sed -i 's@ExecStart=/k8s/hyperkube kubelet@ExecStart=/usr/bin/kubelet@' /etc/systemd/system/dockershim.service
+        fi
         systemctl stop kubelet
         systemctl daemon-reload
         systemctl enable dockershim criproxy
