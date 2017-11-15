@@ -509,5 +509,3 @@ func dump(o interface{}) string {
 	s := replaceRx.ReplaceAllString(spew.Sdump(o), "&$1")
 	return rmRx.ReplaceAllString(s, "")
 }
-
-// TODO: version selection via a command line flag

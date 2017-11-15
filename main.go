@@ -41,6 +41,12 @@ var (
 		"CRI runtime ids and unix socket(s) to connect to, e.g. /var/run/dockershim.sock,alt:/var/run/another.sock")
 	streamPort    = flag.Int("streamPort", 11250, "streaming port of the default runtime")
 	apiServerHost = flag.String("apiserver", "", "apiserver URL")
+	apiVersion    = flag.String("apiVersion", "1.8", "CRI API version (1.7 or 1.8)")
+
+	apis = map[string]proxy.CRIVersion{
+		"1.7": &proxy.CRI17{},
+		"1.8": &proxy.CRI18{},
+	}
 )
 
 // runCriProxy starts CRI proxy
@@ -50,7 +56,11 @@ func runCriProxy(connect, listen string) error {
 	if err != nil {
 		return fmt.Errorf("can't get stream url: %v", err)
 	}
-	proxy, err := proxy.NewRuntimeProxy(&proxy.CRI17{}, addrs, connectionTimeout, streamUrl, nil)
+	criVersion, found := apis[*apiVersion]
+	if !found {
+		return fmt.Errorf("bad CRI version %q", *apiVersion)
+	}
+	proxy, err := proxy.NewRuntimeProxy(criVersion, addrs, connectionTimeout, streamUrl, nil)
 	if err != nil {
 		return fmt.Errorf("error starting CRI proxy: %v", err)
 	}
