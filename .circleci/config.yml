@@ -29,6 +29,9 @@ jobs:
         paths:
         - criproxy*.deb
         - criproxy
+    - store_artifacts:
+        path: /go/src/github.com/Mirantis/criproxy/_output
+        destination: criproxy
 
   publish:
     docker:
