@@ -461,7 +461,7 @@ func (r *RuntimeProxy) handleImage(ctx context.Context, method string, req, resp
 		return nil, err
 	}
 
-	if out, ok := resp.(ImageStatusResponse); ok {
+	if out, ok := resp.(ImageStatusResponse); ok && out.Image() != nil {
 		out.SetImage(client.prefixImage(out.Image()))
 	}
 

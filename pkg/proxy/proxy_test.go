@@ -1219,6 +1219,24 @@ func TestCriProxy(t *testing.T) {
 			journal: []string{"2/image/ImageStatus"},
 		},
 		{
+			name:   "nonexistent image status",
+			method: "/runtime.ImageService/ImageStatus",
+			in: &runtimeapi.ImageStatusRequest{
+				Image: &runtimeapi.ImageSpec{Image: "nosuchimage"},
+			},
+			resp:    &runtimeapi.ImageStatusResponse{},
+			journal: []string{"1/image/ImageStatus"},
+		},
+		{
+			name:   "nonexistent image status (alt)",
+			method: "/runtime.ImageService/ImageStatus",
+			in: &runtimeapi.ImageStatusRequest{
+				Image: &runtimeapi.ImageSpec{Image: "alt/nosuchimage"},
+			},
+			resp:    &runtimeapi.ImageStatusResponse{},
+			journal: []string{"2/image/ImageStatus"},
+		},
+		{
 			name:   "remove image 1-1",
 			method: "/runtime.ImageService/RemoveImage",
 			in: &runtimeapi.RemoveImageRequest{

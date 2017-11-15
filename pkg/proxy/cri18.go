@@ -759,7 +759,12 @@ type ImageStatusResponse_18 struct {
 var _ ImageStatusResponse = &ImageStatusResponse_18{}
 
 func (o *ImageStatusResponse_18) Unwrap() interface{} { return o.inner }
-func (o *ImageStatusResponse_18) Image() Image        { return &Image_18{o.inner.Image} }
+func (o *ImageStatusResponse_18) Image() Image {
+	if o.inner.Image == nil {
+		return nil
+	}
+	return &Image_18{o.inner.Image}
+}
 func (o *ImageStatusResponse_18) SetImage(image Image) {
 	o.inner.Image = image.Unwrap().(*runtimeapi.Image)
 }
@@ -885,6 +890,9 @@ func (c *CRI18) ProbeRequest() (interface{}, interface{}) {
 }
 
 func (c *CRI18) WrapObject(o interface{}) (CRIObject, CRIObject, error) {
+	if o == nil {
+		return nil, nil, nil
+	}
 	switch v := o.(type) {
 	case *runtimeapi.PodSandbox:
 		return &PodSandbox_18{v}, nil, nil

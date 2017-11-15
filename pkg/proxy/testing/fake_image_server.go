@@ -120,9 +120,13 @@ func (r *FakeImageServer) ImageStatus(ctx context.Context, in *runtimeapi.ImageS
 	r.journal.Record("ImageStatus")
 
 	image := in.GetImage()
+	img, found := r.Images[image.Image]
+	if !found {
+		return &runtimeapi.ImageStatusResponse{}, nil
+	}
 	// make a copy of the image struct
-	img := *r.Images[image.Image]
-	return &runtimeapi.ImageStatusResponse{Image: &img}, nil
+	copy := *img
+	return &runtimeapi.ImageStatusResponse{Image: &copy}, nil
 }
 
 func (r *FakeImageServer) PullImage(ctx context.Context, in *runtimeapi.PullImageRequest) (*runtimeapi.PullImageResponse, error) {
