@@ -1,46 +1,13 @@
-package: github.com/Mirantis/virtlet
+package: github.com/Mirantis/criproxy
 import:
-- package: github.com/coreos/go-systemd
-  version: 4484981625c1a6a2ecb40a390fcb6a9bcfee76e3
+- package: google.golang.org/grpc
+- package: github.com/davecgh/go-spew
+  version: 5215b55f46b2b919f50a1df0eaa5886afe4e3b3d
 - package: github.com/golang/glog
 - package: golang.org/x/net
   subpackages:
   - context
-- package: google.golang.org/grpc
-- package: github.com/davecgh/go-spew
-  version: 5215b55f46b2b919f50a1df0eaa5886afe4e3b3d
-- package: go.universe.tf/netboot
-  subpackages:
-  - dhcp4
-- package: github.com/containernetworking/cni
-  version: v0.5.2
-- package: github.com/vishvananda/netlink
-  version: 9dee363ad4abbc3c9a4a24a9f1e33363e224b111
 - package: github.com/pmezard/go-difflib
   version: ~1.0.0
   subpackages:
   - difflib
-- package: github.com/libvirt/libvirt-go
-  version: c3209e4ba8b8dda65c85ca0ac04302e55895caf7
-- package: github.com/libvirt/libvirt-go-xml
-  version: b80a3ac43b6d354cd28dbf86de016639c0e5cd87
-- package: k8s.io/kubernetes
-  version: v1.7.0
-- package: k8s.io/apiserver
-  version: b6348e73bd115a31b70a4e9ff12d35869d057d8c
-  //version: b74e5942e2a7ef9f73874b7e5a48c030ff7f1189
-- package: k8s.io/client-go
-  version: 4cbb4d746a6a36cf99d6cd4f1b69a6907f49318a
-- package: github.com/jonboulle/clockwork
-  version: bcac9884e7502bb2b474c0339d889cb981a2f27f
-- package: github.com/onsi/ginkgo
-- package: github.com/onsi/gomega
-- package: k8s.io/apiextensions-apiserver
-  version: fcd622fe88a4a6efcb5aea9e94ee87324ac1b036
-- package: k8s.io/metrics
-  version: 8efbc8e22d00b9c600afec5f1c14073fd2412fce
-- package: k8s.io/api
-  version: 4fe9229aaa9d704f8a2a21cdcd50de2bbb6e1b57
-- package: golang.org/x/sync
-  subpackages:
-  - syncmap

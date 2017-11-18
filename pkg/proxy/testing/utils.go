@@ -40,7 +40,7 @@ import (
 	"sync"
 	"time"
 
-	runtimeapi "k8s.io/kubernetes/pkg/kubelet/apis/cri/v1alpha1/runtime"
+	runtimeapi "github.com/Mirantis/criproxy/pkg/runtimeapi/v1_7"
 )
 
 const (

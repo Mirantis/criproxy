@@ -125,31 +125,23 @@ func (c *apiClient) connectNonLocked() chan error {
 			}
 			return err
 		}); err != nil {
-			c.Lock()
-			chErrs := c.connectErrChs
-			c.connectErrChs = nil
-			c.Unlock()
 			glog.Errorf("Failed to find the socket: %v", err)
 			err = fmt.Errorf("failed to find the socket: %v", err)
-			for _, ch := range chErrs {
+			for _, ch := range c.connectErrChs {
 				ch <- err
-				close(ch)
 			}
 			return
 		}
 
 		c.Lock()
+		defer c.Unlock()
 		glog.V(1).Infof("Connected to runtime service %s", c.addr)
 		c.RuntimeServiceClient = runtimeapi.NewRuntimeServiceClient(c.conn)
 		c.ImageServiceClient = runtimeapi.NewImageServiceClient(c.conn)
 		c.state = clientStateConnected
 
-		chErrs := c.connectErrChs
-		c.connectErrChs = nil
-		c.Unlock()
-		for _, ch := range chErrs {
+		for _, ch := range c.connectErrChs {
 			ch <- nil
-			close(ch)
 		}
 	}()
 	return errCh
@@ -347,6 +339,15 @@ func NewRuntimeProxy(addrs []string, connectionTimout time.Duration, hook func()
 	runtimeapi.RegisterImageServiceServer(r.server, r)
 
 	return r, nil
+}
+
+func (r *RuntimeProxy) fixStreamingUrl(url string) string {
+	if strings.HasPrefix(url, "/") {
+		// XXX: FIXME!!! Don't hardcode!
+		// 10.192.0.3 is only for testing w/kubeadm-dind-cluster (kube-node-1)
+		return "http://10.192.0.3:10999" + url
+	}
+	return url
 }
 
 func (r *RuntimeProxy) Serve(addr string, readyCh chan struct{}) error {
@@ -767,6 +768,7 @@ func (r *RuntimeProxy) Exec(ctx context.Context, in *runtimeapi.ExecRequest) (*r
 		return nil, client.handleError(err, false)
 	}
 
+	resp.Url = r.fixStreamingUrl(resp.Url)
 	glog.V(3).Infof("LEAVE: Exec() [%s]: %s", client.id, spew.Sdump(resp))
 	return resp, nil
 }
@@ -787,6 +789,7 @@ func (r *RuntimeProxy) Attach(ctx context.Context, in *runtimeapi.AttachRequest)
 		return nil, client.handleError(err, false)
 	}
 
+	resp.Url = r.fixStreamingUrl(resp.Url)
 	glog.V(3).Infof("LEAVE: Attach() [%s]: %s", client.id, spew.Sdump(resp))
 	return resp, nil
 }
@@ -807,6 +810,7 @@ func (r *RuntimeProxy) PortForward(ctx context.Context, in *runtimeapi.PortForwa
 		return nil, client.handleError(err, false)
 	}
 
+	resp.Url = r.fixStreamingUrl(resp.Url)
 	glog.V(3).Infof("LEAVE: PortForward() [%s]: %s", client.id, spew.Sdump(resp))
 	return resp, nil
 }

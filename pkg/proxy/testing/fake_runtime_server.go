@@ -40,8 +40,8 @@ import (
 	"sync"
 	"time"
 
+	runtimeapi "github.com/Mirantis/criproxy/pkg/runtimeapi/v1_7"
 	"golang.org/x/net/context"
-	runtimeapi "k8s.io/kubernetes/pkg/kubelet/apis/cri/v1alpha1/runtime"
 )
 
 var (

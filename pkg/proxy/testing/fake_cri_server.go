@@ -21,8 +21,8 @@ import (
 	"os"
 	"syscall"
 
+	runtimeapi "github.com/Mirantis/criproxy/pkg/runtimeapi/v1_7"
 	"google.golang.org/grpc"
-	runtimeapi "k8s.io/kubernetes/pkg/kubelet/apis/cri/v1alpha1/runtime"
 )
 
 type FakeCriServer struct {
