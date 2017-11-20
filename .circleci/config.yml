@@ -51,16 +51,24 @@ workflows:
     jobs:
     - build:
         filters:
-          # tags:
-          #   only: /^v[0-9].*/
+          tags:
+            # FIXME: v0.0.2 tag has triggered a CircleCI problem but we can't
+            # delete it yet, to let's exclude it for now. Use simpler
+            # regexp when Virtlet is updated.
+            # only: /^v[0-9].*/
+            only: /v[^0].*|v0\.[^0].*|v0\.0\.[^0][0-9].*|v0\.0\.[3-9]/
           branches:
             only: /.*/
     - publish:
         requires:
         - build
         filters:
-          # tags:
-          #   only: /^v[0-9].*/
+          tags:
+            # FIXME: v0.0.2 tag has triggered a CircleCI problem but we can't
+            # delete it yet, to let's exclude it for now. Use simpler
+            # regexp when Virtlet is updated.
+            # only: /^v[0-9].*/
+            only: /v[^0].*|v0\.[^0].*|v0\.0\.[^0][0-9].*|v0\.0\.[3-9]/
           branches:
             ignore: /.*/
 
