@@ -1,4 +1,4 @@
-#!/bin/sh -x
+#!/bin/sh
 # see: dh_installdeb(1)
 
 set -o errexit
@@ -28,9 +28,11 @@ case "$1" in
             fi
         fi
         cp -r "${kubelet_service_file}" /etc/systemd/system/dockershim.service
-        if [ -d /etc/systemd/system/kubelet.service.d ]; then
+        # only copy the dir if it's non-empty
+        if [ -d /etc/systemd/system/kubelet.service.d && $(ls -A "/etc/systemd/system/kubelet.service.d") ]; then
             cp -r /etc/systemd/system/kubelet.service.d /etc/systemd/system/dockershim.service.d
             rm -f /etc/systemd/system/dockershim.service.d/99-criproxy.conf
+            sed -i 's@\(ExecStart.*kubelet\)@\1 --experimental-dockershim --port 11250@' /etc/systemd/system/dockershim.service.d/*
         fi
         sed -i 's@\(ExecStart.*kubelet\)@\1 --experimental-dockershim --port 11250@' /etc/systemd/system/dockershim.service
         # FIXME: this is temporary hack before 'hyperkube kubelet --experimental-dockershim'
