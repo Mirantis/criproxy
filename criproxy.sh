@@ -7,12 +7,12 @@ set -o errtrace
 api_version=1.8
 version_str=
 if hash kubectl 2>/dev/null; then
-    version_str="$(kubectl --version)"
+    version_str="$(kubectl version --short --client)"
 elif hash hyperkube 2>/dev/null; then
-    version_str="$(hyperkube kubectl --version)"
+    version_str="$(hyperkube --version)"
 elif [[ -x /k8s/hyperkube ]]; then
     # kubeadm-dind-cluster
-    version_str="$(/k8s/hyperkube kubectl --version)"
+    version_str="$(/k8s/hyperkube --version)"
 fi
     
 if [[ ${version_str} =~ v1\.7\. ]]; then
