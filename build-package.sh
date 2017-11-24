@@ -12,7 +12,7 @@ go build 1>&2
 
 # https://www.debian.org/doc/manuals/maint-guide/update.en.html#idm3360
 date="$(LANG=C date -R)"
-version="$(git describe 2>/dev/null | sed 's/[^0-9.]//g' || true)"
+version="$(git describe 2>/dev/null | sed 's/^v\|-g.*//g' || true)"
 version="${version:-0.0.0}"
 author="Ivan Shvedunov <ishvedunov@mirantis.com>"
 

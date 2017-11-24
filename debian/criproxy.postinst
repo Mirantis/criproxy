@@ -1,4 +1,4 @@
-#!/bin/sh -x
+#!/bin/bash
 # see: dh_installdeb(1)
 
 set -o errexit
@@ -16,35 +16,47 @@ set -o nounset
 # for details, see http://www.debian.org/doc/debian-policy/ or
 # the debian-policy package
 
+function make_dochershim_service {
+    kubelet_service_file=/lib/systemd/system/kubelet.service
+    if [[ ! -f ${kubelet_service_file} ]]; then
+        kubelet_service_file=/etc/systemd/system/kubelet.service
+        if [[ ! -f ${kubelet_service_file} ]]; then
+            echo "can't find kubelet.service" >&2
+            exit 1
+        fi
+    fi
+    cp -r "${kubelet_service_file}" /etc/systemd/system/dockershim.service
+    # only copy the dir if it's non-empty
+    if [[ -d /etc/systemd/system/kubelet.service.d && $(ls -A "/etc/systemd/system/kubelet.service.d") ]]; then
+        cp -r /etc/systemd/system/kubelet.service.d /etc/systemd/system/dockershim.service.d
+        rm -f /etc/systemd/system/dockershim.service.d/99-criproxy.conf
+        if [[ $(ls -A "/etc/systemd/system/dockershim.service.d") ]]; then
+            sed -i 's@\(ExecStart.*kubelet\)@\1 --experimental-dockershim --port 11250@' /etc/systemd/system/dockershim.service.d/*
+        fi
+    fi
+    sed -i 's@\(ExecStart.*kubelet\)@\1 --experimental-dockershim --port 11250@' /etc/systemd/system/dockershim.service
+}
 
-case "$1" in
-    configure)
-        kubelet_service_file=/lib/systemd/system/kubelet.service
-        if [ ! -f ${kubelet_service_file} ]; then
-            kubelet_service_file=/lib/systemd/system/kubelet.service
-            if [ ! -f ${kubelet_service_file} ]; then
-                echo "can't find kubelet.service" >&2
-                exit 1
-            fi
-        fi
-        cp -r "${kubelet_service_file}" /etc/systemd/system/dockershim.service
-        if [ -d /etc/systemd/system/kubelet.service.d ]; then
-            cp -r /etc/systemd/system/kubelet.service.d /etc/systemd/system/dockershim.service.d
-            rm -f /etc/systemd/system/dockershim.service.d/99-criproxy.conf
-        fi
-        sed -i 's@\(ExecStart.*kubelet\)@\1 --experimental-dockershim --port 11250@' /etc/systemd/system/dockershim.service
-        # FIXME: this is temporary hack before 'hyperkube kubelet --experimental-dockershim'
-        # fix lands in k8s 1.7 and k8s 1.8. See k8s issues / PRs:
-        # https://github.com/kubernetes/kubernetes/issues/54424
-        # https://github.com/kubernetes/kubernetes/pull/55250
-        # https://github.com/kubernetes/kubernetes/pull/55335
-        if [ -d /dind -a -x /k8s/hyperkube ]; then
-            k8s_version="$(/k8s/hyperkube --version|awk '{print $2}')"
+# FIXME: this is temporary hack because 'hyperkube kubelet --experimental-dockershim'
+# used to be broken. The fix is included in k8s 1.8.4 and will be included in k8s 1.7.11.
+# PR link: https://github.com/kubernetes/kubernetes/pull/55335
+function ensure_dockershim_in_kubelet {
+    if [[ -d /dind && -x /k8s/hyperkube && $(/k8s/hyperkube --version | awk '{print $2}') =~ (v[0-9]+\.[0-9]+\.[0-9]+)($|^[0-9]) ]]; then
+        k8s_version="${BASH_REMATCH[1]}"
+        if [[ $((echo "${k8s_version}"; echo v1.8.4 ) | sort -V | head -1) != v1.8.4 ]]; then
             rm -f /usr/bin/kubelet
             curl "https://storage.googleapis.com/kubernetes-release/release/${k8s_version}/bin/linux/amd64/kubelet" >/usr/bin/kubelet
             chmod +x /usr/bin/kubelet
             sed -i 's@ExecStart=/k8s/hyperkube kubelet@ExecStart=/usr/bin/kubelet@' /etc/systemd/system/dockershim.service
         fi
+    fi
+    return 0
+}
+
+case "$1" in
+    configure)
+        make_dochershim_service
+        ensure_dockershim_in_kubelet
         systemctl stop kubelet
         systemctl daemon-reload
         systemctl enable dockershim criproxy
