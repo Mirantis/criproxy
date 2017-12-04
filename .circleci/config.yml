@@ -23,7 +23,7 @@ jobs:
         name: Run tests
         command: |
           cd /go/src/github.com/Mirantis/criproxy
-          go test -v ./pkg/...
+          go test -race -v ./pkg/...
     - persist_to_workspace:
         root: /go/src/github.com/Mirantis/criproxy/_output
         paths:
