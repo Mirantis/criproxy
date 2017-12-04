@@ -206,7 +206,7 @@ func (r *RuntimeProxy) passToPrimary(ctx context.Context, method string, req, re
 	if err != nil {
 		return nil, err
 	}
-	return client.invoke(ctx, method, req, resp)
+	return client.invokeWithErrorHandling(ctx, method, req, resp)
 }
 
 func (r *RuntimeProxy) updateRuntimeConfig(ctx context.Context, method string, req, resp CRIObject) (interface{}, error) {
@@ -333,7 +333,7 @@ func (r *RuntimeProxy) invokePodSandboxMethod(ctx context.Context, method string
 		return nil, err
 	}
 	in.SetPodSandboxId(unprefixed)
-	_, err = client.invoke(ctx, method, req, resp)
+	_, err = client.invokeWithErrorHandling(ctx, method, req, resp)
 	return client, err
 }
 
@@ -345,7 +345,7 @@ func (r *RuntimeProxy) invokeContainerMethod(ctx context.Context, method string,
 	}
 	in.SetContainerId(unprefixed)
 
-	_, err = client.invoke(ctx, method, req, resp)
+	_, err = client.invokeWithErrorHandling(ctx, method, req, resp)
 	return client, err
 
 }
@@ -355,7 +355,7 @@ func (r *RuntimeProxy) runPodSandbox(ctx context.Context, method string, req, re
 	if err != nil {
 		return nil, err
 	}
-	if _, err = client.invoke(ctx, method, req, resp); err == nil {
+	if _, err = client.invokeWithErrorHandling(ctx, method, req, resp); err == nil {
 		out := resp.(RunPodSandboxResponse)
 		out.SetPodSandboxId(client.augmentId(out.PodSandboxId()))
 	}
@@ -404,7 +404,7 @@ func (r *RuntimeProxy) createContainer(ctx context.Context, method string, req, 
 	}
 	in.SetImage(unprefixedImage)
 
-	_, err = client.invoke(ctx, method, req, resp)
+	_, err = client.invokeWithErrorHandling(ctx, method, req, resp)
 	if err != nil {
 		return nil, err
 	}
@@ -456,7 +456,7 @@ func (r *RuntimeProxy) handleImage(ctx context.Context, method string, req, resp
 	}
 	in.SetImage(unprefixed)
 
-	_, err = client.invoke(ctx, method, req, resp)
+	_, err = client.invokeWithErrorHandling(ctx, method, req, resp)
 	if err != nil {
 		return nil, err
 	}

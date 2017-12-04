@@ -17,6 +17,7 @@ limitations under the License.
 package proxy
 
 import (
+	"errors"
 	"fmt"
 	"strings"
 	"sync"
@@ -39,6 +40,9 @@ const (
 	clientStateConnected
 	versionRequestMethod = "/runtime.RuntimeService/Version"
 )
+
+var errNotConnected = errors.New("not connected")
+var errOldConnection = errors.New("the request was made on an old closed connection")
 
 type apiClient struct {
 	sync.Mutex
@@ -91,15 +95,15 @@ func (c *apiClient) connectNonLocked() chan error {
 	c.state = clientStateConnecting
 	go func() {
 		glog.V(1).Infof("Connecting to runtime service %s", c.addr)
+		var conn *grpc.ClientConn
 		if err := utils.WaitForSocket(c.addr, -1, func() error {
 			var err error
-			c.conn, err = grpc.Dial(c.addr, grpc.WithInsecure(), grpc.WithTimeout(c.connectionTimeout), grpc.WithDialer(utils.Dial))
+			conn, err = grpc.Dial(c.addr, grpc.WithInsecure(), grpc.WithTimeout(c.connectionTimeout), grpc.WithDialer(utils.Dial))
 			if err == nil {
 				ctx, _ := context.WithTimeout(context.Background(), c.connectionTimeout)
 				pReq, pResp := c.criVersion.ProbeRequest()
-				if err := grpc.Invoke(ctx, versionRequestMethod, pReq, pResp, c.conn); err != nil {
-					c.conn.Close()
-					c.conn = nil
+				if err = grpc.Invoke(ctx, versionRequestMethod, pReq, pResp, conn); err != nil {
+					conn.Close()
 				}
 			}
 			return err
@@ -116,6 +120,7 @@ func (c *apiClient) connectNonLocked() chan error {
 		defer c.Unlock()
 		glog.V(1).Infof("Connected to runtime service %s", c.addr)
 		c.state = clientStateConnected
+		c.conn = conn
 
 		for _, ch := range c.connectErrChs {
 			ch <- nil
@@ -270,7 +275,40 @@ func (c *apiClient) addPrefix(criObject CRIObject) CRIObject {
 	}
 }
 
+func (c *apiClient) getConn() (*grpc.ClientConn, error) {
+	c.Lock()
+	defer c.Unlock()
+	if c.state != clientStateConnected {
+		return nil, errNotConnected
+	}
+	return c.conn, nil
+}
+
 func (c *apiClient) invoke(ctx context.Context, method string, req, resp CRIObject) (CRIObject, error) {
-	err := grpc.Invoke(ctx, method, req.Unwrap(), resp.Unwrap(), c.conn)
+	conn, err := c.getConn()
+	if err != nil {
+		return nil, err
+	}
+	err = conn.Invoke(ctx, method, req.Unwrap(), resp.Unwrap())
+	if grpc.Code(err) == codes.Unavailable {
+		c.Lock()
+		defer c.Unlock()
+		if conn != c.conn {
+			// do not close the current connection if the request is related
+			// to a previously closed one
+			err = errOldConnection
+		}
+	}
 	return resp, err
 }
+
+func (c *apiClient) invokeWithErrorHandling(ctx context.Context, method string, req, resp CRIObject) (CRIObject, error) {
+	err := c.conn.Invoke(ctx, method, req.Unwrap(), resp.Unwrap())
+	if err != nil {
+		err = c.handleError(err, false)
+	}
+	return resp, err
+
+}
+
+// TODO: handle grpc's ClientTransport.Error() to reconnect
