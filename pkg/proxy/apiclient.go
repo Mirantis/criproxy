@@ -120,6 +120,7 @@ func (c *apiClient) connectNonLocked() chan error {
 		for _, ch := range c.connectErrChs {
 			ch <- nil
 		}
+		c.connectErrChs = nil
 	}()
 	return errCh
 }
