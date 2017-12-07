@@ -6,7 +6,7 @@ ENV DEBIAN_FRONTEND noninteractive
 
 RUN apt-get update -y && \
     apt-get -yy -q install --no-install-recommends --no-install-suggests --fix-missing \
-      dpkg-dev build-essential debhelper dh-systemd && \
+      dpkg-dev build-essential debhelper dh-systemd socat && \
     apt-get upgrade -y && \
     apt-get autoremove -y && \
     apt-get clean && \
