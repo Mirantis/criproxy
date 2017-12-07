@@ -1,4 +1,4 @@
-# CRI Proxy
+# CRI Proxy [![CircleCI](https://circleci.com/gh/Mirantis/criproxy/tree/master.svg?style=svg)](https://circleci.com/gh/Mirantis/criproxy/tree/master)
 
 CRI Proxy makes it possible to run several CRI implementations on the
 same node and run CRI implementations inside pods. CRI Proxy is
