@@ -13,19 +13,24 @@ if [[ ! ${CRIPROXY_DEB_URL:-} && ! ${CRIPROXY_DEB:-} ]]; then
   exit 1
 fi
 
-function step {
-  local OPTS=""
-  if [ "$1" = "-n" ]; then
-    shift
-    OPTS+="-n"
-  fi
-  GREEN="$1"
-  shift
+function msg {
+  local color="${1}"
+  local text="${2}"
+  shift 2
   if [ -t 2 ] ; then
-    echo -e ${OPTS} "\x1B[97m* \x1B[92m${GREEN}\x1B[39m $*" >&2
+    echo -e "\x1B[97m* \x1B[${color}m${text}\x1B[39m $*" >&2
   else
-    echo ${OPTS} "* ${GREEN} $*" >&2
+    echo "* ${text} $*" >&2
   fi
+}
+
+function step {
+  msg 92 "$@"
+}
+
+function error {
+  msg 91 "ERROR $*"
+  status=1
 }
 
 function wait-for {
@@ -77,11 +82,12 @@ set -o nounset
 set -o pipefail
 set -o errtrace
 
-apt-get update
-apt-get install -y software-properties-common
+export DEBIAN_FRONTEND=noninteractive
+apt-get update -qq
+apt-get install -qqy software-properties-common
 add-apt-repository -y ppa:projectatomic/ppa
-apt-get update
-apt-get install -y cri-o
+apt-get update -qq
+apt-get install -qqy cri-o
 
 mkdir -p /etc/sysconfig
 echo 'CRIO_STORAGE_OPTIONS=--root /dind/crio --cgroup-manager cgroupfs' >/etc/sysconfig/crio-storage
@@ -106,23 +112,19 @@ if ! ("${kubectl}" run bbtest-crio --attach \
         --restart=Never -- \
         /bin/sh -c 'while true; do echo "this-is-crio-pod"; sleep 1; done' || true) |
         grep --line-buffered -m 1 this-is-crio-pod; then
-  echo "Failed to verify bbtest-crio pod" >&2
-  status=1
+  error "Failed to verify bbtest-crio pod"
 fi
 
 if ! "${kubectl}" logs bbtest-crio | grep -q this-is-crio-pod; then
-  echo "kubectl logs failed on bbtest-crio pod or didn't get this-is-crio-pod in its output" >&2
-  status=1
+  error "kubectl logs failed on bbtest-crio pod or didn't get this-is-crio-pod in its output"
 fi
 
 if ! docker exec kube-node-1 crioctl pod list | grep bbtest-crio; then
-  echo "Failed to find bbtest-crio pod among CRI-O pods" >&2
-  status=1
+  error "Failed to find bbtest-crio pod among CRI-O pods"
 fi
 
 if docker exec kube-node-1 docker ps -a | grep bbtest-crio; then
-  echo "Error: found CRI-O pod's container among docker containers" >&2
-  status=1
+  error "Error: found CRI-O pod's container among docker containers"
 fi
 
 step "Starting and verifying busybox pod using docker"
@@ -134,33 +136,27 @@ if ! ("${kubectl}" run bbtest-docker --attach \
         --restart=Never -- \
         /bin/sh -c 'while true; do echo "this-is-docker-pod"; sleep 1; done' || true) |
         grep --line-buffered -q this-is-docker-pod; then
-  echo "Failed to verify bbtest-docker pod" >&2
-  status=1
+  error "Failed to verify bbtest-docker pod"
 fi
 
 if ! "${kubectl}" logs bbtest-docker | grep -q this-is-docker-pod; then
-  echo "kubectl logs failed on bbtest-docker pod or didn't get this-is-docker-pod in its output" >&2
-  status=1
+  error "kubectl logs failed on bbtest-docker pod or didn't get this-is-docker-pod in its output"
 fi
 
 if docker exec kube-node-1 crioctl pod list | grep bbtest-docker; then
-  echo "Error: found docker pod in CRI-O pod list" >&2
-  status=1
+  error "Error: found docker pod in CRI-O pod list"
 fi
 
 if ! docker exec kube-node-1 docker ps -a | grep bbtest-docker; then
-  echo "Didn't find docker pod's container among docker containers" >&2
-  status=1
+  error "Didn't find docker pod's container among docker containers"
 fi
 
 step "Verifying pod listing"
 if ! "${kubectl}" get pods | grep bbtest-crio; then
-  echo "Failed to verify bbtest-crio pod" >&2
-  status=1
+  error "Failed to verify bbtest-crio pod"
 fi
 if ! "${kubectl}" get pods | grep bbtest-docker; then
-  echo "Failed to verify bbtest-docker pod" >&2
-  status=1
+  error "Failed to verify bbtest-docker pod"
 fi
 
 step "Deleting bbtest-crio pod"
