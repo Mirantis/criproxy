@@ -2,7 +2,7 @@ version: 2
 jobs:
   build:
     docker:
-    - image: ishvedunov/criproxy-build:0.0.1
+    - image: ishvedunov/criproxy-build:0.0.2
     steps:
     - checkout
     - run:
@@ -35,7 +35,7 @@ jobs:
 
   publish:
     docker:
-    - image: ishvedunov/criproxy-build:0.0.1
+    - image: ishvedunov/criproxy-build:0.0.2
     steps:
     - checkout
     - attach_workspace:
@@ -45,6 +45,45 @@ jobs:
         command: |
           ghr -u Mirantis -delete "${CIRCLE_TAG}" _output/
 
+  deployment-test:
+    environment:
+      DOCKER_VERSION: "17.03.0-ce"
+      KUBECTL_VERSION: "v1.8.4"
+      KUBECTL_SHA1: "8e2314db816b9b4465c5f713c1152cb0603db15e"
+    docker:
+    - image: ishvedunov/criproxy-build:0.0.2
+    steps:
+    - setup-remote-docker
+    - checkout
+    - run:
+        name: Set up the environment
+        command: |
+          # Install Docker client
+          curl -sSL -o "/tmp/docker-${DOCKER_VERSION}.tgz" "https://get.docker.com/builds/Linux/x86_64/docker-${DOCKER_VERSION}.tgz"
+          tar -xz -C /tmp -f "/tmp/docker-${DOCKER_VERSION}.tgz"
+          mv /tmp/docker/* /usr/bin
+
+          # Start port forwarder
+          ./portforward.sh start
+    - attach_workspace:
+        at: _output
+    - run:
+        name: install kubectl
+        command: |
+          curl -L https://storage.googleapis.com/kubernetes-release/release/${KUBECTL_VERSION}/bin/linux/amd64/kubectl -o /usr/local/bin/kubectl
+          echo ${KUBECTL_SHA1} /usr/local/bin/kubectl |sha1sum -c
+          chmod +x /usr/local/bin/kubectl
+    - run:
+        name: Run deployment test script
+        # FIXME: extra "$(...)" is needed because globbing fails
+        # in this CircleCI command for some reason
+        command: |
+          ./portforward.sh 8080&
+          # FIXME: rm this ls -l
+          SKIP_SNAPSHOT=1 \
+            CRIPROXY_DEB="$(echo "${PWD}"/_output/criproxy*nodeps*.deb)" \
+            ./deployment-test.sh
+
 workflows:
   version: 2
   build-test-and-publish:
@@ -52,23 +91,24 @@ workflows:
     - build:
         filters:
           tags:
-            # FIXME: v0.0.2 tag has triggered a CircleCI problem but we can't
-            # delete it yet, to let's exclude it for now. Use simpler
-            # regexp when Virtlet is updated.
-            # only: /^v[0-9].*/
-            only: /v[^0].*|v0\.[^0].*|v0\.0\.[^0][0-9].*|v0\.0\.[3-9]/
+            only: /^v.*/
           branches:
             only: /.*/
-    - publish:
+    - deployment-test:
         requires:
         - build
         filters:
           tags:
-            # FIXME: v0.0.2 tag has triggered a CircleCI problem but we can't
-            # delete it yet, to let's exclude it for now. Use simpler
-            # regexp when Virtlet is updated.
-            # only: /^v[0-9].*/
-            only: /v[^0].*|v0\.[^0].*|v0\.0\.[^0][0-9].*|v0\.0\.[3-9]/
+            only: /^v.*/
+          branches:
+            only: /.*/
+
+    - publish:
+        requires:
+        - build
+        - deployment-test
+        filters:
+          tags:
+            only: /v.*/
           branches:
             ignore: /.*/
-
