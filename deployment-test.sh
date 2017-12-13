@@ -108,7 +108,7 @@ step "Starting and verifying busybox pod using CRI-O"
 # successful if it displays the message though
 if ! ("${kubectl}" run bbtest-crio --attach \
         --overrides='{"metadata": {"annotations":{"kubernetes.io/target-runtime":"cri.o"}}}' \
-        --image=cri.o/busybox \
+        --image=cri.o/docker.io/busybox \
         --restart=Never -- \
         /bin/sh -c 'while true; do echo "this-is-crio-pod"; sleep 1; done' || true) |
         grep --line-buffered -m 1 this-is-crio-pod; then
@@ -132,7 +132,7 @@ step "Starting and verifying busybox pod using docker"
 # with a non-zero status, thus '|| true'. It can be considered
 # successful if it displays the message though
 if ! ("${kubectl}" run bbtest-docker --attach \
-        --image=busybox \
+        --image=docker.io/busybox \
         --restart=Never -- \
         /bin/sh -c 'while true; do echo "this-is-docker-pod"; sleep 1; done' || true) |
         grep --line-buffered -q this-is-docker-pod; then
