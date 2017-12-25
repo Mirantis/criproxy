@@ -4,6 +4,13 @@ set -o nounset
 set -o pipefail
 set -o errtrace
 
+if [ $(uname) = Darwin ]; then
+  readlinkf(){ perl -MCwd -e 'print Cwd::abs_path shift' "$1";}
+else
+  readlinkf(){ readlink -f "$1"; }
+fi
+TEST_DIR="$(cd $(dirname "$(readlinkf "${BASH_SOURCE}")"); pwd)"
+
 kubectl="${HOME}/.kubeadm-dind-cluster/kubectl"
 dind_script="dind-cluster-v1.8.sh"
 status=0
@@ -62,7 +69,7 @@ step "Starting kubeadm-dind-cluster"
 
 # Uncomment to have the cluster cleaned up.  Currently we're not doing
 # it as it slows down local debugging.
-# "./${dind_script}" clean use
+# "./${dind_script}" clean
 
 # Use single-worker cluster so as to have all the pods w/o tolerations
 # scheduled on kube-node-1
@@ -75,23 +82,26 @@ else
   docker cp "${CRIPROXY_DEB}" kube-node-1:/criproxy.deb
 fi
 
-step "Installing criproxy and cri-o on the node"
+step "Copying cri-o files to the node"
+docker exec -i kube-node-1 tar -C / -xvz </crio.tar.gz
+docker cp "${TEST_DIR}"/crio.service kube-node-1:/etc/systemd/system
+
+step "Setting up criproxy and cri-o on the node"
 docker exec -i kube-node-1 /bin/bash -s <<EOF
 set -o errexit
 set -o nounset
 set -o pipefail
 set -o errtrace
 
+# FIXME: scopeo-containers package contains just a few files which we should
+# probably just include with criproxy
 export DEBIAN_FRONTEND=noninteractive
 apt-get update -qq
-apt-get install -qqy software-properties-common
+apt-get install -qqy software-properties-common libgpgme11
 add-apt-repository -y ppa:projectatomic/ppa
 apt-get update -qq
-apt-get install -qqy cri-o
+apt-get install -qqy skopeo-containers
 
-mkdir -p /etc/sysconfig
-echo 'CRIO_STORAGE_OPTIONS=--root /dind/crio --cgroup-manager cgroupfs' >/etc/sysconfig/crio-storage
-echo 'CRIO_NETWORK_OPTIONS=--cni-config-dir /etc/cni/net.d --cni-plugin-dir /opt/cni/bin' >/etc/sysconfig/crio-network
 systemctl enable crio
 systemctl start crio
 
