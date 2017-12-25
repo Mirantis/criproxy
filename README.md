@@ -148,11 +148,14 @@ Let's say CRI proxy is started as follows:
 `-v` option of `criproxy` controls the verbosity here. 0-1 means some
 very basic logging during startup and displaying serious errors, 2 is
 the same as 1 plus logging of CRI request errors and 3 causes dumping
-of actual CRI requests and responses except for `ListPodSandbox`,
-`ListContainers` and `ListImages` requests in addition to what's
-logged on level 2. Level 4 adds dumping `List*` requests which may
-cause the log to grow fast. `--log-opt` docker option controls the
-maximum size of the docker log for CRI proxy container.
+of actual CRI requests and responses except for noisy `List*` and pod
+container/status requests in addition to what's logged on level 2, so
+on level 3 most of the output consists mostly of requests that change
+the state of the runtime. Level 4 enables dumping of pod / container
+status requests. Level 5 adds dumping `List*` requests which may cause
+the log to grow fast. See
+[fixing log throttling](#fixing-log-throttling) below if you're
+starting CRI proxy using systemd with log level set to 3 or higher.
 
 `-alsologtostderr` directs logging output to stderr (it's part of glog configuration)
 
@@ -214,3 +217,26 @@ virtlet this means downloading QCOW2 image from
 In order to distinguish between runtimes during requests that don't
 include image name or pod annotations such as `RemovePodSandbox`, CRI
 proxy adds prefixes to pod and container ids returned by the runtimes.
+
+## <a name="fixing-log-throttling"></a>Fixing log throttling
+
+If you're using log level 3 or higher, journald may throttle CRI Proxy
+logs. If this is the case, you'll see some delays when checking CRI
+Proxy logs with commands like `journalctl -xef -u criproxy`. In order
+to work around this issue, you need to disable journald's rate
+limiter. To do so, add the following line to
+`/etc/systemd/journald.conf` (if it already has `RateLimitInterval=...`
+line, you just need to change the value to 0)
+
+```
+RateLimitInterval=0
+```
+
+And then restart journald:
+```
+systemctl restart systemd-journald
+```
+
+See
+[this post](https://www.rootusers.com/how-to-change-log-rate-limiting-in-linux/)
+for more info on the issue.

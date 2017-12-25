@@ -33,6 +33,13 @@ import (
 	"google.golang.org/grpc"
 )
 
+const (
+	criErrorLogLevel   = 2
+	criRequestLogLevel = 3
+	criNoisyLogLevel   = 4
+	criListLogLevel    = 5
+)
+
 // RuntimeProxy is a gRPC implementation of internalapi.RuntimeService.
 type RuntimeProxy struct {
 	criVersion CRIVersion
@@ -42,7 +49,12 @@ type RuntimeProxy struct {
 	clients    []*apiClient
 }
 
-type methodInterceptor func(r *RuntimeProxy, ctx context.Context, method string, req, resp CRIObject) (interface{}, error)
+type methodHandler func(r *RuntimeProxy, ctx context.Context, method string, req, resp CRIObject) (interface{}, error)
+
+type dispatchItem struct {
+	handler  methodHandler
+	logLevel glog.Level
+}
 
 // NewRuntimeProxy creates a new internalapi.RuntimeService.
 func NewRuntimeProxy(criVersion CRIVersion, addrs []string, connectionTimout time.Duration, streamUrl *url.URL, hook func()) (*RuntimeProxy, error) {
@@ -97,34 +109,33 @@ func (r *RuntimeProxy) Stop() {
 }
 
 func (r *RuntimeProxy) intercept(ctx context.Context, req interface{}, info *grpc.UnaryServerInfo, handler grpc.UnaryHandler) (interface{}, error) {
-	if glog.V(3) {
+	var err error
+	defer func() {
+		if err != nil {
+			glog.V(criErrorLogLevel).Infof("FAIL: %s(): %v", err)
+		}
+	}()
+	dispatchItem, found := dispatchTable[info.FullMethod]
+	if !found {
+		err = fmt.Errorf("no handler for method %q", info.FullMethod) // make it logged in defer
+		return nil, err
+	}
+	if glog.V(dispatchItem.logLevel) {
 		glog.Infof("ENTER: %s(): %s", info.FullMethod, dump(req))
 	}
-	resp, err := r.doIntercept(ctx, req, info.FullMethod)
-	switch {
-	case err == nil:
-		glog.Infof("LEAVE: %s(): %s", info.FullMethod, dump(resp))
-	case bool(glog.V(2)):
-		glog.Infof("FAIL: %s(): %v", info.FullMethod, err)
-	}
-	return resp, err
-}
-
-func (r *RuntimeProxy) doIntercept(ctx context.Context, req interface{}, method string) (interface{}, error) {
 	wrappedReq, wrappedResp, err := r.criVersion.WrapObject(req)
 	if err != nil {
 		return nil, err
 	}
-	proxyHandler, found := dispatchTable[method]
-	if !found {
-		return nil, fmt.Errorf("no handler for method %q", method)
-	}
-	resp, err := proxyHandler(r, ctx, method, wrappedReq, wrappedResp)
+	resp, err := dispatchItem.handler(r, ctx, info.FullMethod, wrappedReq, wrappedResp)
 	if err != nil {
 		return nil, err
 	}
 	if wrappedResp, ok := resp.(CRIObject); ok {
-		return wrappedResp.Unwrap(), nil
+		resp = wrappedResp.Unwrap()
+	}
+	if glog.V(dispatchItem.logLevel) {
+		glog.Infof("ENTER: %s(): %s", info.FullMethod, dump(resp))
 	}
 	return resp, nil
 }
@@ -472,33 +483,33 @@ func (r *RuntimeProxy) handleImage(ctx context.Context, method string, req, resp
 	return resp, err
 }
 
-var dispatchTable = map[string]methodInterceptor{
-	"/runtime.RuntimeService/Version":                  (*RuntimeProxy).passToPrimary,
-	"/runtime.RuntimeService/Status":                   (*RuntimeProxy).passToPrimary,
-	"/runtime.RuntimeService/UpdateRuntimeConfig":      (*RuntimeProxy).updateRuntimeConfig,
-	"/runtime.RuntimeService/RunPodSandbox":            (*RuntimeProxy).runPodSandbox,
-	"/runtime.RuntimeService/ListPodSandbox":           (*RuntimeProxy).listObjects,
-	"/runtime.RuntimeService/StopPodSandbox":           (*RuntimeProxy).handlePodSandbox,
-	"/runtime.RuntimeService/RemovePodSandbox":         (*RuntimeProxy).handlePodSandbox,
-	"/runtime.RuntimeService/PodSandboxStatus":         (*RuntimeProxy).podSandboxStatus,
-	"/runtime.RuntimeService/CreateContainer":          (*RuntimeProxy).createContainer,
-	"/runtime.RuntimeService/ListContainers":           (*RuntimeProxy).listObjects,
-	"/runtime.RuntimeService/ListContainerStats":       (*RuntimeProxy).listObjects,
-	"/runtime.RuntimeService/StartContainer":           (*RuntimeProxy).handleContainer,
-	"/runtime.RuntimeService/StopContainer":            (*RuntimeProxy).handleContainer,
-	"/runtime.RuntimeService/RemoveContainer":          (*RuntimeProxy).handleContainer,
-	"/runtime.RuntimeService/ContainerStatus":          (*RuntimeProxy).containerStatus,
-	"/runtime.RuntimeService/ContainerStats":           (*RuntimeProxy).containerStats,
-	"/runtime.RuntimeService/UpdateContainerResources": (*RuntimeProxy).handleContainer,
-	"/runtime.RuntimeService/ExecSync":                 (*RuntimeProxy).handleContainer,
-	"/runtime.RuntimeService/Exec":                     (*RuntimeProxy).handleContainer,
-	"/runtime.RuntimeService/Attach":                   (*RuntimeProxy).handleContainer,
-	"/runtime.RuntimeService/PortForward":              (*RuntimeProxy).handlePodSandbox,
-	"/runtime.ImageService/ListImages":                 (*RuntimeProxy).listObjects,
-	"/runtime.ImageService/ImageStatus":                (*RuntimeProxy).handleImage,
-	"/runtime.ImageService/PullImage":                  (*RuntimeProxy).handleImage,
-	"/runtime.ImageService/RemoveImage":                (*RuntimeProxy).handleImage,
-	"/runtime.ImageService/ImageFsInfo":                (*RuntimeProxy).listObjects,
+var dispatchTable = map[string]dispatchItem{
+	"/runtime.RuntimeService/Version":                  {(*RuntimeProxy).passToPrimary, criNoisyLogLevel},
+	"/runtime.RuntimeService/Status":                   {(*RuntimeProxy).passToPrimary, criNoisyLogLevel},
+	"/runtime.RuntimeService/UpdateRuntimeConfig":      {(*RuntimeProxy).updateRuntimeConfig, criRequestLogLevel},
+	"/runtime.RuntimeService/RunPodSandbox":            {(*RuntimeProxy).runPodSandbox, criRequestLogLevel},
+	"/runtime.RuntimeService/ListPodSandbox":           {(*RuntimeProxy).listObjects, criListLogLevel},
+	"/runtime.RuntimeService/StopPodSandbox":           {(*RuntimeProxy).handlePodSandbox, criRequestLogLevel},
+	"/runtime.RuntimeService/RemovePodSandbox":         {(*RuntimeProxy).handlePodSandbox, criRequestLogLevel},
+	"/runtime.RuntimeService/PodSandboxStatus":         {(*RuntimeProxy).podSandboxStatus, criNoisyLogLevel},
+	"/runtime.RuntimeService/CreateContainer":          {(*RuntimeProxy).createContainer, criRequestLogLevel},
+	"/runtime.RuntimeService/ListContainers":           {(*RuntimeProxy).listObjects, criListLogLevel},
+	"/runtime.RuntimeService/ListContainerStats":       {(*RuntimeProxy).listObjects, criListLogLevel},
+	"/runtime.RuntimeService/StartContainer":           {(*RuntimeProxy).handleContainer, criRequestLogLevel},
+	"/runtime.RuntimeService/StopContainer":            {(*RuntimeProxy).handleContainer, criRequestLogLevel},
+	"/runtime.RuntimeService/RemoveContainer":          {(*RuntimeProxy).handleContainer, criRequestLogLevel},
+	"/runtime.RuntimeService/ContainerStatus":          {(*RuntimeProxy).containerStatus, criNoisyLogLevel},
+	"/runtime.RuntimeService/ContainerStats":           {(*RuntimeProxy).containerStats, criNoisyLogLevel},
+	"/runtime.RuntimeService/UpdateContainerResources": {(*RuntimeProxy).handleContainer, criRequestLogLevel},
+	"/runtime.RuntimeService/ExecSync":                 {(*RuntimeProxy).handleContainer, criRequestLogLevel},
+	"/runtime.RuntimeService/Exec":                     {(*RuntimeProxy).handleContainer, criRequestLogLevel},
+	"/runtime.RuntimeService/Attach":                   {(*RuntimeProxy).handleContainer, criRequestLogLevel},
+	"/runtime.RuntimeService/PortForward":              {(*RuntimeProxy).handlePodSandbox, criRequestLogLevel},
+	"/runtime.ImageService/ListImages":                 {(*RuntimeProxy).listObjects, criListLogLevel},
+	"/runtime.ImageService/ImageStatus":                {(*RuntimeProxy).handleImage, criNoisyLogLevel},
+	"/runtime.ImageService/PullImage":                  {(*RuntimeProxy).handleImage, criRequestLogLevel},
+	"/runtime.ImageService/RemoveImage":                {(*RuntimeProxy).handleImage, criRequestLogLevel},
+	"/runtime.ImageService/ImageFsInfo":                {(*RuntimeProxy).listObjects, criRequestLogLevel},
 }
 
 var replaceRx = regexp.MustCompile(`\(\*(runtime.\w+)\)\(0x[0-9a-f]+\)`)
