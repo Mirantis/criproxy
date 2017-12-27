@@ -2,7 +2,7 @@ version: 2
 jobs:
   build:
     docker:
-    - image: ishvedunov/criproxy-build:0.0.2
+    - image: ishvedunov/criproxy-build:0.0.3
     steps:
     - checkout
     - run:
@@ -35,7 +35,7 @@ jobs:
 
   publish:
     docker:
-    - image: ishvedunov/criproxy-build:0.0.2
+    - image: ishvedunov/criproxy-build:0.0.3
     steps:
     - checkout
     - attach_workspace:
@@ -51,7 +51,7 @@ jobs:
       KUBECTL_VERSION: "v1.8.4"
       KUBECTL_SHA1: "8e2314db816b9b4465c5f713c1152cb0603db15e"
     docker:
-    - image: ishvedunov/criproxy-build:0.0.2
+    - image: ishvedunov/criproxy-build:0.0.3
     steps:
     - setup-remote-docker
     - checkout
@@ -64,7 +64,7 @@ jobs:
           mv /tmp/docker/* /usr/bin
 
           # Start port forwarder
-          ./portforward.sh start
+          test/portforward.sh start
     - attach_workspace:
         at: _output
     - run:
@@ -78,11 +78,11 @@ jobs:
         # FIXME: extra "$(...)" is needed because globbing fails
         # in this CircleCI command for some reason
         command: |
-          ./portforward.sh 8080&
+          test/portforward.sh 8080&
           # FIXME: rm this ls -l
           SKIP_SNAPSHOT=1 \
             CRIPROXY_DEB="$(echo "${PWD}"/_output/criproxy*nodeps*.deb)" \
-            ./deployment-test.sh
+            test/deployment-test.sh
 
 workflows:
   version: 2
