@@ -234,7 +234,10 @@ func (c *apiClient) prefixContainer(unprefixedContainer Container) Container {
 	container := unprefixedContainer.Copy()
 	container.SetId(c.augmentId(unprefixedContainer.Id()))
 	container.SetPodSandboxId(c.augmentId(unprefixedContainer.PodSandboxId()))
-	container.SetImage(c.imageName(unprefixedContainer.Image()))
+	// don't prefix digests
+	if _, err := digest.ParseDigest(unprefixedContainer.Image()); err != nil {
+		container.SetImage(c.imageName(unprefixedContainer.Image()))
+	}
 	return container
 }
 
