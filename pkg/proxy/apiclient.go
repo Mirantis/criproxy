@@ -289,8 +289,8 @@ func (c *apiClient) invoke(ctx context.Context, method string, req, resp CRIObje
 	if err != nil {
 		return nil, err
 	}
-	err = conn.Invoke(ctx, method, req.Unwrap(), resp.Unwrap())
-	if grpc.Code(err) == codes.Unavailable {
+
+	if err = grpc.Invoke(ctx, method, req.Unwrap(), resp.Unwrap(), conn); grpc.Code(err) == codes.Unavailable {
 		c.Lock()
 		defer c.Unlock()
 		if conn != c.conn {
@@ -303,12 +303,11 @@ func (c *apiClient) invoke(ctx context.Context, method string, req, resp CRIObje
 }
 
 func (c *apiClient) invokeWithErrorHandling(ctx context.Context, method string, req, resp CRIObject) (CRIObject, error) {
-	err := c.conn.Invoke(ctx, method, req.Unwrap(), resp.Unwrap())
+	err := grpc.Invoke(ctx, method, req.Unwrap(), resp.Unwrap(), c.conn)
 	if err != nil {
 		err = c.handleError(err, false)
 	}
 	return resp, err
-
 }
 
 // TODO: handle grpc's ClientTransport.Error() to reconnect
