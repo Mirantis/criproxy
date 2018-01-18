@@ -1219,6 +1219,22 @@ func TestCriProxy(t *testing.T) {
 			journal: []string{"2/image/ImageStatus"},
 		},
 		{
+			name:   "image status 2-3 with digest",
+			method: "/runtime.ImageService/ImageStatus",
+			in: &runtimeapi.ImageStatusRequest{
+				Image: &runtimeapi.ImageSpec{Image: "alt/image2-3/digest"},
+			},
+			resp: &runtimeapi.ImageStatusResponse{
+				Image: &runtimeapi.Image{
+					// sha256 of "image2-3"
+					Id:       "sha256:80f249cf98e79e376b13b75f52e9859daf6a6b4bade536be70fc14c2621913f0",
+					RepoTags: []string{"alt/image2-3"},
+					Size_:    fakeImageSize2,
+				},
+			},
+			journal: []string{"2/image/ImageStatus"},
+		},
+		{
 			name:   "nonexistent image status",
 			method: "/runtime.ImageService/ImageStatus",
 			in: &runtimeapi.ImageStatusRequest{

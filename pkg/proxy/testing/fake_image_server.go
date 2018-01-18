@@ -21,10 +21,12 @@ package testing
 import (
 	"math/rand"
 	"sort"
+	"strings"
 	"sync"
 	"time"
 
 	runtimeapi "github.com/Mirantis/criproxy/pkg/runtimeapi/v1_8"
+	"github.com/docker/distribution/digest"
 	"golang.org/x/net/context"
 )
 
@@ -119,13 +121,21 @@ func (r *FakeImageServer) ImageStatus(ctx context.Context, in *runtimeapi.ImageS
 
 	r.journal.Record("ImageStatus")
 
-	image := in.GetImage()
-	img, found := r.Images[image.Image]
+	useDigest := false
+	image := in.GetImage().GetImage()
+	if strings.HasSuffix(image, "/digest") {
+		image = image[:len(image)-7]
+		useDigest = true
+	}
+	img, found := r.Images[image]
 	if !found {
 		return &runtimeapi.ImageStatusResponse{}, nil
 	}
 	// make a copy of the image struct
 	copy := *img
+	if useDigest {
+		copy.Id = digest.FromBytes([]byte(image)).String()
+	}
 	return &runtimeapi.ImageStatusResponse{Image: &copy}, nil
 }
 

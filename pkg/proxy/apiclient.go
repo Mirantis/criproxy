@@ -23,6 +23,7 @@ import (
 	"sync"
 	"time"
 
+	"github.com/docker/distribution/digest"
 	"github.com/golang/glog"
 	"golang.org/x/net/context"
 	"google.golang.org/grpc"
@@ -251,7 +252,11 @@ func (c *apiClient) prefixImage(unprefixedImage Image) Image {
 		return unprefixedImage
 	}
 	image := unprefixedImage.Copy()
-	image.SetId(c.imageName(image.Id()))
+	// only prefix image id if it's not a digest
+	// so we don't get prefix/sha256:... which doesn't make sense
+	if _, err := digest.ParseDigest(image.Id()); err != nil {
+		image.SetId(c.imageName(image.Id()))
+	}
 	newRepoTags := make([]string, len(image.RepoTags()))
 	for n, tag := range image.RepoTags() {
 		newRepoTags[n] = c.imageName(tag)
