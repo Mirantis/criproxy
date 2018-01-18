@@ -135,7 +135,7 @@ func (r *RuntimeProxy) intercept(ctx context.Context, req interface{}, info *grp
 		resp = wrappedResp.Unwrap()
 	}
 	if glog.V(dispatchItem.logLevel) {
-		glog.Infof("ENTER: %s(): %s", info.FullMethod, dump(resp))
+		glog.Infof("LEAVE: %s(): %s", info.FullMethod, dump(resp))
 	}
 	return resp, nil
 }
