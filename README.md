@@ -104,7 +104,7 @@ the following content (you can also use `systemctl --force edit criproxy.service
 Description=CRI Proxy
 
 [Service]
-ExecStart=/usr/local/bin/criproxy -v 3 -alsologtostderr -connect /var/run/dockershim.sock,virtlet.cloud:/run/virtlet.sock -listen /run/criproxy.sock
+ExecStart=/usr/local/bin/criproxy -v 3 -logtostderr -connect /var/run/dockershim.sock,virtlet.cloud:/run/virtlet.sock -listen /run/criproxy.sock
 Restart=always
 StartLimitInterval=0
 RestartSec=10
@@ -142,7 +142,7 @@ image name / pod id / container id prefixes.
 
 Let's say CRI proxy is started as follows:
 ```
-/usr/bin/criproxy -apiVersion 1.8 -v 3 -alsologtostderr -connect /var/run/dockershim.sock,virtlet.cloud:/run/virtlet.sock -listen /run/criproxy.sock
+/usr/bin/criproxy -apiVersion 1.8 -v 3 -logtostderr -connect /var/run/dockershim.sock,virtlet.cloud:/run/virtlet.sock -listen /run/criproxy.sock
 ```
 
 `-v` option of `criproxy` controls the verbosity here. 0-1 means some
@@ -157,7 +157,7 @@ the log to grow fast. See
 [fixing log throttling](#fixing-log-throttling) below if you're
 starting CRI proxy using systemd with log level set to 3 or higher.
 
-`-alsologtostderr` directs logging output to stderr (it's part of glog configuration)
+`-logtostderr` directs logging output to stderr (it's part of glog configuration)
 
 `-connect /var/run/dockershim.sock,virtlet.cloud:/run/virtlet.sock` specifies the list of
 runtimes that the proxy passes requests to.

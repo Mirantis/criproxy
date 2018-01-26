@@ -1513,7 +1513,7 @@ func TestCriProxyInactiveServers(t *testing.T) {
 
 func init() {
 	// FIXME: testing.Verbose() always returns false
-	flag.Set("alsologtostderr", "true")
+	flag.Set("logtostderr", "true")
 	flag.Set("v", "5")
 }
 
