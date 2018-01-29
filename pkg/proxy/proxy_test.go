@@ -52,10 +52,12 @@ const (
 	podSandboxId2             = "alt__" + podSandboxId2unprefixed
 	containerId1              = podSandboxId1 + "_container1_0"
 	containerId2              = podSandboxId2 + "_container2_0"
+	containerId3              = podSandboxId2 + "_container3_0"
 	containerId2unprefixed    = podSandboxId2unprefixed + "_container2_0"
 	numGrpcConnectAttempts    = 600
 	imageFsUUID1              = "e4080efe-834f-4c1e-a455-656bbcef7486"
 	imageFsUUID2              = "d3ba2199-0fa2-45f0-aea9-f4522e2cbb3f"
+	sampleDigest              = "sha256:80f249cf98e79e376b13b75f52e9859daf6a6b4bade536be70fc14c2621913f0" // sha256 of "image2-3"
 )
 
 type ServerWithReadinessFeedback interface {
@@ -538,6 +540,26 @@ func TestCriProxy(t *testing.T) {
 			journal: []string{"2/runtime/CreateContainer"},
 		},
 		{
+			name:   "create container 2 with digest",
+			method: "/runtime.RuntimeService/CreateContainer",
+			in: &runtimeapi.CreateContainerRequest{
+				PodSandboxId: podSandboxId2,
+				Config: &runtimeapi.ContainerConfig{
+					Metadata: &runtimeapi.ContainerMetadata{
+						Name:    "container3",
+						Attempt: 0,
+					},
+					Image: &runtimeapi.ImageSpec{
+						Image: sampleDigest,
+					},
+				},
+			},
+			resp: &runtimeapi.CreateContainerResponse{
+				ContainerId: containerId3,
+			},
+			journal: []string{"2/runtime/CreateContainer"},
+		},
+		{
 			name:   "try to create container for a wrong runtime",
 			method: "/runtime.RuntimeService/CreateContainer",
 			in: &runtimeapi.CreateContainerRequest{
@@ -588,6 +610,20 @@ func TestCriProxy(t *testing.T) {
 							Image: "alt/image2-1",
 						},
 						ImageRef:  "image2-1",
+						CreatedAt: tester.servers[1].CurrentTime,
+						State:     runtimeapi.ContainerState_CONTAINER_CREATED,
+					},
+					{
+						Id:           containerId3,
+						PodSandboxId: podSandboxId2,
+						Metadata: &runtimeapi.ContainerMetadata{
+							Name:    "container3",
+							Attempt: 0,
+						},
+						Image: &runtimeapi.ImageSpec{
+							Image: sampleDigest,
+						},
+						ImageRef:  sampleDigest,
 						CreatedAt: tester.servers[1].CurrentTime,
 						State:     runtimeapi.ContainerState_CONTAINER_CREATED,
 					},
@@ -647,9 +683,6 @@ func TestCriProxy(t *testing.T) {
 					Filter: &runtimeapi.ContainerFilter{Id: containerId2},
 				},
 				&runtimeapi.ListContainersRequest{
-					Filter: &runtimeapi.ContainerFilter{PodSandboxId: podSandboxId2},
-				},
-				&runtimeapi.ListContainersRequest{
 					Filter: &runtimeapi.ContainerFilter{
 						Id:           containerId2,
 						PodSandboxId: podSandboxId2,
@@ -676,6 +709,46 @@ func TestCriProxy(t *testing.T) {
 							Image: "alt/image2-1",
 						},
 						ImageRef:  "image2-1",
+						CreatedAt: tester.servers[1].CurrentTime,
+						State:     runtimeapi.ContainerState_CONTAINER_CREATED,
+					},
+				},
+			},
+			journal: []string{"2/runtime/ListContainers"},
+		},
+		{
+			name:   "list containers with container filter 2 (filter by pod sandbox id only)",
+			method: "/runtime.RuntimeService/ListContainers",
+			in: &runtimeapi.ListContainersRequest{
+				Filter: &runtimeapi.ContainerFilter{PodSandboxId: podSandboxId2},
+			},
+			resp: &runtimeapi.ListContainersResponse{
+				Containers: []*runtimeapi.Container{
+					{
+						Id:           containerId2,
+						PodSandboxId: podSandboxId2,
+						Metadata: &runtimeapi.ContainerMetadata{
+							Name:    "container2",
+							Attempt: 0,
+						},
+						Image: &runtimeapi.ImageSpec{
+							Image: "alt/image2-1",
+						},
+						ImageRef:  "image2-1",
+						CreatedAt: tester.servers[1].CurrentTime,
+						State:     runtimeapi.ContainerState_CONTAINER_CREATED,
+					},
+					{
+						Id:           containerId3,
+						PodSandboxId: podSandboxId2,
+						Metadata: &runtimeapi.ContainerMetadata{
+							Name:    "container3",
+							Attempt: 0,
+						},
+						Image: &runtimeapi.ImageSpec{
+							Image: sampleDigest,
+						},
+						ImageRef:  sampleDigest,
 						CreatedAt: tester.servers[1].CurrentTime,
 						State:     runtimeapi.ContainerState_CONTAINER_CREATED,
 					},
@@ -1212,6 +1285,21 @@ func TestCriProxy(t *testing.T) {
 			resp: &runtimeapi.ImageStatusResponse{
 				Image: &runtimeapi.Image{
 					Id:       "alt/image2-3",
+					RepoTags: []string{"alt/image2-3"},
+					Size_:    fakeImageSize2,
+				},
+			},
+			journal: []string{"2/image/ImageStatus"},
+		},
+		{
+			name:   "image status 2-3 with digest",
+			method: "/runtime.ImageService/ImageStatus",
+			in: &runtimeapi.ImageStatusRequest{
+				Image: &runtimeapi.ImageSpec{Image: "alt/image2-3/digest"},
+			},
+			resp: &runtimeapi.ImageStatusResponse{
+				Image: &runtimeapi.Image{
+					Id:       sampleDigest,
 					RepoTags: []string{"alt/image2-3"},
 					Size_:    fakeImageSize2,
 				},

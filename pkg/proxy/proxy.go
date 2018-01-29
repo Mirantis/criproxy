@@ -28,6 +28,7 @@ import (
 	"time"
 
 	"github.com/davecgh/go-spew/spew"
+	"github.com/docker/distribution/digest"
 	"github.com/golang/glog"
 	"golang.org/x/net/context"
 	"google.golang.org/grpc"
@@ -406,14 +407,17 @@ func (r *RuntimeProxy) createContainer(ctx context.Context, method string, req, 
 		return nil, errors.New("criproxy: no image specified")
 	}
 
-	imageClient, unprefixedImage, err := r.clientForImage(in.Image(), false)
-	if err != nil {
-		return nil, err
+	// don't prefix image digests
+	if _, err := digest.ParseDigest(in.Image()); err != nil {
+		imageClient, unprefixedImage, err := r.clientForImage(in.Image(), false)
+		if err != nil {
+			return nil, err
+		}
+		if imageClient != client {
+			return nil, fmt.Errorf("criproxy: image %q is for a wrong runtime", in.Image())
+		}
+		in.SetImage(unprefixedImage)
 	}
-	if imageClient != client {
-		return nil, fmt.Errorf("criproxy: image %q is for a wrong runtime", in.Image())
-	}
-	in.SetImage(unprefixedImage)
 
 	_, err = client.invokeWithErrorHandling(ctx, method, req, resp)
 	if err != nil {

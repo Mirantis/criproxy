@@ -23,6 +23,7 @@ import (
 	"sync"
 	"time"
 
+	"github.com/docker/distribution/digest"
 	"github.com/golang/glog"
 	"golang.org/x/net/context"
 	"google.golang.org/grpc"
@@ -233,7 +234,10 @@ func (c *apiClient) prefixContainer(unprefixedContainer Container) Container {
 	container := unprefixedContainer.Copy()
 	container.SetId(c.augmentId(unprefixedContainer.Id()))
 	container.SetPodSandboxId(c.augmentId(unprefixedContainer.PodSandboxId()))
-	container.SetImage(c.imageName(unprefixedContainer.Image()))
+	// don't prefix digests
+	if _, err := digest.ParseDigest(unprefixedContainer.Image()); err != nil {
+		container.SetImage(c.imageName(unprefixedContainer.Image()))
+	}
 	return container
 }
 
@@ -251,7 +255,11 @@ func (c *apiClient) prefixImage(unprefixedImage Image) Image {
 		return unprefixedImage
 	}
 	image := unprefixedImage.Copy()
-	image.SetId(c.imageName(image.Id()))
+	// only prefix image id if it's not a digest
+	// so we don't get prefix/sha256:... which doesn't make sense
+	if _, err := digest.ParseDigest(image.Id()); err != nil {
+		image.SetId(c.imageName(image.Id()))
+	}
 	newRepoTags := make([]string, len(image.RepoTags()))
 	for n, tag := range image.RepoTags() {
 		newRepoTags[n] = c.imageName(tag)
@@ -289,8 +297,8 @@ func (c *apiClient) invoke(ctx context.Context, method string, req, resp CRIObje
 	if err != nil {
 		return nil, err
 	}
-	err = conn.Invoke(ctx, method, req.Unwrap(), resp.Unwrap())
-	if grpc.Code(err) == codes.Unavailable {
+
+	if err = grpc.Invoke(ctx, method, req.Unwrap(), resp.Unwrap(), conn); grpc.Code(err) == codes.Unavailable {
 		c.Lock()
 		defer c.Unlock()
 		if conn != c.conn {
@@ -303,12 +311,11 @@ func (c *apiClient) invoke(ctx context.Context, method string, req, resp CRIObje
 }
 
 func (c *apiClient) invokeWithErrorHandling(ctx context.Context, method string, req, resp CRIObject) (CRIObject, error) {
-	err := c.conn.Invoke(ctx, method, req.Unwrap(), resp.Unwrap())
+	err := grpc.Invoke(ctx, method, req.Unwrap(), resp.Unwrap(), c.conn)
 	if err != nil {
 		err = c.handleError(err, false)
 	}
 	return resp, err
-
 }
 
 // TODO: handle grpc's ClientTransport.Error() to reconnect
