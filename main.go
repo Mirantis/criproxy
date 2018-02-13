@@ -43,11 +43,12 @@ var (
 	streamPort    = flag.Int("streamPort", 11250, "streaming port of the default runtime")
 	streamUrl     = flag.String("streamUrl", "", "streaming url of the default runtime (-streamPort is ignored if this value is set)")
 	apiServerHost = flag.String("apiserver", "", "apiserver URL")
-	apiVersion    = flag.String("apiVersion", "1.8", "CRI API version (1.7 or 1.8)")
+	apiVersion    = flag.String("apiVersion", "1.8", "CRI API version (1.7, 1.8 or 1.9)")
 
 	apis = map[string]proxy.CRIVersion{
 		"1.7": &proxy.CRI17{},
 		"1.8": &proxy.CRI18{},
+		"1.9": &proxy.CRI19{},
 	}
 )
 

@@ -17,6 +17,8 @@ fi
 
 if [[ ${version_str} =~ v1\.7\. ]]; then
     api_version=1.7
+elif [[ ${version_str} =~ v1\.9\. ]]; then
+    api_version=1.9
 fi
 
 exec /usr/bin/criproxy -apiVersion "${api_version}" "$@"
