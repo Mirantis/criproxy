@@ -11,8 +11,9 @@ else
 fi
 TEST_DIR="$(cd $(dirname "$(readlinkf "${BASH_SOURCE}")"); pwd)"
 
+K8S_VERSION="${K8S_VERSION:-1.9}"
 kubectl="${HOME}/.kubeadm-dind-cluster/kubectl"
-dind_script="dind-cluster-v1.8.sh"
+dind_script="dind-cluster-v${K8S_VERSION}.sh"
 status=0
 
 if [[ ! ${CRIPROXY_DEB_URL:-} && ! ${CRIPROXY_DEB:-} ]]; then
@@ -60,7 +61,7 @@ function pod-is-gone {
   fi
 }
 
-step "Downloading kubeadm-dind-cluster script"
+step "Downloading kubeadm-dind-cluster script from ${dind_script}"
 rm -f "${dind_script}"
 wget "https://raw.githubusercontent.com/Mirantis/kubeadm-dind-cluster/master/fixed/${dind_script}"
 chmod +x "${dind_script}"
