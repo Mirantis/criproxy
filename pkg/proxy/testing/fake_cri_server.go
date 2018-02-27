@@ -21,7 +21,7 @@ import (
 	"os"
 	"syscall"
 
-	runtimeapi "github.com/Mirantis/criproxy/pkg/runtimeapi/v1_8"
+	runtimeapi "github.com/Mirantis/criproxy/pkg/runtimeapi/v1_9"
 	"google.golang.org/grpc"
 )
 
