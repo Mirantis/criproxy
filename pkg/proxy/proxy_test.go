@@ -21,7 +21,6 @@ import (
 	"flag"
 	"fmt"
 	"net/url"
-	"os"
 	"reflect"
 	"strings"
 	"testing"
@@ -1412,30 +1411,7 @@ func TestCriProxy(t *testing.T) {
 	}
 }
 
-func skipAsFlaky(t *testing.T) {
-	t.Skip("skipping flaky test -- will only run on master branch")
-}
-
-func skipFlakyTest(t *testing.T) {
-	// skip for PRs, run on master only
-	switch {
-	case os.Getenv("CIRCLECI") == "true":
-		if os.Getenv("CIRCLE_PULL_REQUEST") != "" || os.Getenv("CIRCLE_BRANCH") != "master" {
-			skipAsFlaky(t)
-		}
-	case os.Getenv("TRAVIS") == "true":
-		if os.Getenv("TRAVIS_PULL_REQUEST") != "false" || os.Getenv("TRAVIS_BRANCH") != "master" {
-			skipAsFlaky(t)
-		}
-	}
-
-	t.Skip("skipping flaky test -- will only run on master branch")
-}
-
 func TestCriProxyInactiveServers(t *testing.T) {
-	// FIXME: resolve the flakes
-	skipFlakyTest(t)
-
 	tester := newProxyTester(t)
 	defer tester.stop()
 	tester.startServers(t, 0)
