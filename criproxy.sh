@@ -15,8 +15,4 @@ elif [[ -x /k8s/hyperkube ]]; then
     version_str="$(/k8s/hyperkube --version)"
 fi
 
-if [[ ${version_str} =~ v1\.7\. ]]; then
-    api_version=1.7
-fi
-
-exec /usr/bin/criproxy -apiVersion "${api_version}" "$@"
+exec /usr/bin/criproxy "$@"

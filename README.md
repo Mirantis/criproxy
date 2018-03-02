@@ -5,7 +5,7 @@ same node and run CRI implementations inside pods. CRI Proxy is
 currently used by [Virtlet](https://github.com/Mirantis/virtlet)
 project but it can be used by other CRI implementations, too.
 
-It supports Kubernetes versions 1.7.x and 1.8.x.
+It supports Kubernetes versions 1.7.x, 1.8.x and 1.9.x.
 
 ## Installation on kubeadm clusters for use with Virtlet
 
@@ -142,7 +142,7 @@ image name / pod id / container id prefixes.
 
 Let's say CRI proxy is started as follows:
 ```
-/usr/bin/criproxy -apiVersion 1.8 -v 3 -logtostderr -connect /var/run/dockershim.sock,virtlet.cloud:/run/virtlet.sock -listen /run/criproxy.sock
+/usr/bin/criproxy -v 3 -logtostderr -connect /var/run/dockershim.sock,virtlet.cloud:/run/virtlet.sock -listen /run/criproxy.sock
 ```
 
 `-v` option of `criproxy` controls the verbosity here. 0-1 means some

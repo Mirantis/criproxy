@@ -4,8 +4,8 @@ set -o nounset
 set -o pipefail
 set -o errtrace
 
-TARGET_PKGS=(v1_7 v1_8)
-K8S_TAGS=(v1.7.10 v1.8.2)
+TARGET_PKGS=(v1_9)
+K8S_TAGS=(v1.9.3)
 FILES=(api.pb.go api.proto constants.go)
 
 if [ $(uname) = Darwin ]; then

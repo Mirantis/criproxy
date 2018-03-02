@@ -43,12 +43,6 @@ var (
 	streamPort    = flag.Int("streamPort", 11250, "streaming port of the default runtime")
 	streamUrl     = flag.String("streamUrl", "", "streaming url of the default runtime (-streamPort is ignored if this value is set)")
 	apiServerHost = flag.String("apiserver", "", "apiserver URL")
-	apiVersion    = flag.String("apiVersion", "1.8", "CRI API version (1.7 or 1.8)")
-
-	apis = map[string]proxy.CRIVersion{
-		"1.7": &proxy.CRI17{},
-		"1.8": &proxy.CRI18{},
-	}
 )
 
 // runCriProxy starts CRI proxy
@@ -65,11 +59,7 @@ func runCriProxy(connect, listen string) error {
 			return fmt.Errorf("invalid stream url %q: %v", *streamUrl, err)
 		}
 	}
-	criVersion, found := apis[*apiVersion]
-	if !found {
-		return fmt.Errorf("bad CRI version %q", *apiVersion)
-	}
-	proxy, err := proxy.NewRuntimeProxy(criVersion, addrs, connectionTimeout, realStreamUrl, nil)
+	proxy, err := proxy.NewRuntimeProxy(&proxy.CRI19{}, addrs, connectionTimeout, realStreamUrl, nil)
 	if err != nil {
 		return fmt.Errorf("error starting CRI proxy: %v", err)
 	}

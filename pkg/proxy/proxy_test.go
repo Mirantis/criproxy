@@ -21,13 +21,12 @@ import (
 	"flag"
 	"fmt"
 	"net/url"
-	"os"
 	"reflect"
 	"strings"
 	"testing"
 	"time"
 
-	runtimeapi "github.com/Mirantis/criproxy/pkg/runtimeapi/v1_8"
+	runtimeapi "github.com/Mirantis/criproxy/pkg/runtimeapi/v1_9"
 	"github.com/golang/glog"
 	"github.com/pmezard/go-difflib/difflib"
 	"golang.org/x/net/context"
@@ -136,7 +135,7 @@ func newProxyTester(t *testing.T) *proxyTester {
 	if err != nil {
 		t.Fatalf("error parsing stream url: %v", err)
 	}
-	tester.proxy, err = NewRuntimeProxy(&CRI18{}, []string{fakeCriSocketPath1, altSocketSpec}, connectionTimeoutForTests, streamUrl, func() {
+	tester.proxy, err = NewRuntimeProxy(&CRI19{}, []string{fakeCriSocketPath1, altSocketSpec}, connectionTimeoutForTests, streamUrl, func() {
 		tester.hookCallCount++
 	})
 	if err != nil {
@@ -1412,30 +1411,7 @@ func TestCriProxy(t *testing.T) {
 	}
 }
 
-func skipAsFlaky(t *testing.T) {
-	t.Skip("skipping flaky test -- will only run on master branch")
-}
-
-func skipFlakyTest(t *testing.T) {
-	// skip for PRs, run on master only
-	switch {
-	case os.Getenv("CIRCLECI") == "true":
-		if os.Getenv("CIRCLE_PULL_REQUEST") != "" || os.Getenv("CIRCLE_BRANCH") != "master" {
-			skipAsFlaky(t)
-		}
-	case os.Getenv("TRAVIS") == "true":
-		if os.Getenv("TRAVIS_PULL_REQUEST") != "false" || os.Getenv("TRAVIS_BRANCH") != "master" {
-			skipAsFlaky(t)
-		}
-	}
-
-	t.Skip("skipping flaky test -- will only run on master branch")
-}
-
 func TestCriProxyInactiveServers(t *testing.T) {
-	// FIXME: resolve the flakes
-	skipFlakyTest(t)
-
 	tester := newProxyTester(t)
 	defer tester.stop()
 	tester.startServers(t, 0)
