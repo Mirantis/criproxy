@@ -39,7 +39,7 @@ const (
 	clientStateOffline         = clientState(iota)
 	clientStateConnecting
 	clientStateConnected
-	versionRequestMethod = "/runtime.RuntimeService/Version"
+	versionRequestMethod = "/runtime.v1alpha2.RuntimeService/Version"
 )
 
 var errNotConnected = errors.New("not connected")

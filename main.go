@@ -59,7 +59,7 @@ func runCriProxy(connect, listen string) error {
 			return fmt.Errorf("invalid stream url %q: %v", *streamUrl, err)
 		}
 	}
-	proxy, err := proxy.NewRuntimeProxy(&proxy.CRI19{}, addrs, connectionTimeout, realStreamUrl, nil)
+	proxy, err := proxy.NewRuntimeProxy(&proxy.CRI110{}, addrs, connectionTimeout, realStreamUrl, nil)
 	if err != nil {
 		return fmt.Errorf("error starting CRI proxy: %v", err)
 	}
