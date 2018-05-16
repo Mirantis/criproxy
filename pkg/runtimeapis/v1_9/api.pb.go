@@ -3104,7 +3104,7 @@ func (m *UInt64Value) GetValue() uint64 {
 }
 
 // StorageIdentifier uniquely identify the storage..
-// +k8s:conversion-gen=false
+/* +k8s:conversion-gen=false */
 type StorageIdentifier struct {
 	// UUID of the device.
 	Uuid string `protobuf:"bytes,1,opt,name=uuid,proto3" json:"uuid,omitempty"`

@@ -123,7 +123,17 @@ RUN make -C /go/src/github.com/kubernetes-incubator/cri-o binaries crio.conf && 
     DESTDIR=/tmp/cri-o make -C /go/src/github.com/kubernetes-incubator/cri-o install.bin install.config && \
     tar -C /tmp/cri-o -cvzf /crio.tar.gz .
 
-FROM golang:1.8
+FROM golang:1.10
+
+RUN go get github.com/tcnksm/ghr && \
+    go get github.com/Masterminds/glide && \
+    mkdir -p /go/src/k8s.io && \
+    git clone https://github.com/kubernetes/code-generator /go/src/k8s.io/code-generator && \
+    cd /go/src/k8s.io/code-generator && \
+    git checkout 1eeed5f600b70f788fa97951e1e7b47ce212c242 && \
+    go build -o /go/bin/conversion-gen ./cmd/conversion-gen
+
+FROM golang:1.10
 
 # The following is based on https://github.com/kubernetes/release/blob/master/debian/Dockerfile
 
@@ -135,11 +145,10 @@ RUN apt-get update -y && \
     apt-get upgrade -y && \
     apt-get autoremove -y && \
     apt-get clean && \
-    rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/* && \
-    go get github.com/tcnksm/ghr && \
-    go get github.com/Masterminds/glide
+    rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 
 COPY --from=0 /crio.tar.gz /crio.tar.gz
+COPY --from=1 /go/bin/* /go/bin/
 
 ADD . /go/src/github.com/Mirantis/criproxy
 WORKDIR /go/src/github.com/Mirantis/criproxy

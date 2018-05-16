@@ -1,6 +1,6 @@
 deployment_test: &deployment_test
   docker:
-  - image: ishvedunov/criproxy-build:0.0.3
+  - image: ishvedunov/criproxy-build:0.0.4
   steps:
   - setup-remote-docker
   - checkout
@@ -13,7 +13,7 @@ deployment_test: &deployment_test
         mv /tmp/docker/* /usr/bin
 
         # Start port forwarder
-        test/portforward.sh start
+        hack/portforward.sh start
   - attach_workspace:
       at: _output
   - run:
@@ -21,17 +21,17 @@ deployment_test: &deployment_test
       # FIXME: extra "$(...)" is needed because globbing fails
       # in this CircleCI command for some reason
       command: |
-        test/portforward.sh 8080&
+        hack/portforward.sh 8080&
         # FIXME: rm this ls -l
         SKIP_SNAPSHOT=1 \
           CRIPROXY_DEB="$(echo "${PWD}"/_output/criproxy*nodeps*.deb)" \
-          test/deployment-test.sh
+          hack/deployment-test.sh
 
 version: 2
 jobs:
   build:
     docker:
-    - image: ishvedunov/criproxy-build:0.0.3
+    - image: ishvedunov/criproxy-build:0.0.4
     steps:
     - checkout
     - run:
