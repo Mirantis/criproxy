@@ -27,8 +27,5 @@ for ((i = 0; i < ${#TARGET_PKGS[@]}; i++)); do
     echo >&2 "Downloading ${url} -> ${subpath}"
     curl -sSL "${url}" >"${script_dir}/${subpath}"
      # | sed 's/^package v1alpha2/package runtime/g'
-    if [[ ${file} = "api.pb.go" ]]; then
-      sed -i "s/^func init *() *{ *$/func RegisterCRI() {/" "${script_dir}/${subpath}"
-    fi
   done
 done

@@ -17,11 +17,9 @@ limitations under the License.
 package proxy
 
 import (
-	"fmt"
-
 	"google.golang.org/grpc"
 
-	runtimeapi "github.com/Mirantis/criproxy/pkg/runtimeapi/v1_10"
+	runtimeapi "github.com/Mirantis/criproxy/pkg/runtimeapis/v1_10"
 )
 
 // ---
@@ -32,6 +30,13 @@ type PodSandbox_110 struct {
 
 var _ PodSandbox = &PodSandbox_110{}
 
+func (o *PodSandbox_110) Wrap(v interface{}) {
+	if v == nil {
+		o.inner = &runtimeapi.PodSandbox{}
+	} else {
+		o.inner = v.(*runtimeapi.PodSandbox)
+	}
+}
 func (o *PodSandbox_110) Unwrap() interface{} { return o.inner }
 func (o *PodSandbox_110) Copy() PodSandbox    { r := *o.inner; return &PodSandbox_110{&r} }
 func (o *PodSandbox_110) Id() string          { return o.inner.Id }
@@ -45,6 +50,13 @@ type Container_110 struct {
 
 var _ Container = &Container_110{}
 
+func (o *Container_110) Wrap(v interface{}) {
+	if v == nil {
+		o.inner = &runtimeapi.Container{}
+	} else {
+		o.inner = v.(*runtimeapi.Container)
+	}
+}
 func (o *Container_110) Unwrap() interface{}       { return o.inner }
 func (o *Container_110) Copy() Container           { r := *o.inner; return &Container_110{&r} }
 func (o *Container_110) Id() string                { return o.inner.Id }
@@ -62,6 +74,13 @@ type Image_110 struct {
 
 var _ Image = &Image_110{}
 
+func (o *Image_110) Wrap(v interface{}) {
+	if v == nil {
+		o.inner = &runtimeapi.Image{}
+	} else {
+		o.inner = v.(*runtimeapi.Image)
+	}
+}
 func (o *Image_110) Unwrap() interface{}           { return o.inner }
 func (o *Image_110) Copy() Image                   { r := *o.inner; return &Image_110{&r} }
 func (o *Image_110) Id() string                    { return o.inner.Id }
@@ -77,6 +96,13 @@ type PodSandboxStatus_110 struct {
 
 var _ PodSandboxStatus = &PodSandboxStatus_110{}
 
+func (o *PodSandboxStatus_110) Wrap(v interface{}) {
+	if v == nil {
+		o.inner = &runtimeapi.PodSandboxStatus{}
+	} else {
+		o.inner = v.(*runtimeapi.PodSandboxStatus)
+	}
+}
 func (o *PodSandboxStatus_110) Unwrap() interface{} { return o.inner }
 func (o *PodSandboxStatus_110) Copy() PodSandboxStatus {
 	r := *o.inner
@@ -93,6 +119,13 @@ type ContainerStatus_110 struct {
 
 var _ ContainerStatus = &ContainerStatus_110{}
 
+func (o *ContainerStatus_110) Wrap(v interface{}) {
+	if v == nil {
+		o.inner = &runtimeapi.ContainerStatus{}
+	} else {
+		o.inner = v.(*runtimeapi.ContainerStatus)
+	}
+}
 func (o *ContainerStatus_110) Unwrap() interface{}   { return o.inner }
 func (o *ContainerStatus_110) Copy() ContainerStatus { r := *o.inner; return &ContainerStatus_110{&r} }
 func (o *ContainerStatus_110) Id() string            { return o.inner.Id }
@@ -110,6 +143,13 @@ type ContainerStats_110 struct {
 
 var _ ContainerStats = &ContainerStats_110{}
 
+func (o *ContainerStats_110) Wrap(v interface{}) {
+	if v == nil {
+		o.inner = &runtimeapi.ContainerStats{}
+	} else {
+		o.inner = v.(*runtimeapi.ContainerStats)
+	}
+}
 func (o *ContainerStats_110) Unwrap() interface{}  { return o.inner }
 func (o *ContainerStats_110) Copy() ContainerStats { r := *o.inner; return &ContainerStats_110{&r} }
 func (o *ContainerStats_110) Id() string           { return o.inner.Attributes.GetId() }
@@ -127,6 +167,13 @@ type FilesystemUsage_110 struct {
 	inner *runtimeapi.FilesystemUsage
 }
 
+func (o *FilesystemUsage_110) Wrap(v interface{}) {
+	if v == nil {
+		o.inner = &runtimeapi.FilesystemUsage{}
+	} else {
+		o.inner = v.(*runtimeapi.FilesystemUsage)
+	}
+}
 func (o *FilesystemUsage_110) Unwrap() interface{} { return o.inner }
 
 // ---
@@ -137,6 +184,13 @@ type VersionRequest_110 struct {
 
 var _ VersionRequest = &VersionRequest_110{}
 
+func (o *VersionRequest_110) Wrap(v interface{}) {
+	if v == nil {
+		o.inner = &runtimeapi.VersionRequest{}
+	} else {
+		o.inner = v.(*runtimeapi.VersionRequest)
+	}
+}
 func (o *VersionRequest_110) Unwrap() interface{} { return o.inner }
 
 // ---
@@ -147,6 +201,13 @@ type VersionResponse_110 struct {
 
 var _ VersionResponse = &VersionResponse_110{}
 
+func (o *VersionResponse_110) Wrap(v interface{}) {
+	if v == nil {
+		o.inner = &runtimeapi.VersionResponse{}
+	} else {
+		o.inner = v.(*runtimeapi.VersionResponse)
+	}
+}
 func (o *VersionResponse_110) Unwrap() interface{} { return o.inner }
 
 // ---
@@ -157,6 +218,13 @@ type StatusRequest_110 struct {
 
 var _ StatusRequest = &StatusRequest_110{}
 
+func (o *StatusRequest_110) Wrap(v interface{}) {
+	if v == nil {
+		o.inner = &runtimeapi.StatusRequest{}
+	} else {
+		o.inner = v.(*runtimeapi.StatusRequest)
+	}
+}
 func (o *StatusRequest_110) Unwrap() interface{} { return o.inner }
 
 // ---
@@ -167,6 +235,13 @@ type StatusResponse_110 struct {
 
 var _ StatusResponse = &StatusResponse_110{}
 
+func (o *StatusResponse_110) Wrap(v interface{}) {
+	if v == nil {
+		o.inner = &runtimeapi.StatusResponse{}
+	} else {
+		o.inner = v.(*runtimeapi.StatusResponse)
+	}
+}
 func (o *StatusResponse_110) Unwrap() interface{} { return o.inner }
 
 // ---
@@ -177,6 +252,13 @@ type UpdateRuntimeConfigRequest_110 struct {
 
 var _ UpdateRuntimeConfigRequest = &UpdateRuntimeConfigRequest_110{}
 
+func (o *UpdateRuntimeConfigRequest_110) Wrap(v interface{}) {
+	if v == nil {
+		o.inner = &runtimeapi.UpdateRuntimeConfigRequest{}
+	} else {
+		o.inner = v.(*runtimeapi.UpdateRuntimeConfigRequest)
+	}
+}
 func (o *UpdateRuntimeConfigRequest_110) Unwrap() interface{} { return o.inner }
 
 // ---
@@ -187,6 +269,13 @@ type UpdateRuntimeConfigResponse_110 struct {
 
 var _ UpdateRuntimeConfigResponse = &UpdateRuntimeConfigResponse_110{}
 
+func (o *UpdateRuntimeConfigResponse_110) Wrap(v interface{}) {
+	if v == nil {
+		o.inner = &runtimeapi.UpdateRuntimeConfigResponse{}
+	} else {
+		o.inner = v.(*runtimeapi.UpdateRuntimeConfigResponse)
+	}
+}
 func (o *UpdateRuntimeConfigResponse_110) Unwrap() interface{} { return o.inner }
 
 // ---
@@ -197,6 +286,13 @@ type RunPodSandboxRequest_110 struct {
 
 var _ RunPodSandboxRequest = &RunPodSandboxRequest_110{}
 
+func (o *RunPodSandboxRequest_110) Wrap(v interface{}) {
+	if v == nil {
+		o.inner = &runtimeapi.RunPodSandboxRequest{}
+	} else {
+		o.inner = v.(*runtimeapi.RunPodSandboxRequest)
+	}
+}
 func (o *RunPodSandboxRequest_110) Unwrap() interface{} { return o.inner }
 func (o *RunPodSandboxRequest_110) GetAnnotations() map[string]string {
 	return o.inner.Config.GetAnnotations()
@@ -210,6 +306,13 @@ type RunPodSandboxResponse_110 struct {
 
 var _ RunPodSandboxResponse = &RunPodSandboxResponse_110{}
 
+func (o *RunPodSandboxResponse_110) Wrap(v interface{}) {
+	if v == nil {
+		o.inner = &runtimeapi.RunPodSandboxResponse{}
+	} else {
+		o.inner = v.(*runtimeapi.RunPodSandboxResponse)
+	}
+}
 func (o *RunPodSandboxResponse_110) Unwrap() interface{}       { return o.inner }
 func (o *RunPodSandboxResponse_110) PodSandboxId() string      { return o.inner.PodSandboxId }
 func (o *RunPodSandboxResponse_110) SetPodSandboxId(id string) { o.inner.PodSandboxId = id }
@@ -222,6 +325,13 @@ type ListPodSandboxRequest_110 struct {
 
 var _ ListPodSandboxRequest = &ListPodSandboxRequest_110{}
 
+func (o *ListPodSandboxRequest_110) Wrap(v interface{}) {
+	if v == nil {
+		o.inner = &runtimeapi.ListPodSandboxRequest{}
+	} else {
+		o.inner = v.(*runtimeapi.ListPodSandboxRequest)
+	}
+}
 func (o *ListPodSandboxRequest_110) Unwrap() interface{} { return o.inner }
 func (o *ListPodSandboxRequest_110) IdFilter() string {
 	return o.inner.Filter.GetId()
@@ -243,6 +353,13 @@ type ListPodSandboxResponse_110 struct {
 
 var _ ListPodSandboxResponse = &ListPodSandboxResponse_110{}
 
+func (o *ListPodSandboxResponse_110) Wrap(v interface{}) {
+	if v == nil {
+		o.inner = &runtimeapi.ListPodSandboxResponse{}
+	} else {
+		o.inner = v.(*runtimeapi.ListPodSandboxResponse)
+	}
+}
 func (o *ListPodSandboxResponse_110) Unwrap() interface{} { return o.inner }
 func (o *ListPodSandboxResponse_110) Items() []CRIObject {
 	var r []CRIObject
@@ -266,6 +383,13 @@ type StopPodSandboxRequest_110 struct {
 
 var _ StopPodSandboxRequest = &StopPodSandboxRequest_110{}
 
+func (o *StopPodSandboxRequest_110) Wrap(v interface{}) {
+	if v == nil {
+		o.inner = &runtimeapi.StopPodSandboxRequest{}
+	} else {
+		o.inner = v.(*runtimeapi.StopPodSandboxRequest)
+	}
+}
 func (o *StopPodSandboxRequest_110) Unwrap() interface{}       { return o.inner }
 func (o *StopPodSandboxRequest_110) PodSandboxId() string      { return o.inner.PodSandboxId }
 func (o *StopPodSandboxRequest_110) SetPodSandboxId(id string) { o.inner.PodSandboxId = id }
@@ -278,6 +402,13 @@ type StopPodSandboxResponse_110 struct {
 
 var _ StopPodSandboxResponse = &StopPodSandboxResponse_110{}
 
+func (o *StopPodSandboxResponse_110) Wrap(v interface{}) {
+	if v == nil {
+		o.inner = &runtimeapi.StopPodSandboxResponse{}
+	} else {
+		o.inner = v.(*runtimeapi.StopPodSandboxResponse)
+	}
+}
 func (o *StopPodSandboxResponse_110) Unwrap() interface{} { return o.inner }
 
 // ---
@@ -288,6 +419,13 @@ type RemovePodSandboxRequest_110 struct {
 
 var _ RemovePodSandboxRequest = &RemovePodSandboxRequest_110{}
 
+func (o *RemovePodSandboxRequest_110) Wrap(v interface{}) {
+	if v == nil {
+		o.inner = &runtimeapi.RemovePodSandboxRequest{}
+	} else {
+		o.inner = v.(*runtimeapi.RemovePodSandboxRequest)
+	}
+}
 func (o *RemovePodSandboxRequest_110) Unwrap() interface{}       { return o.inner }
 func (o *RemovePodSandboxRequest_110) PodSandboxId() string      { return o.inner.PodSandboxId }
 func (o *RemovePodSandboxRequest_110) SetPodSandboxId(id string) { o.inner.PodSandboxId = id }
@@ -300,6 +438,13 @@ type RemovePodSandboxResponse_110 struct {
 
 var _ RemovePodSandboxResponse = &RemovePodSandboxResponse_110{}
 
+func (o *RemovePodSandboxResponse_110) Wrap(v interface{}) {
+	if v == nil {
+		o.inner = &runtimeapi.RemovePodSandboxResponse{}
+	} else {
+		o.inner = v.(*runtimeapi.RemovePodSandboxResponse)
+	}
+}
 func (o *RemovePodSandboxResponse_110) Unwrap() interface{} { return o.inner }
 
 // ---
@@ -310,6 +455,13 @@ type PodSandboxStatusRequest_110 struct {
 
 var _ PodSandboxStatusRequest = &PodSandboxStatusRequest_110{}
 
+func (o *PodSandboxStatusRequest_110) Wrap(v interface{}) {
+	if v == nil {
+		o.inner = &runtimeapi.PodSandboxStatusRequest{}
+	} else {
+		o.inner = v.(*runtimeapi.PodSandboxStatusRequest)
+	}
+}
 func (o *PodSandboxStatusRequest_110) Unwrap() interface{}       { return o.inner }
 func (o *PodSandboxStatusRequest_110) PodSandboxId() string      { return o.inner.PodSandboxId }
 func (o *PodSandboxStatusRequest_110) SetPodSandboxId(id string) { o.inner.PodSandboxId = id }
@@ -322,6 +474,13 @@ type PodSandboxStatusResponse_110 struct {
 
 var _ PodSandboxStatusResponse = &PodSandboxStatusResponse_110{}
 
+func (o *PodSandboxStatusResponse_110) Wrap(v interface{}) {
+	if v == nil {
+		o.inner = &runtimeapi.PodSandboxStatusResponse{}
+	} else {
+		o.inner = v.(*runtimeapi.PodSandboxStatusResponse)
+	}
+}
 func (o *PodSandboxStatusResponse_110) Unwrap() interface{} { return o.inner }
 func (o *PodSandboxStatusResponse_110) Status() PodSandboxStatus {
 	if o.inner.Status == nil {
@@ -338,6 +497,13 @@ type CreateContainerRequest_110 struct {
 
 var _ CreateContainerRequest = &CreateContainerRequest_110{}
 
+func (o *CreateContainerRequest_110) Wrap(v interface{}) {
+	if v == nil {
+		o.inner = &runtimeapi.CreateContainerRequest{}
+	} else {
+		o.inner = v.(*runtimeapi.CreateContainerRequest)
+	}
+}
 func (o *CreateContainerRequest_110) Unwrap() interface{}       { return o.inner }
 func (o *CreateContainerRequest_110) PodSandboxId() string      { return o.inner.PodSandboxId }
 func (o *CreateContainerRequest_110) SetPodSandboxId(id string) { o.inner.PodSandboxId = id }
@@ -362,6 +528,13 @@ type CreateContainerResponse_110 struct {
 
 var _ CreateContainerResponse = &CreateContainerResponse_110{}
 
+func (o *CreateContainerResponse_110) Wrap(v interface{}) {
+	if v == nil {
+		o.inner = &runtimeapi.CreateContainerResponse{}
+	} else {
+		o.inner = v.(*runtimeapi.CreateContainerResponse)
+	}
+}
 func (o *CreateContainerResponse_110) Unwrap() interface{}      { return o.inner }
 func (o *CreateContainerResponse_110) ContainerId() string      { return o.inner.ContainerId }
 func (o *CreateContainerResponse_110) SetContainerId(id string) { o.inner.ContainerId = id }
@@ -374,6 +547,13 @@ type ListContainersRequest_110 struct {
 
 var _ ListContainersRequest = &ListContainersRequest_110{}
 
+func (o *ListContainersRequest_110) Wrap(v interface{}) {
+	if v == nil {
+		o.inner = &runtimeapi.ListContainersRequest{}
+	} else {
+		o.inner = v.(*runtimeapi.ListContainersRequest)
+	}
+}
 func (o *ListContainersRequest_110) Unwrap() interface{} { return o.inner }
 func (o *ListContainersRequest_110) IdFilter() string {
 	return o.inner.Filter.GetId()
@@ -407,6 +587,13 @@ type ListContainersResponse_110 struct {
 
 var _ ListContainersResponse = &ListContainersResponse_110{}
 
+func (o *ListContainersResponse_110) Wrap(v interface{}) {
+	if v == nil {
+		o.inner = &runtimeapi.ListContainersResponse{}
+	} else {
+		o.inner = v.(*runtimeapi.ListContainersResponse)
+	}
+}
 func (o *ListContainersResponse_110) Unwrap() interface{} { return o.inner }
 func (o *ListContainersResponse_110) Items() []CRIObject {
 	var r []CRIObject
@@ -430,6 +617,13 @@ type ListContainerStatsRequest_110 struct {
 
 var _ ListContainerStatsRequest = &ListContainerStatsRequest_110{}
 
+func (o *ListContainerStatsRequest_110) Wrap(v interface{}) {
+	if v == nil {
+		o.inner = &runtimeapi.ListContainerStatsRequest{}
+	} else {
+		o.inner = v.(*runtimeapi.ListContainerStatsRequest)
+	}
+}
 func (o *ListContainerStatsRequest_110) Unwrap() interface{} { return o.inner }
 func (o *ListContainerStatsRequest_110) IdFilter() string {
 	return o.inner.Filter.GetId()
@@ -463,6 +657,13 @@ type ListContainerStatsResponse_110 struct {
 
 var _ ListContainerStatsResponse = &ListContainerStatsResponse_110{}
 
+func (o *ListContainerStatsResponse_110) Wrap(v interface{}) {
+	if v == nil {
+		o.inner = &runtimeapi.ListContainerStatsResponse{}
+	} else {
+		o.inner = v.(*runtimeapi.ListContainerStatsResponse)
+	}
+}
 func (o *ListContainerStatsResponse_110) Unwrap() interface{} { return o.inner }
 func (o *ListContainerStatsResponse_110) Items() []CRIObject {
 	var r []CRIObject
@@ -486,6 +687,13 @@ type StartContainerRequest_110 struct {
 
 var _ StartContainerRequest = &StartContainerRequest_110{}
 
+func (o *StartContainerRequest_110) Wrap(v interface{}) {
+	if v == nil {
+		o.inner = &runtimeapi.StartContainerRequest{}
+	} else {
+		o.inner = v.(*runtimeapi.StartContainerRequest)
+	}
+}
 func (o *StartContainerRequest_110) Unwrap() interface{}      { return o.inner }
 func (o *StartContainerRequest_110) ContainerId() string      { return o.inner.ContainerId }
 func (o *StartContainerRequest_110) SetContainerId(id string) { o.inner.ContainerId = id }
@@ -498,6 +706,13 @@ type StartContainerResponse_110 struct {
 
 var _ StartContainerResponse = &StartContainerResponse_110{}
 
+func (o *StartContainerResponse_110) Wrap(v interface{}) {
+	if v == nil {
+		o.inner = &runtimeapi.StartContainerResponse{}
+	} else {
+		o.inner = v.(*runtimeapi.StartContainerResponse)
+	}
+}
 func (o *StartContainerResponse_110) Unwrap() interface{} { return o.inner }
 
 // ---
@@ -508,6 +723,13 @@ type StopContainerRequest_110 struct {
 
 var _ StopContainerRequest = &StopContainerRequest_110{}
 
+func (o *StopContainerRequest_110) Wrap(v interface{}) {
+	if v == nil {
+		o.inner = &runtimeapi.StopContainerRequest{}
+	} else {
+		o.inner = v.(*runtimeapi.StopContainerRequest)
+	}
+}
 func (o *StopContainerRequest_110) Unwrap() interface{}      { return o.inner }
 func (o *StopContainerRequest_110) ContainerId() string      { return o.inner.ContainerId }
 func (o *StopContainerRequest_110) SetContainerId(id string) { o.inner.ContainerId = id }
@@ -520,6 +742,13 @@ type StopContainerResponse_110 struct {
 
 var _ StopContainerResponse = &StopContainerResponse_110{}
 
+func (o *StopContainerResponse_110) Wrap(v interface{}) {
+	if v == nil {
+		o.inner = &runtimeapi.StopContainerResponse{}
+	} else {
+		o.inner = v.(*runtimeapi.StopContainerResponse)
+	}
+}
 func (o *StopContainerResponse_110) Unwrap() interface{} { return o.inner }
 
 // ---
@@ -530,6 +759,13 @@ type RemoveContainerRequest_110 struct {
 
 var _ RemoveContainerRequest = &RemoveContainerRequest_110{}
 
+func (o *RemoveContainerRequest_110) Wrap(v interface{}) {
+	if v == nil {
+		o.inner = &runtimeapi.RemoveContainerRequest{}
+	} else {
+		o.inner = v.(*runtimeapi.RemoveContainerRequest)
+	}
+}
 func (o *RemoveContainerRequest_110) Unwrap() interface{}      { return o.inner }
 func (o *RemoveContainerRequest_110) ContainerId() string      { return o.inner.ContainerId }
 func (o *RemoveContainerRequest_110) SetContainerId(id string) { o.inner.ContainerId = id }
@@ -542,7 +778,50 @@ type RemoveContainerResponse_110 struct {
 
 var _ RemoveContainerResponse = &RemoveContainerResponse_110{}
 
+func (o *RemoveContainerResponse_110) Wrap(v interface{}) {
+	if v == nil {
+		o.inner = &runtimeapi.RemoveContainerResponse{}
+	} else {
+		o.inner = v.(*runtimeapi.RemoveContainerResponse)
+	}
+}
 func (o *RemoveContainerResponse_110) Unwrap() interface{} { return o.inner }
+
+// ---
+
+type ReopenContainerLogRequest_110 struct {
+	inner *runtimeapi.ReopenContainerLogRequest
+}
+
+var _ ReopenContainerLogRequest = &ReopenContainerLogRequest_110{}
+
+func (o *ReopenContainerLogRequest_110) Wrap(v interface{}) {
+	if v == nil {
+		o.inner = &runtimeapi.ReopenContainerLogRequest{}
+	} else {
+		o.inner = v.(*runtimeapi.ReopenContainerLogRequest)
+	}
+}
+func (o *ReopenContainerLogRequest_110) Unwrap() interface{}      { return o.inner }
+func (o *ReopenContainerLogRequest_110) ContainerId() string      { return o.inner.ContainerId }
+func (o *ReopenContainerLogRequest_110) SetContainerId(id string) { o.inner.ContainerId = id }
+
+// ---
+
+type ReopenContainerLogResponse_110 struct {
+	inner *runtimeapi.ReopenContainerLogResponse
+}
+
+var _ ReopenContainerLogResponse = &ReopenContainerLogResponse_110{}
+
+func (o *ReopenContainerLogResponse_110) Wrap(v interface{}) {
+	if v == nil {
+		o.inner = &runtimeapi.ReopenContainerLogResponse{}
+	} else {
+		o.inner = v.(*runtimeapi.ReopenContainerLogResponse)
+	}
+}
+func (o *ReopenContainerLogResponse_110) Unwrap() interface{} { return o.inner }
 
 // ---
 
@@ -552,6 +831,13 @@ type ContainerStatusRequest_110 struct {
 
 var _ ContainerStatusRequest = &ContainerStatusRequest_110{}
 
+func (o *ContainerStatusRequest_110) Wrap(v interface{}) {
+	if v == nil {
+		o.inner = &runtimeapi.ContainerStatusRequest{}
+	} else {
+		o.inner = v.(*runtimeapi.ContainerStatusRequest)
+	}
+}
 func (o *ContainerStatusRequest_110) Unwrap() interface{}      { return o.inner }
 func (o *ContainerStatusRequest_110) ContainerId() string      { return o.inner.ContainerId }
 func (o *ContainerStatusRequest_110) SetContainerId(id string) { o.inner.ContainerId = id }
@@ -564,6 +850,13 @@ type ContainerStatusResponse_110 struct {
 
 var _ ContainerStatusResponse = &ContainerStatusResponse_110{}
 
+func (o *ContainerStatusResponse_110) Wrap(v interface{}) {
+	if v == nil {
+		o.inner = &runtimeapi.ContainerStatusResponse{}
+	} else {
+		o.inner = v.(*runtimeapi.ContainerStatusResponse)
+	}
+}
 func (o *ContainerStatusResponse_110) Unwrap() interface{} { return o.inner }
 func (o *ContainerStatusResponse_110) Status() ContainerStatus {
 	if o.inner.Status == nil {
@@ -580,6 +873,13 @@ type ContainerStatsRequest_110 struct {
 
 var _ ContainerStatsRequest = &ContainerStatsRequest_110{}
 
+func (o *ContainerStatsRequest_110) Wrap(v interface{}) {
+	if v == nil {
+		o.inner = &runtimeapi.ContainerStatsRequest{}
+	} else {
+		o.inner = v.(*runtimeapi.ContainerStatsRequest)
+	}
+}
 func (o *ContainerStatsRequest_110) Unwrap() interface{}      { return o.inner }
 func (o *ContainerStatsRequest_110) ContainerId() string      { return o.inner.ContainerId }
 func (o *ContainerStatsRequest_110) SetContainerId(id string) { o.inner.ContainerId = id }
@@ -592,6 +892,13 @@ type ContainerStatsResponse_110 struct {
 
 var _ ContainerStatsResponse = &ContainerStatsResponse_110{}
 
+func (o *ContainerStatsResponse_110) Wrap(v interface{}) {
+	if v == nil {
+		o.inner = &runtimeapi.ContainerStatsResponse{}
+	} else {
+		o.inner = v.(*runtimeapi.ContainerStatsResponse)
+	}
+}
 func (o *ContainerStatsResponse_110) Unwrap() interface{} { return o.inner }
 func (o *ContainerStatsResponse_110) Stats() ContainerStats {
 	if o.inner.Stats == nil {
@@ -608,6 +915,13 @@ type ExecSyncRequest_110 struct {
 
 var _ ExecSyncRequest = &ExecSyncRequest_110{}
 
+func (o *ExecSyncRequest_110) Wrap(v interface{}) {
+	if v == nil {
+		o.inner = &runtimeapi.ExecSyncRequest{}
+	} else {
+		o.inner = v.(*runtimeapi.ExecSyncRequest)
+	}
+}
 func (o *ExecSyncRequest_110) Unwrap() interface{}      { return o.inner }
 func (o *ExecSyncRequest_110) ContainerId() string      { return o.inner.ContainerId }
 func (o *ExecSyncRequest_110) SetContainerId(id string) { o.inner.ContainerId = id }
@@ -620,6 +934,13 @@ type ExecSyncResponse_110 struct {
 
 var _ ExecSyncResponse = &ExecSyncResponse_110{}
 
+func (o *ExecSyncResponse_110) Wrap(v interface{}) {
+	if v == nil {
+		o.inner = &runtimeapi.ExecSyncResponse{}
+	} else {
+		o.inner = v.(*runtimeapi.ExecSyncResponse)
+	}
+}
 func (o *ExecSyncResponse_110) Unwrap() interface{} { return o.inner }
 
 // ---
@@ -630,6 +951,13 @@ type ExecRequest_110 struct {
 
 var _ ExecRequest = &ExecRequest_110{}
 
+func (o *ExecRequest_110) Wrap(v interface{}) {
+	if v == nil {
+		o.inner = &runtimeapi.ExecRequest{}
+	} else {
+		o.inner = v.(*runtimeapi.ExecRequest)
+	}
+}
 func (o *ExecRequest_110) Unwrap() interface{}      { return o.inner }
 func (o *ExecRequest_110) ContainerId() string      { return o.inner.ContainerId }
 func (o *ExecRequest_110) SetContainerId(id string) { o.inner.ContainerId = id }
@@ -642,6 +970,13 @@ type ExecResponse_110 struct {
 
 var _ ExecResponse = &ExecResponse_110{}
 
+func (o *ExecResponse_110) Wrap(v interface{}) {
+	if v == nil {
+		o.inner = &runtimeapi.ExecResponse{}
+	} else {
+		o.inner = v.(*runtimeapi.ExecResponse)
+	}
+}
 func (o *ExecResponse_110) Unwrap() interface{} { return o.inner }
 func (o *ExecResponse_110) Url() string         { return o.inner.Url }
 func (o *ExecResponse_110) SetUrl(url string)   { o.inner.Url = url }
@@ -654,6 +989,13 @@ type AttachRequest_110 struct {
 
 var _ AttachRequest = &AttachRequest_110{}
 
+func (o *AttachRequest_110) Wrap(v interface{}) {
+	if v == nil {
+		o.inner = &runtimeapi.AttachRequest{}
+	} else {
+		o.inner = v.(*runtimeapi.AttachRequest)
+	}
+}
 func (o *AttachRequest_110) Unwrap() interface{}      { return o.inner }
 func (o *AttachRequest_110) ContainerId() string      { return o.inner.ContainerId }
 func (o *AttachRequest_110) SetContainerId(id string) { o.inner.ContainerId = id }
@@ -666,6 +1008,13 @@ type AttachResponse_110 struct {
 
 var _ AttachResponse = &AttachResponse_110{}
 
+func (o *AttachResponse_110) Wrap(v interface{}) {
+	if v == nil {
+		o.inner = &runtimeapi.AttachResponse{}
+	} else {
+		o.inner = v.(*runtimeapi.AttachResponse)
+	}
+}
 func (o *AttachResponse_110) Unwrap() interface{} { return o.inner }
 func (o *AttachResponse_110) Url() string         { return o.inner.Url }
 func (o *AttachResponse_110) SetUrl(url string)   { o.inner.Url = url }
@@ -678,6 +1027,13 @@ type PortForwardRequest_110 struct {
 
 var _ PortForwardRequest = &PortForwardRequest_110{}
 
+func (o *PortForwardRequest_110) Wrap(v interface{}) {
+	if v == nil {
+		o.inner = &runtimeapi.PortForwardRequest{}
+	} else {
+		o.inner = v.(*runtimeapi.PortForwardRequest)
+	}
+}
 func (o *PortForwardRequest_110) Unwrap() interface{}  { return o.inner }
 func (o *PortForwardRequest_110) PodSandboxId() string { return o.inner.PodSandboxId }
 func (o *PortForwardRequest_110) SetPodSandboxId(podSandboxId string) {
@@ -692,6 +1048,13 @@ type PortForwardResponse_110 struct {
 
 var _ PortForwardResponse = &PortForwardResponse_110{}
 
+func (o *PortForwardResponse_110) Wrap(v interface{}) {
+	if v == nil {
+		o.inner = &runtimeapi.PortForwardResponse{}
+	} else {
+		o.inner = v.(*runtimeapi.PortForwardResponse)
+	}
+}
 func (o *PortForwardResponse_110) Unwrap() interface{} { return o.inner }
 func (o *PortForwardResponse_110) Url() string         { return o.inner.Url }
 func (o *PortForwardResponse_110) SetUrl(url string)   { o.inner.Url = url }
@@ -704,6 +1067,13 @@ type ListImagesRequest_110 struct {
 
 var _ ListImagesRequest = &ListImagesRequest_110{}
 
+func (o *ListImagesRequest_110) Wrap(v interface{}) {
+	if v == nil {
+		o.inner = &runtimeapi.ListImagesRequest{}
+	} else {
+		o.inner = v.(*runtimeapi.ListImagesRequest)
+	}
+}
 func (o *ListImagesRequest_110) Unwrap() interface{} { return o.inner }
 func (o *ListImagesRequest_110) ImageFilter() string { return o.inner.Filter.GetImage().GetImage() }
 func (o *ListImagesRequest_110) SetImageFilter(image string) {
@@ -724,6 +1094,13 @@ type ListImagesResponse_110 struct {
 
 var _ ListImagesResponse = &ListImagesResponse_110{}
 
+func (o *ListImagesResponse_110) Wrap(v interface{}) {
+	if v == nil {
+		o.inner = &runtimeapi.ListImagesResponse{}
+	} else {
+		o.inner = v.(*runtimeapi.ListImagesResponse)
+	}
+}
 func (o *ListImagesResponse_110) Unwrap() interface{} { return o.inner }
 func (o *ListImagesResponse_110) Items() []CRIObject {
 	var r []CRIObject
@@ -747,6 +1124,13 @@ type ImageStatusRequest_110 struct {
 
 var _ ImageStatusRequest = &ImageStatusRequest_110{}
 
+func (o *ImageStatusRequest_110) Wrap(v interface{}) {
+	if v == nil {
+		o.inner = &runtimeapi.ImageStatusRequest{}
+	} else {
+		o.inner = v.(*runtimeapi.ImageStatusRequest)
+	}
+}
 func (o *ImageStatusRequest_110) Unwrap() interface{} { return o.inner }
 func (o *ImageStatusRequest_110) Image() string       { return o.inner.Image.GetImage() }
 func (o *ImageStatusRequest_110) SetImage(image string) {
@@ -761,6 +1145,13 @@ type ImageStatusResponse_110 struct {
 
 var _ ImageStatusResponse = &ImageStatusResponse_110{}
 
+func (o *ImageStatusResponse_110) Wrap(v interface{}) {
+	if v == nil {
+		o.inner = &runtimeapi.ImageStatusResponse{}
+	} else {
+		o.inner = v.(*runtimeapi.ImageStatusResponse)
+	}
+}
 func (o *ImageStatusResponse_110) Unwrap() interface{} { return o.inner }
 func (o *ImageStatusResponse_110) Image() Image {
 	if o.inner.Image == nil {
@@ -780,6 +1171,13 @@ type PullImageRequest_110 struct {
 
 var _ PullImageRequest = &PullImageRequest_110{}
 
+func (o *PullImageRequest_110) Wrap(v interface{}) {
+	if v == nil {
+		o.inner = &runtimeapi.PullImageRequest{}
+	} else {
+		o.inner = v.(*runtimeapi.PullImageRequest)
+	}
+}
 func (o *PullImageRequest_110) Unwrap() interface{} { return o.inner }
 func (o *PullImageRequest_110) Image() string       { return o.inner.Image.GetImage() }
 func (o *PullImageRequest_110) SetImage(image string) {
@@ -794,6 +1192,13 @@ type PullImageResponse_110 struct {
 
 var _ PullImageResponse = &PullImageResponse_110{}
 
+func (o *PullImageResponse_110) Wrap(v interface{}) {
+	if v == nil {
+		o.inner = &runtimeapi.PullImageResponse{}
+	} else {
+		o.inner = v.(*runtimeapi.PullImageResponse)
+	}
+}
 func (o *PullImageResponse_110) Unwrap() interface{}   { return o.inner }
 func (o *PullImageResponse_110) Image() string         { return o.inner.ImageRef }
 func (o *PullImageResponse_110) SetImage(image string) { o.inner.ImageRef = image }
@@ -806,6 +1211,13 @@ type RemoveImageRequest_110 struct {
 
 var _ RemoveImageRequest = &RemoveImageRequest_110{}
 
+func (o *RemoveImageRequest_110) Wrap(v interface{}) {
+	if v == nil {
+		o.inner = &runtimeapi.RemoveImageRequest{}
+	} else {
+		o.inner = v.(*runtimeapi.RemoveImageRequest)
+	}
+}
 func (o *RemoveImageRequest_110) Unwrap() interface{} { return o.inner }
 func (o *RemoveImageRequest_110) Image() string       { return o.inner.Image.GetImage() }
 func (o *RemoveImageRequest_110) SetImage(image string) {
@@ -820,6 +1232,13 @@ type RemoveImageResponse_110 struct {
 
 var _ RemoveImageResponse = &RemoveImageResponse_110{}
 
+func (o *RemoveImageResponse_110) Wrap(v interface{}) {
+	if v == nil {
+		o.inner = &runtimeapi.RemoveImageResponse{}
+	} else {
+		o.inner = v.(*runtimeapi.RemoveImageResponse)
+	}
+}
 func (o *RemoveImageResponse_110) Unwrap() interface{} { return o.inner }
 
 // ---
@@ -830,6 +1249,13 @@ type ImageFsInfoRequest_110 struct {
 
 var _ ImageFsInfoRequest = &ImageFsInfoRequest_110{}
 
+func (o *ImageFsInfoRequest_110) Wrap(v interface{}) {
+	if v == nil {
+		o.inner = &runtimeapi.ImageFsInfoRequest{}
+	} else {
+		o.inner = v.(*runtimeapi.ImageFsInfoRequest)
+	}
+}
 func (o *ImageFsInfoRequest_110) Unwrap() interface{} { return o.inner }
 
 // ---
@@ -840,6 +1266,13 @@ type ImageFsInfoResponse_110 struct {
 
 var _ ImageFsInfoResponse = &ImageFsInfoResponse_110{}
 
+func (o *ImageFsInfoResponse_110) Wrap(v interface{}) {
+	if v == nil {
+		o.inner = &runtimeapi.ImageFsInfoResponse{}
+	} else {
+		o.inner = v.(*runtimeapi.ImageFsInfoResponse)
+	}
+}
 func (o *ImageFsInfoResponse_110) Unwrap() interface{} { return o.inner }
 func (o *ImageFsInfoResponse_110) Items() []CRIObject {
 	var r []CRIObject
@@ -863,6 +1296,13 @@ type UpdateContainerResourcesRequest_110 struct {
 
 var _ UpdateContainerResourcesRequest = &UpdateContainerResourcesRequest_110{}
 
+func (o *UpdateContainerResourcesRequest_110) Wrap(v interface{}) {
+	if v == nil {
+		o.inner = &runtimeapi.UpdateContainerResourcesRequest{}
+	} else {
+		o.inner = v.(*runtimeapi.UpdateContainerResourcesRequest)
+	}
+}
 func (o *UpdateContainerResourcesRequest_110) Unwrap() interface{}      { return o.inner }
 func (o *UpdateContainerResourcesRequest_110) ContainerId() string      { return o.inner.ContainerId }
 func (o *UpdateContainerResourcesRequest_110) SetContainerId(id string) { o.inner.ContainerId = id }
@@ -875,9 +1315,84 @@ type UpdateContainerResourcesResponse_110 struct {
 
 var _ UpdateContainerResourcesResponse = &UpdateContainerResourcesResponse_110{}
 
+func (o *UpdateContainerResourcesResponse_110) Wrap(v interface{}) {
+	if v == nil {
+		o.inner = &runtimeapi.UpdateContainerResourcesResponse{}
+	} else {
+		o.inner = v.(*runtimeapi.UpdateContainerResourcesResponse)
+	}
+}
 func (o *UpdateContainerResourcesResponse_110) Unwrap() interface{} { return o.inner }
 
 // ---
+
+var cri110typeMatcher = newTypeMatcher()
+
+func init() {
+	cri110typeMatcher.registerTypes(
+		&PodSandbox_110{},
+		&Container_110{},
+		&Image_110{},
+		&PodSandboxStatus_110{},
+		&ContainerStatus_110{},
+		&ContainerStats_110{},
+		&FilesystemUsage_110{},
+		&VersionRequest_110{},
+		&VersionResponse_110{},
+		&StatusRequest_110{},
+		&StatusResponse_110{},
+		&UpdateRuntimeConfigRequest_110{},
+		&UpdateRuntimeConfigResponse_110{},
+		&RunPodSandboxRequest_110{},
+		&RunPodSandboxResponse_110{},
+		&ListPodSandboxRequest_110{},
+		&ListPodSandboxResponse_110{},
+		&StopPodSandboxRequest_110{},
+		&StopPodSandboxResponse_110{},
+		&RemovePodSandboxRequest_110{},
+		&RemovePodSandboxResponse_110{},
+		&PodSandboxStatusRequest_110{},
+		&PodSandboxStatusResponse_110{},
+		&CreateContainerRequest_110{},
+		&CreateContainerResponse_110{},
+		&ListContainersRequest_110{},
+		&ListContainersResponse_110{},
+		&ListContainerStatsRequest_110{},
+		&ListContainerStatsResponse_110{},
+		&StartContainerRequest_110{},
+		&StartContainerResponse_110{},
+		&StopContainerRequest_110{},
+		&StopContainerResponse_110{},
+		&RemoveContainerRequest_110{},
+		&RemoveContainerResponse_110{},
+		&ReopenContainerLogRequest_110{},
+		&ReopenContainerLogResponse_110{},
+		&ContainerStatusRequest_110{},
+		&ContainerStatusResponse_110{},
+		&ContainerStatsRequest_110{},
+		&ContainerStatsResponse_110{},
+		&ExecSyncRequest_110{},
+		&ExecSyncResponse_110{},
+		&ExecRequest_110{},
+		&ExecResponse_110{},
+		&AttachRequest_110{},
+		&AttachResponse_110{},
+		&PortForwardRequest_110{},
+		&PortForwardResponse_110{},
+		&ListImagesRequest_110{},
+		&ListImagesResponse_110{},
+		&ImageStatusRequest_110{},
+		&ImageStatusResponse_110{},
+		&PullImageRequest_110{},
+		&PullImageResponse_110{},
+		&RemoveImageRequest_110{},
+		&RemoveImageResponse_110{},
+		&ImageFsInfoRequest_110{},
+		&ImageFsInfoResponse_110{},
+		&UpdateContainerResourcesRequest_110{},
+		&UpdateContainerResourcesResponse_110{},
+	)
+}
 
 type CRI110 struct{}
 
@@ -893,71 +1408,7 @@ func (c *CRI110) ProbeRequest() (interface{}, interface{}) {
 }
 
 func (c *CRI110) WrapObject(o interface{}) (CRIObject, CRIObject, error) {
-	if o == nil {
-		return nil, nil, nil
-	}
-	switch v := o.(type) {
-	case *runtimeapi.PodSandbox:
-		return &PodSandbox_110{v}, nil, nil
-	case *runtimeapi.Container:
-		return &Container_110{v}, nil, nil
-	case *runtimeapi.Image:
-		return &Image_110{v}, nil, nil
-	case *runtimeapi.PodSandboxStatus:
-		return &PodSandboxStatus_110{v}, nil, nil
-	case *runtimeapi.VersionRequest:
-		return &VersionRequest_110{v}, &VersionResponse_110{&runtimeapi.VersionResponse{}}, nil
-	case *runtimeapi.StatusRequest:
-		return &StatusRequest_110{v}, &StatusResponse_110{&runtimeapi.StatusResponse{}}, nil
-	case *runtimeapi.UpdateRuntimeConfigRequest:
-		return &UpdateRuntimeConfigRequest_110{v}, &UpdateRuntimeConfigResponse_110{&runtimeapi.UpdateRuntimeConfigResponse{}}, nil
-	case *runtimeapi.RunPodSandboxRequest:
-		return &RunPodSandboxRequest_110{v}, &RunPodSandboxResponse_110{&runtimeapi.RunPodSandboxResponse{}}, nil
-	case *runtimeapi.ListPodSandboxRequest:
-		return &ListPodSandboxRequest_110{v}, &ListPodSandboxResponse_110{&runtimeapi.ListPodSandboxResponse{}}, nil
-	case *runtimeapi.StopPodSandboxRequest:
-		return &StopPodSandboxRequest_110{v}, &StopPodSandboxResponse_110{&runtimeapi.StopPodSandboxResponse{}}, nil
-	case *runtimeapi.RemovePodSandboxRequest:
-		return &RemovePodSandboxRequest_110{v}, &RemovePodSandboxResponse_110{&runtimeapi.RemovePodSandboxResponse{}}, nil
-	case *runtimeapi.PodSandboxStatusRequest:
-		return &PodSandboxStatusRequest_110{v}, &PodSandboxStatusResponse_110{&runtimeapi.PodSandboxStatusResponse{}}, nil
-	case *runtimeapi.CreateContainerRequest:
-		return &CreateContainerRequest_110{v}, &CreateContainerResponse_110{&runtimeapi.CreateContainerResponse{}}, nil
-	case *runtimeapi.ListContainersRequest:
-		return &ListContainersRequest_110{v}, &ListContainersResponse_110{&runtimeapi.ListContainersResponse{}}, nil
-	case *runtimeapi.ListContainerStatsRequest:
-		return &ListContainerStatsRequest_110{v}, &ListContainerStatsResponse_110{&runtimeapi.ListContainerStatsResponse{}}, nil
-	case *runtimeapi.StartContainerRequest:
-		return &StartContainerRequest_110{v}, &StartContainerResponse_110{&runtimeapi.StartContainerResponse{}}, nil
-	case *runtimeapi.StopContainerRequest:
-		return &StopContainerRequest_110{v}, &StopContainerResponse_110{&runtimeapi.StopContainerResponse{}}, nil
-	case *runtimeapi.RemoveContainerRequest:
-		return &RemoveContainerRequest_110{v}, &RemoveContainerResponse_110{&runtimeapi.RemoveContainerResponse{}}, nil
-	case *runtimeapi.ContainerStatusRequest:
-		return &ContainerStatusRequest_110{v}, &ContainerStatusResponse_110{&runtimeapi.ContainerStatusResponse{}}, nil
-	case *runtimeapi.ContainerStatsRequest:
-		return &ContainerStatsRequest_110{v}, &ContainerStatsResponse_110{&runtimeapi.ContainerStatsResponse{}}, nil
-	case *runtimeapi.ExecSyncRequest:
-		return &ExecSyncRequest_110{v}, &ExecSyncResponse_110{&runtimeapi.ExecSyncResponse{}}, nil
-	case *runtimeapi.ExecRequest:
-		return &ExecRequest_110{v}, &ExecResponse_110{&runtimeapi.ExecResponse{}}, nil
-	case *runtimeapi.AttachRequest:
-		return &AttachRequest_110{v}, &AttachResponse_110{&runtimeapi.AttachResponse{}}, nil
-	case *runtimeapi.PortForwardRequest:
-		return &PortForwardRequest_110{v}, &PortForwardResponse_110{&runtimeapi.PortForwardResponse{}}, nil
-	case *runtimeapi.ListImagesRequest:
-		return &ListImagesRequest_110{v}, &ListImagesResponse_110{&runtimeapi.ListImagesResponse{}}, nil
-	case *runtimeapi.ImageStatusRequest:
-		return &ImageStatusRequest_110{v}, &ImageStatusResponse_110{&runtimeapi.ImageStatusResponse{}}, nil
-	case *runtimeapi.PullImageRequest:
-		return &PullImageRequest_110{v}, &PullImageResponse_110{&runtimeapi.PullImageResponse{}}, nil
-	case *runtimeapi.RemoveImageRequest:
-		return &RemoveImageRequest_110{v}, &RemoveImageResponse_110{&runtimeapi.RemoveImageResponse{}}, nil
-	case *runtimeapi.ImageFsInfoRequest:
-		return &ImageFsInfoRequest_110{v}, &ImageFsInfoResponse_110{&runtimeapi.ImageFsInfoResponse{}}, nil
-	case *runtimeapi.UpdateContainerResourcesRequest: // 1.8+ only
-		return &UpdateContainerResourcesRequest_110{v}, &UpdateContainerResourcesResponse_110{&runtimeapi.UpdateContainerResourcesResponse{}}, nil
-	default:
-		return nil, nil, fmt.Errorf("can't wrap %T", o)
-	}
+	return wrapUsingMatcher(cri110typeMatcher, o)
 }
+
+func (c *CRI110) ProtoPackage() string { return "runtime.v1alpha2" }
