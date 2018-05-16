@@ -177,14 +177,14 @@ func (tester *proxyTester) stop() {
 	tester.proxyServer.Stop()
 }
 
-func (tester *proxyTester) verifyJournal(t *testing.T, expectedItems []string) {
-	if err := tester.journal.Verify(expectedItems); err != nil {
-		t.Error(err)
+func (tester *proxyTester) skipJournalItems(items ...string) {
+	for _, item := range items {
+		tester.journal.Skip(item)
 	}
 }
 
-func (tester *proxyTester) verifyJournalUnordered(t *testing.T, expectedItems []string) {
-	if err := tester.journal.VerifyUnordered(expectedItems); err != nil {
+func (tester *proxyTester) verifyJournal(t *testing.T, expectedItems []string) {
+	if err := tester.journal.Verify(expectedItems); err != nil {
 		t.Error(err)
 	}
 }
@@ -1485,6 +1485,9 @@ func TestCriProxyInactiveServers(t *testing.T) {
 
 	tester.startProxy(t)
 	tester.connectToProxy(t)
+	// these items may occur at different points, and we try to
+	// make the journal stable
+	tester.skipJournalItems("1/runtime/Version", "2/runtime/Version")
 
 	// should not need 2nd runtime to contact just the first one
 	listReq := &runtimeapi.ListImagesRequest{
@@ -1505,7 +1508,7 @@ func TestCriProxyInactiveServers(t *testing.T) {
 	}, "")
 	// the first Version request is done by CRI proxy itself
 	// to verify the connection
-	tester.verifyJournal(t, []string{"1/runtime/Version", "1/image/ListImages"})
+	tester.verifyJournal(t, []string{"1/image/ListImages"})
 
 	// this one skips 2nd client because it's not connected yet
 	tester.verifyCall(t, "/runtime.ImageService/ListImages", &runtimeapi.ListImagesRequest{}, &runtimeapi.ListImagesResponse{
@@ -1539,11 +1542,7 @@ func TestCriProxyInactiveServers(t *testing.T) {
 			t.Fatalf("ListImages() failed while waiting for 2nd client to connect: %v", err)
 		}
 		if len(resp.GetImages()) == 4 {
-			// the Version request is done by CRI proxy itself
-			// to verify the connection. The order here is undefined
-			// beause "2/runtime/Version" may come either before
-			// or after "1/image/ListImages"
-			tester.verifyJournalUnordered(t, []string{"1/image/ListImages", "2/runtime/Version", "2/image/ListImages"})
+			tester.verifyJournal(t, []string{"1/image/ListImages", "2/image/ListImages"})
 			break
 		} else {
 			tester.verifyJournal(t, []string{"1/image/ListImages"})
