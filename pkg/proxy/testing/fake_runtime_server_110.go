@@ -41,32 +41,25 @@ import (
 	"sync"
 	"time"
 
-	runtimeapi "github.com/Mirantis/criproxy/pkg/runtimeapi/v1_9"
+	runtimeapi "github.com/Mirantis/criproxy/pkg/runtimeapis/v1_10"
 	"golang.org/x/net/context"
 )
 
-var (
-	version = "0.1.0"
-
-	FakeRuntimeName  = "fakeRuntime"
-	FakePodSandboxIP = "192.168.192.168"
-)
-
-func BuildContainerName(metadata *runtimeapi.ContainerMetadata, sandboxID string) string {
+func BuildContainerName110(metadata *runtimeapi.ContainerMetadata, sandboxID string) string {
 	// include the sandbox ID to make the container ID unique.
 	return fmt.Sprintf("%s_%s_%d", sandboxID, metadata.Name, metadata.Attempt)
 }
 
-func BuildSandboxName(metadata *runtimeapi.PodSandboxMetadata) string {
+func BuildSandboxName110(metadata *runtimeapi.PodSandboxMetadata) string {
 	return fmt.Sprintf("%s_%s_%s_%d", metadata.Name, metadata.Namespace, metadata.Uid, metadata.Attempt)
 }
 
-type FakePodSandbox struct {
+type FakePodSandbox110 struct {
 	// PodSandboxStatus contains the runtime information for a sandbox.
 	runtimeapi.PodSandboxStatus
 }
 
-type FakeContainer struct {
+type FakeContainer110 struct {
 	// ContainerStatus contains the runtime information for a container.
 	runtimeapi.ContainerStatus
 
@@ -74,38 +67,40 @@ type FakeContainer struct {
 	SandboxID string
 }
 
-type FakeRuntimeServer struct {
+type FakeRuntimeServer110 struct {
 	sync.Mutex
 	streamUrl          string
 	journal            Journal
 	CurrentTime        int64
 	FakeStatus         *runtimeapi.RuntimeStatus
-	Containers         map[string]*FakeContainer
-	Sandboxes          map[string]*FakePodSandbox
+	Containers         map[string]*FakeContainer110
+	Sandboxes          map[string]*FakePodSandbox110
 	FakeContainerStats map[string]*runtimeapi.ContainerStats
 }
 
-func (r *FakeRuntimeServer) SetFakeSandboxes(sandboxes []*FakePodSandbox) {
+var _ runtimeapi.RuntimeServiceServer = &FakeRuntimeServer110{}
+
+func (r *FakeRuntimeServer110) SetFakeSandboxes(sandboxes []*FakePodSandbox110) {
 	r.Lock()
 	defer r.Unlock()
 
-	r.Sandboxes = make(map[string]*FakePodSandbox)
+	r.Sandboxes = make(map[string]*FakePodSandbox110)
 	for _, sandbox := range sandboxes {
 		r.Sandboxes[sandbox.Id] = sandbox
 	}
 }
 
-func (r *FakeRuntimeServer) SetFakeContainers(containers []*FakeContainer) {
+func (r *FakeRuntimeServer110) SetFakeContainers(containers []*FakeContainer110) {
 	r.Lock()
 	defer r.Unlock()
 
-	r.Containers = make(map[string]*FakeContainer)
+	r.Containers = make(map[string]*FakeContainer110)
 	for _, c := range containers {
 		r.Containers[c.Id] = c
 	}
 }
 
-func (r *FakeRuntimeServer) SetFakeContainerStats(containerStats []*runtimeapi.ContainerStats) {
+func (r *FakeRuntimeServer110) SetFakeContainerStats(containerStats []*runtimeapi.ContainerStats) {
 	r.Lock()
 	defer r.Unlock()
 
@@ -115,11 +110,11 @@ func (r *FakeRuntimeServer) SetFakeContainerStats(containerStats []*runtimeapi.C
 	}
 }
 
-func NewFakeRuntimeServer(journal Journal, streamUrl string) *FakeRuntimeServer {
+func NewFakeRuntimeServer110(journal Journal, streamUrl string) *FakeRuntimeServer110 {
 	ready := true
 	runtimeReadyStr := runtimeapi.RuntimeReady
 	networkReadyStr := runtimeapi.NetworkReady
-	return &FakeRuntimeServer{
+	return &FakeRuntimeServer110{
 		streamUrl:   streamUrl,
 		journal:     journal,
 		CurrentTime: time.Now().UnixNano(),
@@ -135,12 +130,12 @@ func NewFakeRuntimeServer(journal Journal, streamUrl string) *FakeRuntimeServer 
 				},
 			},
 		},
-		Containers: make(map[string]*FakeContainer),
-		Sandboxes:  make(map[string]*FakePodSandbox),
+		Containers: make(map[string]*FakeContainer110),
+		Sandboxes:  make(map[string]*FakePodSandbox110),
 	}
 }
 
-func (r *FakeRuntimeServer) Version(ctx context.Context, in *runtimeapi.VersionRequest) (*runtimeapi.VersionResponse, error) {
+func (r *FakeRuntimeServer110) Version(ctx context.Context, in *runtimeapi.VersionRequest) (*runtimeapi.VersionResponse, error) {
 	r.journal.Record("Version")
 
 	return &runtimeapi.VersionResponse{
@@ -151,12 +146,12 @@ func (r *FakeRuntimeServer) Version(ctx context.Context, in *runtimeapi.VersionR
 	}, nil
 }
 
-func (r *FakeRuntimeServer) Status(ctx context.Context, in *runtimeapi.StatusRequest) (*runtimeapi.StatusResponse, error) {
+func (r *FakeRuntimeServer110) Status(ctx context.Context, in *runtimeapi.StatusRequest) (*runtimeapi.StatusResponse, error) {
 	r.journal.Record("Status")
 	return &runtimeapi.StatusResponse{Status: r.FakeStatus}, nil
 }
 
-func (r *FakeRuntimeServer) RunPodSandbox(ctx context.Context, in *runtimeapi.RunPodSandboxRequest) (*runtimeapi.RunPodSandboxResponse, error) {
+func (r *FakeRuntimeServer110) RunPodSandbox(ctx context.Context, in *runtimeapi.RunPodSandboxRequest) (*runtimeapi.RunPodSandboxResponse, error) {
 	r.Lock()
 	defer r.Unlock()
 
@@ -165,8 +160,8 @@ func (r *FakeRuntimeServer) RunPodSandbox(ctx context.Context, in *runtimeapi.Ru
 	// PodSandboxID should be randomized for real container runtime, but here just use
 	// fixed name from BuildSandboxName() for easily making fake sandboxes.
 	config := in.GetConfig()
-	podSandboxID := BuildSandboxName(config.Metadata)
-	r.Sandboxes[podSandboxID] = &FakePodSandbox{
+	podSandboxID := BuildSandboxName110(config.Metadata)
+	r.Sandboxes[podSandboxID] = &FakePodSandbox110{
 		PodSandboxStatus: runtimeapi.PodSandboxStatus{
 			Id:        podSandboxID,
 			Metadata:  config.Metadata,
@@ -183,7 +178,7 @@ func (r *FakeRuntimeServer) RunPodSandbox(ctx context.Context, in *runtimeapi.Ru
 	return &runtimeapi.RunPodSandboxResponse{PodSandboxId: podSandboxID}, nil
 }
 
-func (r *FakeRuntimeServer) StopPodSandbox(ctx context.Context, in *runtimeapi.StopPodSandboxRequest) (*runtimeapi.StopPodSandboxResponse, error) {
+func (r *FakeRuntimeServer110) StopPodSandbox(ctx context.Context, in *runtimeapi.StopPodSandboxRequest) (*runtimeapi.StopPodSandboxResponse, error) {
 	r.Lock()
 	defer r.Unlock()
 
@@ -199,7 +194,7 @@ func (r *FakeRuntimeServer) StopPodSandbox(ctx context.Context, in *runtimeapi.S
 	return &runtimeapi.StopPodSandboxResponse{}, nil
 }
 
-func (r *FakeRuntimeServer) RemovePodSandbox(ctx context.Context, in *runtimeapi.RemovePodSandboxRequest) (*runtimeapi.RemovePodSandboxResponse, error) {
+func (r *FakeRuntimeServer110) RemovePodSandbox(ctx context.Context, in *runtimeapi.RemovePodSandboxRequest) (*runtimeapi.RemovePodSandboxResponse, error) {
 	r.Lock()
 	defer r.Unlock()
 
@@ -211,7 +206,7 @@ func (r *FakeRuntimeServer) RemovePodSandbox(ctx context.Context, in *runtimeapi
 	return &runtimeapi.RemovePodSandboxResponse{}, nil
 }
 
-func (r *FakeRuntimeServer) PodSandboxStatus(ctx context.Context, in *runtimeapi.PodSandboxStatusRequest) (*runtimeapi.PodSandboxStatusResponse, error) {
+func (r *FakeRuntimeServer110) PodSandboxStatus(ctx context.Context, in *runtimeapi.PodSandboxStatusRequest) (*runtimeapi.PodSandboxStatusResponse, error) {
 	r.Lock()
 	defer r.Unlock()
 
@@ -225,7 +220,7 @@ func (r *FakeRuntimeServer) PodSandboxStatus(ctx context.Context, in *runtimeapi
 	return &runtimeapi.PodSandboxStatusResponse{Status: &s.PodSandboxStatus}, nil
 }
 
-func (r *FakeRuntimeServer) ListPodSandbox(ctx context.Context, in *runtimeapi.ListPodSandboxRequest) (*runtimeapi.ListPodSandboxResponse, error) {
+func (r *FakeRuntimeServer110) ListPodSandbox(ctx context.Context, in *runtimeapi.ListPodSandboxRequest) (*runtimeapi.ListPodSandboxResponse, error) {
 	r.Lock()
 	defer r.Unlock()
 
@@ -266,7 +261,7 @@ func (r *FakeRuntimeServer) ListPodSandbox(ctx context.Context, in *runtimeapi.L
 	return &runtimeapi.ListPodSandboxResponse{Items: result}, nil
 }
 
-func (r *FakeRuntimeServer) CreateContainer(ctx context.Context, in *runtimeapi.CreateContainerRequest) (*runtimeapi.CreateContainerResponse, error) {
+func (r *FakeRuntimeServer110) CreateContainer(ctx context.Context, in *runtimeapi.CreateContainerRequest) (*runtimeapi.CreateContainerResponse, error) {
 	r.Lock()
 	defer r.Unlock()
 
@@ -275,8 +270,8 @@ func (r *FakeRuntimeServer) CreateContainer(ctx context.Context, in *runtimeapi.
 	// ContainerID should be randomized for real container runtime, but here just use
 	// fixed BuildContainerName() for easily making fake containers.
 	config := in.GetConfig()
-	containerID := BuildContainerName(config.Metadata, in.PodSandboxId)
-	r.Containers[containerID] = &FakeContainer{
+	containerID := BuildContainerName110(config.Metadata, in.PodSandboxId)
+	r.Containers[containerID] = &FakeContainer110{
 		ContainerStatus: runtimeapi.ContainerStatus{
 			Id:          containerID,
 			Metadata:    config.Metadata,
@@ -293,7 +288,7 @@ func (r *FakeRuntimeServer) CreateContainer(ctx context.Context, in *runtimeapi.
 	return &runtimeapi.CreateContainerResponse{ContainerId: containerID}, nil
 }
 
-func (r *FakeRuntimeServer) StartContainer(ctx context.Context, in *runtimeapi.StartContainerRequest) (*runtimeapi.StartContainerResponse, error) {
+func (r *FakeRuntimeServer110) StartContainer(ctx context.Context, in *runtimeapi.StartContainerRequest) (*runtimeapi.StartContainerResponse, error) {
 	r.Lock()
 	defer r.Unlock()
 
@@ -311,7 +306,7 @@ func (r *FakeRuntimeServer) StartContainer(ctx context.Context, in *runtimeapi.S
 	return &runtimeapi.StartContainerResponse{}, nil
 }
 
-func (r *FakeRuntimeServer) StopContainer(ctx context.Context, in *runtimeapi.StopContainerRequest) (*runtimeapi.StopContainerResponse, error) {
+func (r *FakeRuntimeServer110) StopContainer(ctx context.Context, in *runtimeapi.StopContainerRequest) (*runtimeapi.StopContainerResponse, error) {
 	r.Lock()
 	defer r.Unlock()
 
@@ -329,7 +324,7 @@ func (r *FakeRuntimeServer) StopContainer(ctx context.Context, in *runtimeapi.St
 	return &runtimeapi.StopContainerResponse{}, nil
 }
 
-func (r *FakeRuntimeServer) RemoveContainer(ctx context.Context, in *runtimeapi.RemoveContainerRequest) (*runtimeapi.RemoveContainerResponse, error) {
+func (r *FakeRuntimeServer110) RemoveContainer(ctx context.Context, in *runtimeapi.RemoveContainerRequest) (*runtimeapi.RemoveContainerResponse, error) {
 	r.Lock()
 	defer r.Unlock()
 
@@ -341,7 +336,7 @@ func (r *FakeRuntimeServer) RemoveContainer(ctx context.Context, in *runtimeapi.
 	return &runtimeapi.RemoveContainerResponse{}, nil
 }
 
-func (r *FakeRuntimeServer) ListContainers(ctx context.Context, in *runtimeapi.ListContainersRequest) (*runtimeapi.ListContainersResponse, error) {
+func (r *FakeRuntimeServer110) ListContainers(ctx context.Context, in *runtimeapi.ListContainersRequest) (*runtimeapi.ListContainersResponse, error) {
 	r.Lock()
 	defer r.Unlock()
 
@@ -388,7 +383,7 @@ func (r *FakeRuntimeServer) ListContainers(ctx context.Context, in *runtimeapi.L
 	return &runtimeapi.ListContainersResponse{Containers: result}, nil
 }
 
-func (r *FakeRuntimeServer) ContainerStatus(ctx context.Context, in *runtimeapi.ContainerStatusRequest) (*runtimeapi.ContainerStatusResponse, error) {
+func (r *FakeRuntimeServer110) ContainerStatus(ctx context.Context, in *runtimeapi.ContainerStatusRequest) (*runtimeapi.ContainerStatusResponse, error) {
 	r.Lock()
 	defer r.Unlock()
 
@@ -402,7 +397,7 @@ func (r *FakeRuntimeServer) ContainerStatus(ctx context.Context, in *runtimeapi.
 	return &runtimeapi.ContainerStatusResponse{Status: &c.ContainerStatus}, nil
 }
 
-func (r *FakeRuntimeServer) UpdateContainerResources(ctx context.Context, in *runtimeapi.UpdateContainerResourcesRequest) (*runtimeapi.UpdateContainerResourcesResponse, error) {
+func (r *FakeRuntimeServer110) UpdateContainerResources(ctx context.Context, in *runtimeapi.UpdateContainerResourcesRequest) (*runtimeapi.UpdateContainerResourcesResponse, error) {
 	r.Lock()
 	defer r.Unlock()
 
@@ -415,32 +410,32 @@ func (r *FakeRuntimeServer) UpdateContainerResources(ctx context.Context, in *ru
 	return &runtimeapi.UpdateContainerResourcesResponse{}, nil
 }
 
-func (r *FakeRuntimeServer) ExecSync(ctx context.Context, in *runtimeapi.ExecSyncRequest) (*runtimeapi.ExecSyncResponse, error) {
+func (r *FakeRuntimeServer110) ExecSync(ctx context.Context, in *runtimeapi.ExecSyncRequest) (*runtimeapi.ExecSyncResponse, error) {
 	r.journal.Record("ExecSync")
 	return &runtimeapi.ExecSyncResponse{Stdout: nil, Stderr: nil, ExitCode: int32(0)}, nil
 }
 
-func (r *FakeRuntimeServer) Exec(ctx context.Context, in *runtimeapi.ExecRequest) (*runtimeapi.ExecResponse, error) {
+func (r *FakeRuntimeServer110) Exec(ctx context.Context, in *runtimeapi.ExecRequest) (*runtimeapi.ExecResponse, error) {
 	r.journal.Record("Exec")
 	return &runtimeapi.ExecResponse{Url: r.streamUrl}, nil
 }
 
-func (r *FakeRuntimeServer) Attach(ctx context.Context, in *runtimeapi.AttachRequest) (*runtimeapi.AttachResponse, error) {
+func (r *FakeRuntimeServer110) Attach(ctx context.Context, in *runtimeapi.AttachRequest) (*runtimeapi.AttachResponse, error) {
 	r.journal.Record("Attach")
 	return &runtimeapi.AttachResponse{Url: r.streamUrl}, nil
 }
 
-func (r *FakeRuntimeServer) PortForward(ctx context.Context, in *runtimeapi.PortForwardRequest) (*runtimeapi.PortForwardResponse, error) {
+func (r *FakeRuntimeServer110) PortForward(ctx context.Context, in *runtimeapi.PortForwardRequest) (*runtimeapi.PortForwardResponse, error) {
 	r.journal.Record("PortForward")
 	return &runtimeapi.PortForwardResponse{Url: r.streamUrl}, nil
 }
 
-func (r *FakeRuntimeServer) UpdateRuntimeConfig(ctx context.Context, in *runtimeapi.UpdateRuntimeConfigRequest) (*runtimeapi.UpdateRuntimeConfigResponse, error) {
+func (r *FakeRuntimeServer110) UpdateRuntimeConfig(ctx context.Context, in *runtimeapi.UpdateRuntimeConfigRequest) (*runtimeapi.UpdateRuntimeConfigResponse, error) {
 	r.journal.Record("UpdateRuntimeConfig")
 	return &runtimeapi.UpdateRuntimeConfigResponse{}, nil
 }
 
-func (r *FakeRuntimeServer) ListContainerStats(ctx context.Context, in *runtimeapi.ListContainerStatsRequest) (*runtimeapi.ListContainerStatsResponse, error) {
+func (r *FakeRuntimeServer110) ListContainerStats(ctx context.Context, in *runtimeapi.ListContainerStatsRequest) (*runtimeapi.ListContainerStatsResponse, error) {
 	r.Lock()
 	defer r.Unlock()
 
@@ -469,7 +464,7 @@ func (r *FakeRuntimeServer) ListContainerStats(ctx context.Context, in *runtimea
 	return &runtimeapi.ListContainerStatsResponse{Stats: result}, nil
 }
 
-func (r *FakeRuntimeServer) ContainerStats(ctx context.Context, in *runtimeapi.ContainerStatsRequest) (*runtimeapi.ContainerStatsResponse, error) {
+func (r *FakeRuntimeServer110) ContainerStats(ctx context.Context, in *runtimeapi.ContainerStatsRequest) (*runtimeapi.ContainerStatsResponse, error) {
 	r.Lock()
 	defer r.Unlock()
 
@@ -482,7 +477,15 @@ func (r *FakeRuntimeServer) ContainerStats(ctx context.Context, in *runtimeapi.C
 	return &runtimeapi.ContainerStatsResponse{Stats: s}, nil
 }
 
-func MakeFakeContainerStats(id string, metadata *runtimeapi.ContainerMetadata, imageFsUUID string) *runtimeapi.ContainerStats {
+func (r *FakeRuntimeServer110) ReopenContainerLog(ctx context.Context, in *runtimeapi.ReopenContainerLogRequest) (*runtimeapi.ReopenContainerLogResponse, error) {
+	r.Lock()
+	defer r.Unlock()
+
+	r.journal.Record("ReopenContainerLog")
+	return &runtimeapi.ReopenContainerLogResponse{}, nil
+}
+
+func MakeFakeContainerStats110(id string, metadata *runtimeapi.ContainerMetadata, imageFsUUID string) *runtimeapi.ContainerStats {
 	return &runtimeapi.ContainerStats{
 		Attributes: &runtimeapi.ContainerAttributes{
 			Id:       id,
@@ -497,8 +500,10 @@ func MakeFakeContainerStats(id string, metadata *runtimeapi.ContainerMetadata, i
 			WorkingSetBytes: &runtimeapi.UInt64Value{Value: rand.Uint64()},
 		},
 		WritableLayer: &runtimeapi.FilesystemUsage{
-			Timestamp:  time.Now().UnixNano(),
-			StorageId:  &runtimeapi.StorageIdentifier{Uuid: imageFsUUID},
+			Timestamp: time.Now().UnixNano(),
+			// FIXME: this is not compatible with current tests
+			// which are based on CRI 1.9
+			// FsId:       &runtimeapi.FilesystemIdentifier{Mountpoint: "/mnt"},
 			UsedBytes:  &runtimeapi.UInt64Value{Value: rand.Uint64()},
 			InodesUsed: &runtimeapi.UInt64Value{Value: rand.Uint64()},
 		},

@@ -14,23 +14,6 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-package v1alpha2
+// +k8s:conversion-gen=github.com/Mirantis/criproxy/pkg/runtimeapis/v1_10
 
-import (
-	"google.golang.org/grpc"
-)
-
-// CRI Proxy does all the work in its grpc interceptor,
-// wo we don't need real handlers. Let's cheat grpc a bit
-
-func RegisterDummyRuntimeServiceServer(s *grpc.Server) {
-	desc := _RuntimeService_serviceDesc
-	desc.HandlerType = (*interface{})(nil)
-	s.RegisterService(&desc, struct{}{})
-}
-
-func RegisterDummyImageServiceServer(s *grpc.Server) {
-	desc := _ImageService_serviceDesc
-	desc.HandlerType = (*interface{})(nil)
-	s.RegisterService(&desc, struct{}{})
-}
+package runtime

@@ -46,6 +46,13 @@ const (
 	journalWaitCount    = 1500
 )
 
+var (
+	version = "0.1.0"
+
+	FakeRuntimeName  = "fakeRuntime"
+	FakePodSandboxIP = "192.168.192.168"
+)
+
 func filterInLabels(filter, labels map[string]string) bool {
 	for k, v := range filter {
 		if value, ok := labels[k]; ok {

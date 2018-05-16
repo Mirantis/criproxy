@@ -1,5 +1,5 @@
-hash: fd1b9712432aeee71bf1603d55ec524c816502a346ae52700a804e896b92b947
-updated: 2018-01-18T20:11:52.862600284+03:00
+hash: 7f1e8b48d1d0d745f6f0cdbf691d0ab035e20f6358c8435332785f02f3150186
+updated: 2018-05-15T09:26:34.381336196+03:00
 imports:
 - name: github.com/davecgh/go-spew
   version: 5215b55f46b2b919f50a1df0eaa5886afe4e3b3d
@@ -9,6 +9,8 @@ imports:
   version: 48294d928ced5dd9b378f7fd7c6f5da3ff3f2c89
   subpackages:
   - digest
+- name: github.com/ghodss/yaml
+  version: 0ca9ea5df5451ffdf184b4428c902747c2c11cd7
 - name: github.com/gogo/protobuf
   version: c0656edd0d9eab7c66d1eb0c568f9039345796f7
   subpackages:
@@ -19,7 +21,7 @@ imports:
 - name: github.com/golang/glog
   version: 23def4e6c14b4da8ac2ed8007337bc5eb5007998
 - name: github.com/golang/protobuf
-  version: 8d92cf5fc15a4382f8964b08e1f42a75c0591aa3
+  version: 4bd1920723d7b7c925de087aa32e2187708897f7
   subpackages:
   - proto
 - name: github.com/pmezard/go-difflib
@@ -27,13 +29,29 @@ imports:
   subpackages:
   - difflib
 - name: golang.org/x/net
-  version: 4876518f9e71663000c348837735820161a42df7
+  version: 1c05540f6879653db88113bc4a2b70aec4bd491f
   subpackages:
   - context
   - http2
   - http2/hpack
+  - idna
   - internal/timeseries
+  - lex/httplex
   - trace
+- name: golang.org/x/text
+  version: b19bf474d317b857955b12035d2c5acb57ce8b01
+  subpackages:
+  - cases
+  - internal
+  - internal/tag
+  - language
+  - runes
+  - secure/bidirule
+  - secure/precis
+  - transform
+  - unicode/bidi
+  - unicode/norm
+  - width
 - name: google.golang.org/grpc
   version: 777daa17ff9b5daef1cfdf915088a2ada3332bf0
   subpackages:
@@ -46,8 +64,16 @@ imports:
   - peer
   - transport
 - name: k8s.io/apimachinery
-  version: 917740426ad66ff818da4809990480bcc0786a77
+  version: 19e3f5aa3adca672c153d324e6b7d82ff8935f03
   subpackages:
+  - pkg/conversion
+  - pkg/conversion/queryparams
+  - pkg/runtime
+  - pkg/runtime/schema
+  - pkg/util/errors
+  - pkg/util/json
   - pkg/util/net
+  - pkg/util/runtime
   - pkg/util/sets
+  - third_party/forked/golang/reflect
 testImports: []

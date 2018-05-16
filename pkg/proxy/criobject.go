@@ -21,7 +21,16 @@ import (
 )
 
 type CRIObject interface {
+	Wrap(v interface{})
 	Unwrap() interface{}
+}
+
+type Upgradable interface {
+	Upgrade() (interface{}, error)
+}
+
+type Downgradable interface {
+	Downgrade() (interface{}, error)
 }
 
 type IdObject interface {
@@ -314,6 +323,15 @@ type PortForwardResponse interface {
 	UrlObject
 }
 
+type ReopenContainerLogRequest interface {
+	CRIObject
+	ContainerIdObject
+}
+
+type ReopenContainerLogResponse interface {
+	CRIObject
+}
+
 type ListImagesRequest interface {
 	CRIObject
 	ImageFilterObject
@@ -367,4 +385,26 @@ type CRIVersion interface {
 	Register(*grpc.Server)
 	ProbeRequest() (interface{}, interface{})
 	WrapObject(interface{}) (CRIObject, CRIObject, error)
+	ProtoPackage() string
+}
+
+type UpgradableCRIVersion interface {
+	CRIVersion
+	UpgradesTo() CRIVersion
+}
+
+func wrapUsingMatcher(tm *typeMatcher, o interface{}) (CRIObject, CRIObject, error) {
+	if o == nil {
+		return nil, nil, nil
+	}
+	out, resp, err := tm.matchType(o)
+	if err != nil {
+		return nil, nil, err
+	}
+	out.(CRIObject).Wrap(o)
+	if resp != nil {
+		resp.(CRIObject).Wrap(nil)
+		return out.(CRIObject), resp.(CRIObject), nil
+	}
+	return out.(CRIObject), nil, nil
 }
