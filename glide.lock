@@ -1,5 +1,5 @@
 hash: 7f1e8b48d1d0d745f6f0cdbf691d0ab035e20f6358c8435332785f02f3150186
-updated: 2018-05-15T09:26:34.381336196+03:00
+updated: 2018-05-16T11:17:53.809172535+03:00
 imports:
 - name: github.com/davecgh/go-spew
   version: 5215b55f46b2b919f50a1df0eaa5886afe4e3b3d
@@ -21,7 +21,7 @@ imports:
 - name: github.com/golang/glog
   version: 23def4e6c14b4da8ac2ed8007337bc5eb5007998
 - name: github.com/golang/protobuf
-  version: 4bd1920723d7b7c925de087aa32e2187708897f7
+  version: 8d92cf5fc15a4382f8964b08e1f42a75c0591aa3
   subpackages:
   - proto
 - name: github.com/pmezard/go-difflib
@@ -29,29 +29,13 @@ imports:
   subpackages:
   - difflib
 - name: golang.org/x/net
-  version: 1c05540f6879653db88113bc4a2b70aec4bd491f
+  version: 4876518f9e71663000c348837735820161a42df7
   subpackages:
   - context
   - http2
   - http2/hpack
-  - idna
   - internal/timeseries
-  - lex/httplex
   - trace
-- name: golang.org/x/text
-  version: b19bf474d317b857955b12035d2c5acb57ce8b01
-  subpackages:
-  - cases
-  - internal
-  - internal/tag
-  - language
-  - runes
-  - secure/bidirule
-  - secure/precis
-  - transform
-  - unicode/bidi
-  - unicode/norm
-  - width
 - name: google.golang.org/grpc
   version: 777daa17ff9b5daef1cfdf915088a2ada3332bf0
   subpackages:
@@ -76,4 +60,6 @@ imports:
   - pkg/util/runtime
   - pkg/util/sets
   - third_party/forked/golang/reflect
-testImports: []
+testImports:
+- name: gopkg.in/yaml.v2
+  version: bef53efd0c76e49e6de55ead051f886bea7e9420
