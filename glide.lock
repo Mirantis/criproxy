@@ -1,10 +1,6 @@
-hash: 7f1e8b48d1d0d745f6f0cdbf691d0ab035e20f6358c8435332785f02f3150186
-updated: 2018-05-16T11:17:53.809172535+03:00
+hash: 408d36d6662371ae2a237aaaeab45dc813e8d69a7f63a6f217cc09c0da521fcb
+updated: 2018-05-17T21:04:00.476802652+03:00
 imports:
-- name: github.com/davecgh/go-spew
-  version: 5215b55f46b2b919f50a1df0eaa5886afe4e3b3d
-  subpackages:
-  - spew
 - name: github.com/docker/distribution
   version: 48294d928ced5dd9b378f7fd7c6f5da3ff3f2c89
   subpackages:
@@ -47,6 +43,8 @@ imports:
   - naming
   - peer
   - transport
+- name: gopkg.in/yaml.v2
+  version: bef53efd0c76e49e6de55ead051f886bea7e9420
 - name: k8s.io/apimachinery
   version: 19e3f5aa3adca672c153d324e6b7d82ff8935f03
   subpackages:
@@ -60,6 +58,4 @@ imports:
   - pkg/util/runtime
   - pkg/util/sets
   - third_party/forked/golang/reflect
-testImports:
-- name: gopkg.in/yaml.v2
-  version: bef53efd0c76e49e6de55ead051f886bea7e9420
+testImports: []

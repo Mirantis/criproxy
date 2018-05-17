@@ -24,8 +24,8 @@ import (
 	"strings"
 	"time"
 
-	"github.com/davecgh/go-spew/spew"
 	"github.com/docker/distribution/digest"
+	"github.com/ghodss/yaml"
 	"github.com/golang/glog"
 	"golang.org/x/net/context"
 	"google.golang.org/grpc"
@@ -123,7 +123,7 @@ func (r *RuntimeProxy) Intercept(ctx context.Context, req interface{}, info *grp
 		return nil, err
 	}
 	if glog.V(dispatchItem.logLevel) {
-		glog.Infof("ENTER: %s(): %s", info.FullMethod, dump(req))
+		glog.Infof("ENTER: %s():\n%s", info.FullMethod, dump(req))
 	}
 	wrappedReq, wrappedResp, err := r.criVersion.WrapObject(req)
 	if err != nil {
@@ -137,7 +137,7 @@ func (r *RuntimeProxy) Intercept(ctx context.Context, req interface{}, info *grp
 		resp = wrappedResp.Unwrap()
 	}
 	if glog.V(dispatchItem.logLevel) {
-		glog.Infof("LEAVE: %s(): %s", info.FullMethod, dump(resp))
+		glog.Infof("LEAVE: %s():\n%s", info.FullMethod, dump(resp))
 	}
 	return resp, nil
 }
@@ -522,7 +522,9 @@ var replaceRx = regexp.MustCompile(`\(\*(v1alpha2.\w+)\)\(0x[0-9a-f]+\)`)
 var rmRx = regexp.MustCompile(`(?: \(string\))? \(len=\d+(?: cap=\d+)?\)`)
 
 func dump(o interface{}) string {
-	// try to reduce the noise that's not relevant to CRI object structure
-	s := replaceRx.ReplaceAllString(spew.Sdump(o), "&$1")
-	return rmRx.ReplaceAllString(s, "")
+	out, err := yaml.Marshal(o)
+	if err != nil {
+		return fmt.Sprintf("<Error marshalling %T: %v>", o, err)
+	}
+	return string(out)
 }

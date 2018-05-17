@@ -25,9 +25,6 @@ import (
 	"testing"
 	"time"
 
-	"github.com/Mirantis/criproxy/pkg/runtimeapis"
-	v1_10 "github.com/Mirantis/criproxy/pkg/runtimeapis/v1_10"
-	runtimeapi "github.com/Mirantis/criproxy/pkg/runtimeapis/v1_9"
 	"github.com/ghodss/yaml"
 	"github.com/golang/glog"
 	"github.com/pmezard/go-difflib/difflib"
@@ -35,6 +32,9 @@ import (
 	"google.golang.org/grpc"
 
 	proxytest "github.com/Mirantis/criproxy/pkg/proxy/testing"
+	"github.com/Mirantis/criproxy/pkg/runtimeapis"
+	v1_10 "github.com/Mirantis/criproxy/pkg/runtimeapis/v1_10"
+	runtimeapi "github.com/Mirantis/criproxy/pkg/runtimeapis/v1_9"
 	"github.com/Mirantis/criproxy/pkg/utils"
 )
 
