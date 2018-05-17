@@ -82,16 +82,19 @@ func NewRuntimeProxy(criVersion CRIVersion, addrs []string, connectionTimout tim
 	return r, nil
 }
 
+// Register implements Register method of the Interceptor interface.
 func (r *RuntimeProxy) Register(s *grpc.Server) {
 	r.criVersion.Register(s)
 }
 
+// Stop implements Stop method of the Interceptor interface.
 func (r *RuntimeProxy) Stop() {
 	for _, client := range r.clients {
 		client.stop()
 	}
 }
 
+// Match implements Match method of the Interceptor interface.
 func (r *RuntimeProxy) Match(fullMethod string) bool {
 	lastDot := strings.LastIndex(fullMethod, ".")
 	if lastDot < 0 {
@@ -100,6 +103,7 @@ func (r *RuntimeProxy) Match(fullMethod string) bool {
 	return fullMethod[:lastDot+1] == r.methodPrefix
 }
 
+// Intercept implements Intercept method of the Interceptor interface.
 func (r *RuntimeProxy) Intercept(ctx context.Context, req interface{}, info *grpc.UnaryServerInfo, handler grpc.UnaryHandler) (interface{}, error) {
 	var err error
 	defer func() {

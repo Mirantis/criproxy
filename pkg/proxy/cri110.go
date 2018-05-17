@@ -1394,6 +1394,7 @@ func init() {
 	)
 }
 
+// CRI19 denotes the CRI version 1.10
 type CRI110 struct{}
 
 var _ CRIVersion = &CRI110{}

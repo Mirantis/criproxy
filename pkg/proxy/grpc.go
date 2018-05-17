@@ -26,18 +26,25 @@ import (
 	"google.golang.org/grpc"
 )
 
+// Interceptor specifies an interceptor to be used by gRPC server.
 type Interceptor interface {
+	// Register registers CRI services for proxy's CRI version within the Server.
 	Register(s *grpc.Server)
+	// Match checks whether fullMethod can be handled by this proxy instance.
 	Match(fullMethod string) bool
+	// Intercept handles a CRI request. It's invoked from a gRPC interceptor.
 	Intercept(ctx context.Context, req interface{}, info *grpc.UnaryServerInfo, handler grpc.UnaryHandler) (interface{}, error)
+	// Stop disconnects from all the CRI servers
 	Stop()
 }
 
+// Server denotes a gRPC server.
 type Server struct {
 	server       *grpc.Server
 	interceptors []Interceptor
 }
 
+// NewServer makes a new gRPC server.
 func NewServer(interceptors []Interceptor, hook func()) *Server {
 	s := &Server{interceptors: interceptors}
 	s.server = grpc.NewServer(grpc.UnaryInterceptor(func(ctx context.Context, req interface{}, info *grpc.UnaryServerInfo, handler grpc.UnaryHandler) (resp interface{}, err error) {
@@ -61,6 +68,9 @@ func (s *Server) intercept(ctx context.Context, req interface{}, info *grpc.Unar
 	return nil, fmt.Errorf("no interceptor for method %q", info.FullMethod)
 }
 
+// Serve makes the server listen on the specified addr. If readyCh is
+// not nil, it'll be closed when the server is ready to accept
+// connections.
 func (s *Server) Serve(addr string, readyCh chan struct{}) error {
 	if err := syscall.Unlink(addr); err != nil && !os.IsNotExist(err) {
 		return err
@@ -76,6 +86,7 @@ func (s *Server) Serve(addr string, readyCh chan struct{}) error {
 	return s.server.Serve(ln)
 }
 
+// Stop stops the server.
 func (s *Server) Stop() {
 	for _, intc := range s.interceptors {
 		intc.Stop()

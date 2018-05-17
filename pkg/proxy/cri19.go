@@ -1353,6 +1353,7 @@ func init() {
 	)
 }
 
+// CRI19 denotes CRI version 1.9 that's compatible with k8s 1.7, 1.8 and 1.9.
 type CRI19 struct{}
 
 var _ CRIVersion = &CRI19{}
