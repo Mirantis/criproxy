@@ -108,7 +108,7 @@ systemctl start crio
 
 dpkg -i /criproxy.deb
 mkdir /etc/systemd/system/criproxy.service.d
-echo -e '[Service]\nExecStart=\nExecStart=/usr/bin/criproxy.sh -v 3 -logtostderr -connect /var/run/dockershim.sock,cri.o:/var/run/crio.sock -listen /run/criproxy.sock' >/etc/systemd/system/criproxy.service.d/10-crio.conf
+echo -e '[Service]\nExecStart=\nExecStart=/usr/bin/criproxy -v 3 -logtostderr -connect /var/run/dockershim.sock,cri.o:/var/run/crio.sock -listen /run/criproxy.sock' >/etc/systemd/system/criproxy.service.d/10-crio.conf
 systemctl daemon-reload
 systemctl restart criproxy
 EOF

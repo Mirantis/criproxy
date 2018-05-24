@@ -36,7 +36,6 @@ package testing
 import (
 	"fmt"
 	"reflect"
-	"sort"
 	"sync"
 	"time"
 )
@@ -44,6 +43,13 @@ import (
 const (
 	journalWaitInterval = 1000 * time.Millisecond
 	journalWaitCount    = 1500
+)
+
+var (
+	version = "0.1.0"
+
+	FakeRuntimeName  = "fakeRuntime"
+	FakePodSandboxIP = "192.168.192.168"
 )
 
 func filterInLabels(filter, labels map[string]string) bool {
@@ -72,17 +78,28 @@ type Journal interface {
 type SimpleJournal struct {
 	sync.Mutex
 	Items []string
+	skip  map[string]bool
 }
 
 // NewSimpleJournal creates an instance of SimpleJournal
-func NewSimpleJournal() *SimpleJournal { return &SimpleJournal{} }
+func NewSimpleJournal() *SimpleJournal {
+	return &SimpleJournal{skip: make(map[string]bool)}
+}
+
+// Skip makes SimpleJournal skip the specified items when
+// they occur
+func (j *SimpleJournal) Skip(item string) {
+	j.skip[item] = true
+}
 
 // Record implements Record method of Journal interface
 func (j *SimpleJournal) Record(item string) {
 	j.Lock()
 	defer j.Unlock()
 
-	j.Items = append(j.Items, item)
+	if !j.skip[item] {
+		j.Items = append(j.Items, item)
+	}
 }
 
 // Verify verifies that the current contents of the journal is expectedItems,
@@ -92,24 +109,6 @@ func (j *SimpleJournal) Verify(expectedItems []string) error {
 	defer j.Unlock()
 
 	actualItems := j.Items
-	j.Items = nil
-	if !reflect.DeepEqual(actualItems, expectedItems) {
-		return fmt.Errorf("bad journal items. Expected %v, got %v", expectedItems, actualItems)
-	}
-	return nil
-}
-
-// VerifyUnordered verifies that the current contents of the journal
-// contains the same items as expectedItems slice but in any order.
-// It returns nil if so or an error otherwise
-func (j *SimpleJournal) VerifyUnordered(expectedItems []string) error {
-	j.Lock()
-	defer j.Unlock()
-
-	actualItems := j.Items
-	expectedItems = expectedItems[:]
-	sort.Strings(actualItems)
-	sort.Strings(expectedItems)
 	j.Items = nil
 	if !reflect.DeepEqual(actualItems, expectedItems) {
 		return fmt.Errorf("bad journal items. Expected %v, got %v", expectedItems, actualItems)

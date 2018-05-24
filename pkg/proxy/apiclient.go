@@ -19,10 +19,12 @@ package proxy
 import (
 	"errors"
 	"fmt"
+	"log"
 	"strings"
 	"sync"
 	"time"
 
+	runtimeapis "github.com/Mirantis/criproxy/pkg/runtimeapis"
 	"github.com/docker/distribution/digest"
 	"github.com/golang/glog"
 	"golang.org/x/net/context"
@@ -39,48 +41,55 @@ const (
 	clientStateOffline         = clientState(iota)
 	clientStateConnecting
 	clientStateConnected
-	versionRequestMethod = "/runtime.RuntimeService/Version"
+	versionRequestMethod = "RuntimeService/Version"
 )
 
 var errNotConnected = errors.New("not connected")
 var errOldConnection = errors.New("the request was made on an old closed connection")
 
-type apiClient struct {
+type client interface {
+	getID() string
+	isPrimary() bool
+	currentState() clientState
+	connect() chan error
+	stop()
+	handleError(err error, tolerateDisconnect bool) error
+	imageName(unprefixedName string) string
+	augmentId(id string) string
+	annotationsMatch(annotations map[string]string) bool
+	idPrefixMatches(id string) (bool, string)
+	imageMatches(imageName string) (bool, string)
+	addPrefix(criObject CRIObject) CRIObject
+	invoke(ctx context.Context, method string, req, resp CRIObject) (CRIObject, error)
+	invokeWithErrorHandling(ctx context.Context, method string, req, resp CRIObject) (CRIObject, error)
+}
+
+type clientProbeFunc func(conn *grpc.ClientConn, connectionTimeout time.Duration) error
+
+type clientConnection struct {
 	sync.Mutex
-	criVersion        CRIVersion
-	conn              *grpc.ClientConn
 	addr              string
-	id                string
-	connectionTimeout time.Duration
+	conn              *grpc.ClientConn
+	probe             clientProbeFunc
 	state             clientState
+	connectionTimeout time.Duration
 	connectErrChs     []chan error
 }
 
-func newApiClient(criVersion CRIVersion, addr string, connectionTimeout time.Duration) *apiClient {
-	id := ""
-	parts := strings.SplitN(addr, ":", 2)
-	if len(parts) == 2 {
-		id, addr = parts[0], parts[1]
-	}
-	return &apiClient{
-		criVersion:        criVersion,
+func newClientConnection(addr string, connectionTimeout time.Duration) *clientConnection {
+	return &clientConnection{
 		addr:              addr,
-		id:                id,
 		connectionTimeout: connectionTimeout,
 	}
 }
 
-func (c *apiClient) isPrimary() bool {
-	return c.id == ""
-}
-
-func (c *apiClient) currentState() clientState {
+func (c *clientConnection) currentState() clientState {
 	c.Lock()
 	defer c.Unlock()
 	return c.state
 }
 
-func (c *apiClient) connectNonLocked() chan error {
+func (c *clientConnection) connectNonLocked() chan error {
 	if c.state == clientStateConnected {
 		errCh := make(chan error, 1)
 		errCh <- nil
@@ -100,17 +109,16 @@ func (c *apiClient) connectNonLocked() chan error {
 		if err := utils.WaitForSocket(c.addr, -1, func() error {
 			var err error
 			conn, err = grpc.Dial(c.addr, grpc.WithInsecure(), grpc.WithTimeout(c.connectionTimeout), grpc.WithDialer(utils.Dial))
-			if err == nil {
-				ctx, _ := context.WithTimeout(context.Background(), c.connectionTimeout)
-				pReq, pResp := c.criVersion.ProbeRequest()
-				if err = grpc.Invoke(ctx, versionRequestMethod, pReq, pResp, conn); err != nil {
+			if err == nil && c.probe != nil {
+				err = c.probe(conn, c.connectionTimeout)
+				if err != nil {
 					conn.Close()
 				}
 			}
 			return err
 		}); err != nil {
-			glog.Errorf("Failed to find the socket: %v", err)
-			err = fmt.Errorf("failed to find the socket: %v", err)
+			glog.Errorf("Failed to connect to the socket: %v", err)
+			err = fmt.Errorf("failed to connect to the socket: %v", err)
 			for _, ch := range c.connectErrChs {
 				ch <- err
 			}
@@ -131,13 +139,13 @@ func (c *apiClient) connectNonLocked() chan error {
 	return errCh
 }
 
-func (c *apiClient) connect() chan error {
+func (c *clientConnection) connect() chan error {
 	c.Lock()
 	defer c.Unlock()
 	return c.connectNonLocked()
 }
 
-func (c *apiClient) stopNonLocked() {
+func (c *clientConnection) stopNonLocked() {
 	if c.conn == nil {
 		return
 	}
@@ -148,7 +156,7 @@ func (c *apiClient) stopNonLocked() {
 	c.state = clientStateOffline
 }
 
-func (c *apiClient) stop() {
+func (c *clientConnection) stop() {
 	c.Lock()
 	defer c.Unlock()
 	c.stopNonLocked()
@@ -160,7 +168,7 @@ func (c *apiClient) stop() {
 // tolerateDisconnect is true, it also returns nil in this case. In
 // other cases, including non-'Unavailable' errors, it returns the
 // original err value
-func (c *apiClient) handleError(err error, tolerateDisconnect bool) error {
+func (c *clientConnection) handleError(err error, tolerateDisconnect bool) error {
 	if grpc.Code(err) == codes.Unavailable {
 		c.Lock()
 		defer c.Unlock()
@@ -174,21 +182,31 @@ func (c *apiClient) handleError(err error, tolerateDisconnect bool) error {
 	return fmt.Errorf("%q: %v", c.addr, err)
 }
 
-func (c *apiClient) imageName(unprefixedName string) string {
+type clientBase struct {
+	id string
+}
+
+func (c *clientBase) getID() string { return c.id }
+
+func (c *clientBase) isPrimary() bool {
+	return c.id == ""
+}
+
+func (c *clientBase) imageName(unprefixedName string) string {
 	if c.isPrimary() {
 		return unprefixedName
 	}
 	return c.id + "/" + unprefixedName
 }
 
-func (c *apiClient) augmentId(id string) string {
+func (c *clientBase) augmentId(id string) string {
 	if !c.isPrimary() {
 		return c.id + "__" + id
 	}
 	return id
 }
 
-func (c *apiClient) annotationsMatch(annotations map[string]string) bool {
+func (c *clientBase) annotationsMatch(annotations map[string]string) bool {
 	targetRuntime, found := annotations[targetRuntimeAnnotationKey]
 	if c.isPrimary() {
 		return !found
@@ -196,7 +214,7 @@ func (c *apiClient) annotationsMatch(annotations map[string]string) bool {
 	return found && targetRuntime == c.id
 }
 
-func (c *apiClient) idPrefixMatches(id string) (bool, string) {
+func (c *clientBase) idPrefixMatches(id string) (bool, string) {
 	switch {
 	case c.isPrimary():
 		return true, id
@@ -207,7 +225,7 @@ func (c *apiClient) idPrefixMatches(id string) (bool, string) {
 	}
 }
 
-func (c *apiClient) imageMatches(imageName string) (bool, string) {
+func (c *clientBase) imageMatches(imageName string) (bool, string) {
 	switch {
 	case c.isPrimary():
 		return true, imageName
@@ -218,7 +236,7 @@ func (c *apiClient) imageMatches(imageName string) (bool, string) {
 	}
 }
 
-func (c *apiClient) prefixSandbox(unprefixedSandbox PodSandbox) PodSandbox {
+func (c *clientBase) prefixSandbox(unprefixedSandbox PodSandbox) PodSandbox {
 	if c.isPrimary() {
 		return unprefixedSandbox
 	}
@@ -227,7 +245,7 @@ func (c *apiClient) prefixSandbox(unprefixedSandbox PodSandbox) PodSandbox {
 	return sandbox
 }
 
-func (c *apiClient) prefixContainer(unprefixedContainer Container) Container {
+func (c *clientBase) prefixContainer(unprefixedContainer Container) Container {
 	if c.isPrimary() {
 		return unprefixedContainer
 	}
@@ -241,7 +259,7 @@ func (c *apiClient) prefixContainer(unprefixedContainer Container) Container {
 	return container
 }
 
-func (c *apiClient) prefixContainerStats(unprefixedStats ContainerStats) ContainerStats {
+func (c *clientBase) prefixContainerStats(unprefixedStats ContainerStats) ContainerStats {
 	if c.isPrimary() {
 		return unprefixedStats
 	}
@@ -250,7 +268,7 @@ func (c *apiClient) prefixContainerStats(unprefixedStats ContainerStats) Contain
 	return stats
 }
 
-func (c *apiClient) prefixImage(unprefixedImage Image) Image {
+func (c *clientBase) prefixImage(unprefixedImage Image) Image {
 	if c.isPrimary() {
 		return unprefixedImage
 	}
@@ -268,7 +286,7 @@ func (c *apiClient) prefixImage(unprefixedImage Image) Image {
 	return image
 }
 
-func (c *apiClient) addPrefix(criObject CRIObject) CRIObject {
+func (c *clientBase) addPrefix(criObject CRIObject) CRIObject {
 	switch o := criObject.(type) {
 	case PodSandbox:
 		return c.prefixSandbox(o)
@@ -280,6 +298,22 @@ func (c *apiClient) addPrefix(criObject CRIObject) CRIObject {
 		return c.prefixImage(o)
 	default:
 		return o
+	}
+}
+
+type apiClient struct {
+	clientBase
+	*clientConnection
+	criVersion CRIVersion
+}
+
+var _ client = &apiClient{}
+
+func newApiClient(criVersion CRIVersion, clientConn *clientConnection, id string) *apiClient {
+	return &apiClient{
+		clientBase:       clientBase{id},
+		criVersion:       criVersion,
+		clientConnection: clientConn,
 	}
 }
 
@@ -316,6 +350,159 @@ func (c *apiClient) invokeWithErrorHandling(ctx context.Context, method string, 
 		err = c.handleError(err, false)
 	}
 	return resp, err
+}
+
+type upgradingClient struct {
+	client
+	legacyVersion CRIVersion
+	newVersion    CRIVersion
+}
+
+var _ client = &upgradingClient{}
+
+func newUpgradingClient(next client, legacyVersion UpgradableCRIVersion) *upgradingClient {
+	return &upgradingClient{
+		client:        next,
+		legacyVersion: legacyVersion,
+		newVersion:    legacyVersion.UpgradesTo(),
+	}
+}
+
+func (c *upgradingClient) addPrefix(o CRIObject) CRIObject {
+	return c.downgradeCRIObject(c.client.addPrefix(c.upgradeCRIObject(o)))
+}
+
+func (c *upgradingClient) invoke(ctx context.Context, method string, req, resp CRIObject) (CRIObject, error) {
+	method = strings.Replace(method, "runtime.", "runtime.v1alpha2.", 1)
+	r, err := c.client.invoke(ctx, method, c.upgradeCRIObject(req), c.upgradeCRIObject(resp))
+	if err != nil {
+		return nil, err
+	}
+	return c.downgradeCRIObjectTo(r, resp), err
+}
+
+func (c *upgradingClient) invokeWithErrorHandling(ctx context.Context, method string, req, resp CRIObject) (CRIObject, error) {
+	method = strings.Replace(method, "runtime.", "runtime.v1alpha2.", 1)
+	r, err := c.client.invokeWithErrorHandling(ctx, method, c.upgradeCRIObject(req), c.upgradeCRIObject(resp))
+	if err != nil {
+		return nil, err
+	}
+	return c.downgradeCRIObjectTo(r, resp), nil
+}
+
+func (c *upgradingClient) upgradeCRIObject(o CRIObject) CRIObject {
+	upgraded, err := runtimeapis.Upgrade(o.Unwrap())
+	if err != nil {
+		log.Panicf("Couldn't upgrade %T: %v", o.Unwrap(), err)
+	}
+	r, _, err := c.newVersion.WrapObject(upgraded)
+	if err != nil {
+		log.Panicf("Error wrapping upgraded object %T: %v", upgraded, err)
+	}
+	return r
+}
+
+func (c *upgradingClient) downgradeCRIObject(o CRIObject) CRIObject {
+	downgraded, err := runtimeapis.Downgrade(o.Unwrap())
+	if err != nil {
+		log.Panicf("Couldn't downgrade %T: %v", o.Unwrap(), err)
+	}
+	r, _, err := c.legacyVersion.WrapObject(downgraded)
+	if err != nil {
+		log.Panicf("Error wrapping downgraded object %T: %v", downgraded, err)
+	}
+	return r
+}
+
+func (c *upgradingClient) downgradeCRIObjectTo(o CRIObject, resp CRIObject) CRIObject {
+	downgraded, err := runtimeapis.Downgrade(o.Unwrap())
+	if err != nil {
+		log.Panicf("Couldn't downgrade %T: %v", o.Unwrap(), err)
+	}
+	resp.Wrap(downgraded)
+	return resp
+}
+
+// autoClient detects server version and chooses upgradingClient
+// or plain apiClient depending on it
+type autoClient struct {
+	clientBase
+	*clientConnection
+	proxyCRIVersion CRIVersion
+	next            client
+}
+
+var _ client = &autoClient{}
+
+func newAutoClient(proxyCRIVersion CRIVersion, addr string, connectionTimeout time.Duration) *autoClient {
+	id := ""
+	parts := strings.SplitN(addr, ":", 2)
+	if len(parts) == 2 {
+		id, addr = parts[0], parts[1]
+	}
+	conn := newClientConnection(addr, connectionTimeout)
+	c := &autoClient{
+		clientBase:       clientBase{id},
+		clientConnection: conn,
+		proxyCRIVersion:  proxyCRIVersion,
+	}
+	conn.probe = c.checkConnection
+	return c
+}
+
+func (c *autoClient) checkVersion(criVersion CRIVersion, conn *grpc.ClientConn, connectionTimeout time.Duration) error {
+	ctx, _ := context.WithTimeout(context.Background(), connectionTimeout)
+	pReq, pResp := criVersion.ProbeRequest()
+	reqMethod := fmt.Sprintf("/%s.%s", criVersion.ProtoPackage(), versionRequestMethod)
+	return grpc.Invoke(ctx, reqMethod, pReq, pResp, conn)
+}
+
+func (c *autoClient) checkConnection(conn *grpc.ClientConn, connectionTimeout time.Duration) error {
+	upgrade := []bool{false}
+	toTry := []CRIVersion{c.proxyCRIVersion}
+	upgradableVersion, upgradable := c.proxyCRIVersion.(UpgradableCRIVersion)
+	if upgradable {
+		upgrade = []bool{true, false}
+		toTry = []CRIVersion{upgradableVersion.UpgradesTo(), c.proxyCRIVersion}
+	}
+
+	var err error
+	for n, v := range toTry {
+		if err = c.checkVersion(v, conn, connectionTimeout); err == nil {
+			var next client = newApiClient(v, c.clientConnection, c.id)
+			if upgrade[n] {
+				next = newUpgradingClient(next, upgradableVersion)
+			}
+			c.next = next
+			break
+		}
+	}
+	return err
+}
+
+func (c *autoClient) getNext() (client, error) {
+	c.Lock()
+	defer c.Unlock()
+	if c.state != clientStateConnected {
+		return nil, errNotConnected
+	}
+	return c.next, nil
+}
+
+func (c *autoClient) invoke(ctx context.Context, method string, req, resp CRIObject) (CRIObject, error) {
+	next, err := c.getNext()
+	if err != nil {
+		return nil, err
+	}
+	return next.invoke(ctx, method, req, resp)
+}
+
+func (c *autoClient) invokeWithErrorHandling(ctx context.Context, method string, req, resp CRIObject) (CRIObject, error) {
+	next, err := c.getNext()
+	if err != nil {
+		return nil, err
+	}
+	return next.invokeWithErrorHandling(ctx, method, req, resp)
 }
 
 // TODO: handle grpc's ClientTransport.Error() to reconnect

@@ -25,12 +25,12 @@ import (
 	"sync"
 	"time"
 
-	runtimeapi "github.com/Mirantis/criproxy/pkg/runtimeapi/v1_9"
+	runtimeapi "github.com/Mirantis/criproxy/pkg/runtimeapis/v1_9"
 	"github.com/docker/distribution/digest"
 	"golang.org/x/net/context"
 )
 
-type FakeImageServer struct {
+type FakeImageServer19 struct {
 	sync.Mutex
 
 	journal       Journal
@@ -40,7 +40,9 @@ type FakeImageServer struct {
 	FakeFilesystemUsage []*runtimeapi.FilesystemUsage
 }
 
-func (r *FakeImageServer) SetFakeImages(images []string) {
+var _ runtimeapi.ImageServiceServer = &FakeImageServer19{}
+
+func (r *FakeImageServer19) SetFakeImages(images []string) {
 	r.Lock()
 	defer r.Unlock()
 
@@ -50,28 +52,28 @@ func (r *FakeImageServer) SetFakeImages(images []string) {
 	}
 }
 
-func (r *FakeImageServer) SetFakeImageSize(size uint64) {
+func (r *FakeImageServer19) SetFakeImageSize(size uint64) {
 	r.Lock()
 	defer r.Unlock()
 
 	r.FakeImageSize = size
 }
 
-func (r *FakeImageServer) SetFakeFilesystemUsage(usage []*runtimeapi.FilesystemUsage) {
+func (r *FakeImageServer19) SetFakeFilesystemUsage(usage []*runtimeapi.FilesystemUsage) {
 	r.Lock()
 	defer r.Unlock()
 
 	r.FakeFilesystemUsage = usage
 }
 
-func NewFakeImageServer(journal Journal) *FakeImageServer {
-	return &FakeImageServer{
+func NewFakeImageServer19(journal Journal) *FakeImageServer19 {
+	return &FakeImageServer19{
 		journal: journal,
 		Images:  make(map[string]*runtimeapi.Image),
 	}
 }
 
-func (r *FakeImageServer) makeFakeImage(image string) *runtimeapi.Image {
+func (r *FakeImageServer19) makeFakeImage(image string) *runtimeapi.Image {
 	return &runtimeapi.Image{
 		Id:       image,
 		Size_:    r.FakeImageSize,
@@ -79,7 +81,7 @@ func (r *FakeImageServer) makeFakeImage(image string) *runtimeapi.Image {
 	}
 }
 
-func (r *FakeImageServer) ListImages(ctx context.Context, in *runtimeapi.ListImagesRequest) (*runtimeapi.ListImagesResponse, error) {
+func (r *FakeImageServer19) ListImages(ctx context.Context, in *runtimeapi.ListImagesRequest) (*runtimeapi.ListImagesResponse, error) {
 	r.Lock()
 	defer r.Unlock()
 
@@ -115,7 +117,7 @@ func (r *FakeImageServer) ListImages(ctx context.Context, in *runtimeapi.ListIma
 	return &runtimeapi.ListImagesResponse{Images: images}, nil
 }
 
-func (r *FakeImageServer) ImageStatus(ctx context.Context, in *runtimeapi.ImageStatusRequest) (*runtimeapi.ImageStatusResponse, error) {
+func (r *FakeImageServer19) ImageStatus(ctx context.Context, in *runtimeapi.ImageStatusRequest) (*runtimeapi.ImageStatusResponse, error) {
 	r.Lock()
 	defer r.Unlock()
 
@@ -139,7 +141,7 @@ func (r *FakeImageServer) ImageStatus(ctx context.Context, in *runtimeapi.ImageS
 	return &runtimeapi.ImageStatusResponse{Image: &copy}, nil
 }
 
-func (r *FakeImageServer) PullImage(ctx context.Context, in *runtimeapi.PullImageRequest) (*runtimeapi.PullImageResponse, error) {
+func (r *FakeImageServer19) PullImage(ctx context.Context, in *runtimeapi.PullImageRequest) (*runtimeapi.PullImageResponse, error) {
 	r.Lock()
 	defer r.Unlock()
 
@@ -156,7 +158,7 @@ func (r *FakeImageServer) PullImage(ctx context.Context, in *runtimeapi.PullImag
 	return &runtimeapi.PullImageResponse{ImageRef: imageID}, nil
 }
 
-func (r *FakeImageServer) RemoveImage(ctx context.Context, in *runtimeapi.RemoveImageRequest) (*runtimeapi.RemoveImageResponse, error) {
+func (r *FakeImageServer19) RemoveImage(ctx context.Context, in *runtimeapi.RemoveImageRequest) (*runtimeapi.RemoveImageResponse, error) {
 	r.Lock()
 	defer r.Unlock()
 
@@ -169,7 +171,7 @@ func (r *FakeImageServer) RemoveImage(ctx context.Context, in *runtimeapi.Remove
 	return &runtimeapi.RemoveImageResponse{}, nil
 }
 
-func (r *FakeImageServer) ImageFsInfo(ctx context.Context, in *runtimeapi.ImageFsInfoRequest) (*runtimeapi.ImageFsInfoResponse, error) {
+func (r *FakeImageServer19) ImageFsInfo(ctx context.Context, in *runtimeapi.ImageFsInfoRequest) (*runtimeapi.ImageFsInfoResponse, error) {
 	r.Lock()
 	defer r.Unlock()
 
@@ -178,7 +180,7 @@ func (r *FakeImageServer) ImageFsInfo(ctx context.Context, in *runtimeapi.ImageF
 	return &runtimeapi.ImageFsInfoResponse{ImageFilesystems: r.FakeFilesystemUsage}, nil
 }
 
-func MakeFakeImageFsUsage(fsUUID string) *runtimeapi.FilesystemUsage {
+func MakeFakeImageFsUsage19(fsUUID string) *runtimeapi.FilesystemUsage {
 	return &runtimeapi.FilesystemUsage{
 		Timestamp:  time.Now().UnixNano(),
 		StorageId:  &runtimeapi.StorageIdentifier{Uuid: fsUUID},

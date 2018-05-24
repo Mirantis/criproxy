@@ -1,4 +1,3 @@
 usr/bin/criproxy usr/bin/
 criproxy.service lib/systemd/system/
 99-criproxy.conf etc/systemd/system/kubelet.service.d/
-criproxy.sh usr/bin

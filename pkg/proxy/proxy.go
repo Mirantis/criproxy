@@ -1,5 +1,5 @@
 /*
-Copyright 2017 Mirantis
+Copyright 2018 Mirantis
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -19,16 +19,13 @@ package proxy
 import (
 	"errors"
 	"fmt"
-	"net"
 	"net/url"
-	"os"
 	"regexp"
 	"strings"
-	"syscall"
 	"time"
 
-	"github.com/davecgh/go-spew/spew"
 	"github.com/docker/distribution/digest"
+	"github.com/ghodss/yaml"
 	"github.com/golang/glog"
 	"golang.org/x/net/context"
 	"google.golang.org/grpc"
@@ -43,12 +40,14 @@ const (
 
 // RuntimeProxy is a gRPC implementation of internalapi.RuntimeService.
 type RuntimeProxy struct {
-	criVersion CRIVersion
-	streamUrl  url.URL
-	server     *grpc.Server
-	conn       *grpc.ClientConn
-	clients    []*apiClient
+	criVersion   CRIVersion
+	streamUrl    url.URL
+	conn         *grpc.ClientConn
+	clients      []client
+	methodPrefix string
 }
+
+var _ Interceptor = &RuntimeProxy{}
 
 type methodHandler func(r *RuntimeProxy, ctx context.Context, method string, req, resp CRIObject) (interface{}, error)
 
@@ -58,20 +57,18 @@ type dispatchItem struct {
 }
 
 // NewRuntimeProxy creates a new internalapi.RuntimeService.
-func NewRuntimeProxy(criVersion CRIVersion, addrs []string, connectionTimout time.Duration, streamUrl *url.URL, hook func()) (*RuntimeProxy, error) {
+func NewRuntimeProxy(criVersion CRIVersion, addrs []string, connectionTimout time.Duration, streamUrl *url.URL) (*RuntimeProxy, error) {
 	if len(addrs) == 0 {
 		return nil, errors.New("no sockets specified to connect to")
 	}
 
-	r := &RuntimeProxy{criVersion: criVersion, streamUrl: *streamUrl}
-	r.server = grpc.NewServer(grpc.UnaryInterceptor(func(ctx context.Context, req interface{}, info *grpc.UnaryServerInfo, handler grpc.UnaryHandler) (resp interface{}, err error) {
-		if hook != nil {
-			hook()
-		}
-		return r.intercept(ctx, req, info, handler)
-	}))
+	r := &RuntimeProxy{
+		criVersion:   criVersion,
+		streamUrl:    *streamUrl,
+		methodPrefix: fmt.Sprintf("/%s.", criVersion.ProtoPackage()),
+	}
 	for _, addr := range addrs {
-		r.clients = append(r.clients, newApiClient(criVersion, addr, connectionTimout))
+		r.clients = append(r.clients, newAutoClient(criVersion, addr, connectionTimout))
 	}
 	if !r.clients[0].isPrimary() {
 		return nil, errors.New("the first client should be primary (no id)")
@@ -81,48 +78,52 @@ func NewRuntimeProxy(criVersion CRIVersion, addrs []string, connectionTimout tim
 			return nil, errors.New("only the first client should be primary (no id)")
 		}
 	}
-	criVersion.Register(r.server)
 
 	return r, nil
 }
 
-func (r *RuntimeProxy) Serve(addr string, readyCh chan struct{}) error {
-	if err := syscall.Unlink(addr); err != nil && !os.IsNotExist(err) {
-		return err
-	}
-	ln, err := net.Listen("unix", addr)
-	if err != nil {
-		return err
-	}
-	defer ln.Close()
-	if readyCh != nil {
-		close(readyCh)
-	}
-	return r.server.Serve(ln)
+// Register implements Register method of the Interceptor interface.
+func (r *RuntimeProxy) Register(s *grpc.Server) {
+	r.criVersion.Register(s)
 }
 
+// Stop implements Stop method of the Interceptor interface.
 func (r *RuntimeProxy) Stop() {
 	for _, client := range r.clients {
 		client.stop()
 	}
-	// TODO: check if the server is present
-	r.server.GracefulStop()
 }
 
-func (r *RuntimeProxy) intercept(ctx context.Context, req interface{}, info *grpc.UnaryServerInfo, handler grpc.UnaryHandler) (interface{}, error) {
+// Match implements Match method of the Interceptor interface.
+func (r *RuntimeProxy) Match(fullMethod string) bool {
+	lastDot := strings.LastIndex(fullMethod, ".")
+	if lastDot < 0 {
+		return false
+	}
+	return fullMethod[:lastDot+1] == r.methodPrefix
+}
+
+// Intercept implements Intercept method of the Interceptor interface.
+func (r *RuntimeProxy) Intercept(ctx context.Context, req interface{}, info *grpc.UnaryServerInfo, handler grpc.UnaryHandler) (interface{}, error) {
 	var err error
 	defer func() {
 		if err != nil {
 			glog.V(criErrorLogLevel).Infof("FAIL: %s(): %v", info.FullMethod, err)
 		}
 	}()
-	dispatchItem, found := dispatchTable[info.FullMethod]
+	if !strings.HasPrefix(info.FullMethod, r.methodPrefix) {
+		err = fmt.Errorf("bad method prefix in %q (expected to start with %q)", info.FullMethod, r.methodPrefix) // make it logged in defer
+		return nil, err
+	}
+
+	method := info.FullMethod[len(r.methodPrefix):]
+	dispatchItem, found := dispatchTable[method]
 	if !found {
-		err = fmt.Errorf("no handler for method %q", info.FullMethod) // make it logged in defer
+		err = fmt.Errorf("no handler for method %q", method) // make it logged in defer
 		return nil, err
 	}
 	if glog.V(dispatchItem.logLevel) {
-		glog.Infof("ENTER: %s(): %s", info.FullMethod, dump(req))
+		glog.Infof("ENTER: %s():\n%s", info.FullMethod, dump(req))
 	}
 	wrappedReq, wrappedResp, err := r.criVersion.WrapObject(req)
 	if err != nil {
@@ -136,19 +137,19 @@ func (r *RuntimeProxy) intercept(ctx context.Context, req interface{}, info *grp
 		resp = wrappedResp.Unwrap()
 	}
 	if glog.V(dispatchItem.logLevel) {
-		glog.Infof("LEAVE: %s(): %s", info.FullMethod, dump(resp))
+		glog.Infof("LEAVE: %s():\n%s", info.FullMethod, dump(resp))
 	}
 	return resp, nil
 }
 
-func (r *RuntimeProxy) primaryClient() (*apiClient, error) {
+func (r *RuntimeProxy) primaryClient() (client, error) {
 	if err := <-r.clients[0].connect(); err != nil {
 		return nil, err
 	}
 	return r.clients[0], nil
 }
 
-func (r *RuntimeProxy) clientForAnnotations(annotations map[string]string) (*apiClient, error) {
+func (r *RuntimeProxy) clientForAnnotations(annotations map[string]string) (client, error) {
 	for _, client := range r.clients {
 		if client.annotationsMatch(annotations) {
 			if err := <-client.connect(); err != nil {
@@ -160,7 +161,7 @@ func (r *RuntimeProxy) clientForAnnotations(annotations map[string]string) (*api
 	return nil, fmt.Errorf("criproxy: unknown runtime: %q", annotations[targetRuntimeAnnotationKey])
 }
 
-func (r *RuntimeProxy) clientForId(id string) (*apiClient, string, error) {
+func (r *RuntimeProxy) clientForId(id string) (client, string, error) {
 	client := r.clients[0]
 	unprefixed := id
 	for _, c := range r.clients[1:] {
@@ -180,7 +181,7 @@ func (r *RuntimeProxy) clientForId(id string) (*apiClient, string, error) {
 	return client, unprefixed, nil
 }
 
-func (r *RuntimeProxy) clientForImage(image string, noErrorIfNotConnected bool) (*apiClient, string, error) {
+func (r *RuntimeProxy) clientForImage(image string, noErrorIfNotConnected bool) (client, string, error) {
 	client := r.clients[0]
 	unprefixed := image
 	for _, c := range r.clients[1:] {
@@ -247,7 +248,7 @@ func (r *RuntimeProxy) updateRuntimeConfig(ctx context.Context, method string, r
 func (r *RuntimeProxy) listObjects(ctx context.Context, method string, req, resp CRIObject) (interface{}, error) {
 	out := resp.(ObjectList)
 	clients := r.clients
-	var singleClient *apiClient
+	var singleClient client
 	useSingleClient := false
 	if in, ok := req.(IdFilterObject); ok && in.IdFilter() != "" {
 		var unprefixed string
@@ -300,7 +301,7 @@ func (r *RuntimeProxy) listObjects(ctx context.Context, method string, req, resp
 
 	if useSingleClient {
 		if singleClient != nil {
-			clients = []*apiClient{singleClient}
+			clients = []client{singleClient}
 		} else {
 			// The target client is offline
 			out.SetItems(nil)
@@ -325,7 +326,7 @@ func (r *RuntimeProxy) listObjects(ctx context.Context, method string, req, resp
 			if err != nil {
 				// for more serious errors, log a warning but don't
 				// block the other runtimes by making List* fail
-				glog.Warningf("List request failed for runtime %q: %v", client.id, err)
+				glog.Warningf("List request failed for runtime %q: %v", client.getID(), err)
 			}
 		}
 		for _, item := range out.Items() {
@@ -338,7 +339,7 @@ func (r *RuntimeProxy) listObjects(ctx context.Context, method string, req, resp
 
 }
 
-func (r *RuntimeProxy) invokePodSandboxMethod(ctx context.Context, method string, req, resp CRIObject) (*apiClient, error) {
+func (r *RuntimeProxy) invokePodSandboxMethod(ctx context.Context, method string, req, resp CRIObject) (client, error) {
 	in := req.(PodSandboxIdObject)
 	client, unprefixed, err := r.clientForId(in.PodSandboxId())
 	if err != nil {
@@ -349,7 +350,7 @@ func (r *RuntimeProxy) invokePodSandboxMethod(ctx context.Context, method string
 	return client, err
 }
 
-func (r *RuntimeProxy) invokeContainerMethod(ctx context.Context, method string, req, resp CRIObject) (*apiClient, error) {
+func (r *RuntimeProxy) invokeContainerMethod(ctx context.Context, method string, req, resp CRIObject) (client, error) {
 	in := req.(ContainerIdObject)
 	client, unprefixed, err := r.clientForId(in.ContainerId())
 	if err != nil {
@@ -477,7 +478,7 @@ func (r *RuntimeProxy) handleImage(ctx context.Context, method string, req, resp
 	}
 
 	if out, ok := resp.(ImageStatusResponse); ok && out.Image() != nil {
-		out.SetImage(client.prefixImage(out.Image()))
+		out.SetImage(client.addPrefix(out.Image()).(Image))
 	}
 
 	if out, ok := resp.(ImageObject); ok {
@@ -488,39 +489,42 @@ func (r *RuntimeProxy) handleImage(ctx context.Context, method string, req, resp
 }
 
 var dispatchTable = map[string]dispatchItem{
-	"/runtime.RuntimeService/Version":                  {(*RuntimeProxy).passToPrimary, criNoisyLogLevel},
-	"/runtime.RuntimeService/Status":                   {(*RuntimeProxy).passToPrimary, criNoisyLogLevel},
-	"/runtime.RuntimeService/UpdateRuntimeConfig":      {(*RuntimeProxy).updateRuntimeConfig, criRequestLogLevel},
-	"/runtime.RuntimeService/RunPodSandbox":            {(*RuntimeProxy).runPodSandbox, criRequestLogLevel},
-	"/runtime.RuntimeService/ListPodSandbox":           {(*RuntimeProxy).listObjects, criListLogLevel},
-	"/runtime.RuntimeService/StopPodSandbox":           {(*RuntimeProxy).handlePodSandbox, criRequestLogLevel},
-	"/runtime.RuntimeService/RemovePodSandbox":         {(*RuntimeProxy).handlePodSandbox, criRequestLogLevel},
-	"/runtime.RuntimeService/PodSandboxStatus":         {(*RuntimeProxy).podSandboxStatus, criNoisyLogLevel},
-	"/runtime.RuntimeService/CreateContainer":          {(*RuntimeProxy).createContainer, criRequestLogLevel},
-	"/runtime.RuntimeService/ListContainers":           {(*RuntimeProxy).listObjects, criListLogLevel},
-	"/runtime.RuntimeService/ListContainerStats":       {(*RuntimeProxy).listObjects, criListLogLevel},
-	"/runtime.RuntimeService/StartContainer":           {(*RuntimeProxy).handleContainer, criRequestLogLevel},
-	"/runtime.RuntimeService/StopContainer":            {(*RuntimeProxy).handleContainer, criRequestLogLevel},
-	"/runtime.RuntimeService/RemoveContainer":          {(*RuntimeProxy).handleContainer, criRequestLogLevel},
-	"/runtime.RuntimeService/ContainerStatus":          {(*RuntimeProxy).containerStatus, criNoisyLogLevel},
-	"/runtime.RuntimeService/ContainerStats":           {(*RuntimeProxy).containerStats, criNoisyLogLevel},
-	"/runtime.RuntimeService/UpdateContainerResources": {(*RuntimeProxy).handleContainer, criRequestLogLevel},
-	"/runtime.RuntimeService/ExecSync":                 {(*RuntimeProxy).handleContainer, criRequestLogLevel},
-	"/runtime.RuntimeService/Exec":                     {(*RuntimeProxy).handleContainer, criRequestLogLevel},
-	"/runtime.RuntimeService/Attach":                   {(*RuntimeProxy).handleContainer, criRequestLogLevel},
-	"/runtime.RuntimeService/PortForward":              {(*RuntimeProxy).handlePodSandbox, criRequestLogLevel},
-	"/runtime.ImageService/ListImages":                 {(*RuntimeProxy).listObjects, criListLogLevel},
-	"/runtime.ImageService/ImageStatus":                {(*RuntimeProxy).handleImage, criNoisyLogLevel},
-	"/runtime.ImageService/PullImage":                  {(*RuntimeProxy).handleImage, criRequestLogLevel},
-	"/runtime.ImageService/RemoveImage":                {(*RuntimeProxy).handleImage, criRequestLogLevel},
-	"/runtime.ImageService/ImageFsInfo":                {(*RuntimeProxy).listObjects, criRequestLogLevel},
+	"RuntimeService/Version":                  {(*RuntimeProxy).passToPrimary, criNoisyLogLevel},
+	"RuntimeService/Status":                   {(*RuntimeProxy).passToPrimary, criNoisyLogLevel},
+	"RuntimeService/UpdateRuntimeConfig":      {(*RuntimeProxy).updateRuntimeConfig, criRequestLogLevel},
+	"RuntimeService/RunPodSandbox":            {(*RuntimeProxy).runPodSandbox, criRequestLogLevel},
+	"RuntimeService/ListPodSandbox":           {(*RuntimeProxy).listObjects, criListLogLevel},
+	"RuntimeService/StopPodSandbox":           {(*RuntimeProxy).handlePodSandbox, criRequestLogLevel},
+	"RuntimeService/RemovePodSandbox":         {(*RuntimeProxy).handlePodSandbox, criRequestLogLevel},
+	"RuntimeService/PodSandboxStatus":         {(*RuntimeProxy).podSandboxStatus, criNoisyLogLevel},
+	"RuntimeService/CreateContainer":          {(*RuntimeProxy).createContainer, criRequestLogLevel},
+	"RuntimeService/ListContainers":           {(*RuntimeProxy).listObjects, criListLogLevel},
+	"RuntimeService/ListContainerStats":       {(*RuntimeProxy).listObjects, criListLogLevel},
+	"RuntimeService/StartContainer":           {(*RuntimeProxy).handleContainer, criRequestLogLevel},
+	"RuntimeService/StopContainer":            {(*RuntimeProxy).handleContainer, criRequestLogLevel},
+	"RuntimeService/RemoveContainer":          {(*RuntimeProxy).handleContainer, criRequestLogLevel},
+	"RuntimeService/ContainerStatus":          {(*RuntimeProxy).containerStatus, criNoisyLogLevel},
+	"RuntimeService/ContainerStats":           {(*RuntimeProxy).containerStats, criNoisyLogLevel},
+	"RuntimeService/UpdateContainerResources": {(*RuntimeProxy).handleContainer, criRequestLogLevel},
+	"RuntimeService/ExecSync":                 {(*RuntimeProxy).handleContainer, criRequestLogLevel},
+	"RuntimeService/Exec":                     {(*RuntimeProxy).handleContainer, criRequestLogLevel},
+	"RuntimeService/Attach":                   {(*RuntimeProxy).handleContainer, criRequestLogLevel},
+	"RuntimeService/ReopenContainerLog":       {(*RuntimeProxy).handleContainer, criRequestLogLevel},
+	"RuntimeService/PortForward":              {(*RuntimeProxy).handlePodSandbox, criRequestLogLevel},
+	"ImageService/ListImages":                 {(*RuntimeProxy).listObjects, criListLogLevel},
+	"ImageService/ImageStatus":                {(*RuntimeProxy).handleImage, criNoisyLogLevel},
+	"ImageService/PullImage":                  {(*RuntimeProxy).handleImage, criRequestLogLevel},
+	"ImageService/RemoveImage":                {(*RuntimeProxy).handleImage, criRequestLogLevel},
+	"ImageService/ImageFsInfo":                {(*RuntimeProxy).listObjects, criRequestLogLevel},
 }
 
-var replaceRx = regexp.MustCompile(`\(\*(runtime.\w+)\)\(0x[0-9a-f]+\)`)
+var replaceRx = regexp.MustCompile(`\(\*(v1alpha2.\w+)\)\(0x[0-9a-f]+\)`)
 var rmRx = regexp.MustCompile(`(?: \(string\))? \(len=\d+(?: cap=\d+)?\)`)
 
 func dump(o interface{}) string {
-	// try to reduce the noise that's not relevant to CRI object structure
-	s := replaceRx.ReplaceAllString(spew.Sdump(o), "&$1")
-	return rmRx.ReplaceAllString(s, "")
+	out, err := yaml.Marshal(o)
+	if err != nil {
+		return fmt.Sprintf("<Error marshalling %T: %v>", o, err)
+	}
+	return string(out)
 }

@@ -17,7 +17,6 @@ limitations under the License.
 package proxy
 
 import (
-	"encoding/json"
 	"flag"
 	"fmt"
 	"net/url"
@@ -26,13 +25,16 @@ import (
 	"testing"
 	"time"
 
-	runtimeapi "github.com/Mirantis/criproxy/pkg/runtimeapi/v1_9"
+	"github.com/ghodss/yaml"
 	"github.com/golang/glog"
 	"github.com/pmezard/go-difflib/difflib"
 	"golang.org/x/net/context"
 	"google.golang.org/grpc"
 
 	proxytest "github.com/Mirantis/criproxy/pkg/proxy/testing"
+	"github.com/Mirantis/criproxy/pkg/runtimeapis"
+	v1_10 "github.com/Mirantis/criproxy/pkg/runtimeapis/v1_10"
+	runtimeapi "github.com/Mirantis/criproxy/pkg/runtimeapis/v1_9"
 	"github.com/Mirantis/criproxy/pkg/utils"
 )
 
@@ -82,18 +84,21 @@ func startServer(t *testing.T, s ServerWithReadinessFeedback, addr string) {
 type proxyTester struct {
 	hookCallCount   int
 	journal         *proxytest.SimpleJournal
-	servers         []*proxytest.FakeCriServer
+	servers         []proxytest.FakeCriServer
 	proxy           *RuntimeProxy
+	proxyServer     *Server
 	conn            *grpc.ClientConn
 	containerStats  []*runtimeapi.ContainerStats
 	filesystemUsage []*runtimeapi.FilesystemUsage
 }
 
-func newProxyTester(t *testing.T) *proxyTester {
+type makeFakeCriServerFunc func(journal proxytest.Journal, streamUrl string) proxytest.FakeCriServer
+
+func newProxyTester(t *testing.T, secondSocketSpec string, fakeCriServerMakers []makeFakeCriServerFunc) *proxyTester {
 	journal := proxytest.NewSimpleJournal()
-	servers := []*proxytest.FakeCriServer{
-		proxytest.NewFakeCriServer(proxytest.NewPrefixJournal(journal, "1/"), "/cri"),
-		proxytest.NewFakeCriServer(proxytest.NewPrefixJournal(journal, "2/"), "http://192.168.0.5:12345/stream"),
+	servers := []proxytest.FakeCriServer{
+		fakeCriServerMakers[0](proxytest.NewPrefixJournal(journal, "1/"), "/cri"),
+		fakeCriServerMakers[1](proxytest.NewPrefixJournal(journal, "2/"), "http://192.168.0.5:12345/stream"),
 	}
 
 	fakeImageNames1 := []string{"image1-1", "image1-2"}
@@ -105,21 +110,12 @@ func newProxyTester(t *testing.T) *proxyTester {
 	servers[1].SetFakeImages(fakeImageNames2)
 
 	containerStats := []*runtimeapi.ContainerStats{
-		proxytest.MakeFakeContainerStats(containerId1, &runtimeapi.ContainerMetadata{
-			Name: "container1",
-		}, imageFsUUID1),
-		proxytest.MakeFakeContainerStats(containerId2unprefixed, &runtimeapi.ContainerMetadata{
-			Name: "container2",
-		}, imageFsUUID2),
+		servers[0].SetFakeContainerStats(containerId1, "container1", imageFsUUID1).(*runtimeapi.ContainerStats),
+		servers[1].SetFakeContainerStats(containerId2unprefixed, "container2", imageFsUUID2).(*runtimeapi.ContainerStats),
 	}
-
 	filesystemUsage := []*runtimeapi.FilesystemUsage{
-		proxytest.MakeFakeImageFsUsage(imageFsUUID1),
-		proxytest.MakeFakeImageFsUsage(imageFsUUID2),
-	}
-	for i := 0; i < 2; i++ {
-		servers[i].SetFakeContainerStats(containerStats[i : i+1])
-		servers[i].SetFakeFilesystemUsage(filesystemUsage[i : i+1])
+		servers[0].SetFakeFilesystemUsage(imageFsUUID1).(*runtimeapi.FilesystemUsage),
+		servers[1].SetFakeFilesystemUsage(imageFsUUID2).(*runtimeapi.FilesystemUsage),
 	}
 
 	tester := &proxyTester{
@@ -135,12 +131,17 @@ func newProxyTester(t *testing.T) *proxyTester {
 	if err != nil {
 		t.Fatalf("error parsing stream url: %v", err)
 	}
-	tester.proxy, err = NewRuntimeProxy(&CRI19{}, []string{fakeCriSocketPath1, altSocketSpec}, connectionTimeoutForTests, streamUrl, func() {
+	var interceptors []Interceptor
+	for _, criVersion := range []CRIVersion{&CRI19{}, &CRI110{}} {
+		proxy, err := NewRuntimeProxy(criVersion, []string{fakeCriSocketPath1, secondSocketSpec}, connectionTimeoutForTests, streamUrl)
+		if err != nil {
+			t.Fatalf("failed to create runtime proxy: %v", err)
+		}
+		interceptors = append(interceptors, proxy)
+	}
+	tester.proxyServer = NewServer(interceptors, func() {
 		tester.hookCallCount++
 	})
-	if err != nil {
-		t.Fatalf("failed to create runtime proxy: %v", err)
-	}
 
 	return tester
 }
@@ -155,10 +156,7 @@ func (tester *proxyTester) startServers(t *testing.T, which int) {
 }
 
 func (tester *proxyTester) startProxy(t *testing.T) {
-	// if err := tester.proxy.Connect(); err != nil {
-	// 	t.Fatalf("Failed to set up CRI proxy: %v", err)
-	// }
-	startServer(t, tester.proxy, criProxySocketForTests)
+	startServer(t, tester.proxyServer, criProxySocketForTests)
 }
 
 func (tester *proxyTester) connectToProxy(t *testing.T) {
@@ -176,17 +174,17 @@ func (tester *proxyTester) stop() {
 	for _, server := range tester.servers {
 		server.Stop()
 	}
-	tester.proxy.Stop()
+	tester.proxyServer.Stop()
+}
+
+func (tester *proxyTester) skipJournalItems(items ...string) {
+	for _, item := range items {
+		tester.journal.Skip(item)
+	}
 }
 
 func (tester *proxyTester) verifyJournal(t *testing.T, expectedItems []string) {
 	if err := tester.journal.Verify(expectedItems); err != nil {
-		t.Error(err)
-	}
-}
-
-func (tester *proxyTester) verifyJournalUnordered(t *testing.T, expectedItems []string) {
-	if err := tester.journal.VerifyUnordered(expectedItems); err != nil {
 		t.Error(err)
 	}
 }
@@ -209,11 +207,11 @@ func (tester *proxyTester) verifyCall(t *testing.T, method string, in, resp inte
 	}
 
 	if err == nil && !reflect.DeepEqual(actualResponse, resp) {
-		expectedJSON, err := json.MarshalIndent(resp, "", "  ")
+		expectedJSON, err := yaml.Marshal(resp)
 		if err != nil {
 			t.Fatalf("Failed to marshal json: %v", err)
 		}
-		actualJSON, err := json.MarshalIndent(actualResponse, "", "  ")
+		actualJSON, err := yaml.Marshal(actualResponse)
 		if err != nil {
 			t.Fatalf("Failed to marshal json: %v", err)
 		}
@@ -229,8 +227,8 @@ func (tester *proxyTester) verifyCall(t *testing.T, method string, in, resp inte
 	}
 }
 
-func TestCriProxy(t *testing.T) {
-	tester := newProxyTester(t)
+func verifyCRIProxy(t *testing.T, secondSocketSpec string, useNewCriVersionForProxy bool, fakeCriServerMakers []makeFakeCriServerFunc) {
+	tester := newProxyTester(t, secondSocketSpec, fakeCriServerMakers)
 	defer tester.stop()
 	tester.startServers(t, -1)
 	tester.startProxy(t)
@@ -239,7 +237,7 @@ func TestCriProxy(t *testing.T) {
 	containerStats1 := tester.containerStats[0]
 	containerStats2 := &runtimeapi.ContainerStats{
 		Attributes: &runtimeapi.ContainerAttributes{
-			Id:          containerId2,
+			Id:          containerId2, // that's the difference (prefixed id here)
 			Metadata:    tester.containerStats[1].Attributes.Metadata,
 			Labels:      tester.containerStats[1].Attributes.Labels,
 			Annotations: tester.containerStats[1].Attributes.Annotations,
@@ -255,6 +253,9 @@ func TestCriProxy(t *testing.T) {
 		ins          []interface{}
 		journal      []string
 		error        string
+		newVersion   bool
+		// for debugging
+		stopAfter bool
 	}{
 		{
 			name:   "version",
@@ -372,7 +373,7 @@ func TestCriProxy(t *testing.T) {
 							Attempt:   0,
 						},
 						State:     runtimeapi.PodSandboxState_SANDBOX_READY,
-						CreatedAt: tester.servers[0].CurrentTime,
+						CreatedAt: tester.servers[0].CurrentTime(),
 						Labels:    map[string]string{"name": "pod-1-1"},
 					},
 					{
@@ -384,7 +385,7 @@ func TestCriProxy(t *testing.T) {
 							Attempt:   0,
 						},
 						State:     runtimeapi.PodSandboxState_SANDBOX_READY,
-						CreatedAt: tester.servers[1].CurrentTime,
+						CreatedAt: tester.servers[1].CurrentTime(),
 						Labels:    map[string]string{"name": "pod-2-1"},
 						Annotations: map[string]string{
 							"kubernetes.io/target-runtime": "alt",
@@ -411,7 +412,7 @@ func TestCriProxy(t *testing.T) {
 							Attempt:   0,
 						},
 						State:     runtimeapi.PodSandboxState_SANDBOX_READY,
-						CreatedAt: tester.servers[0].CurrentTime,
+						CreatedAt: tester.servers[0].CurrentTime(),
 						Labels:    map[string]string{"name": "pod-1-1"},
 					},
 				},
@@ -435,7 +436,7 @@ func TestCriProxy(t *testing.T) {
 							Attempt:   0,
 						},
 						State:     runtimeapi.PodSandboxState_SANDBOX_READY,
-						CreatedAt: tester.servers[1].CurrentTime,
+						CreatedAt: tester.servers[1].CurrentTime(),
 						Labels:    map[string]string{"name": "pod-2-1"},
 						Annotations: map[string]string{
 							"kubernetes.io/target-runtime": "alt",
@@ -461,7 +462,7 @@ func TestCriProxy(t *testing.T) {
 						Attempt:   0,
 					},
 					State:     runtimeapi.PodSandboxState_SANDBOX_READY,
-					CreatedAt: tester.servers[0].CurrentTime,
+					CreatedAt: tester.servers[0].CurrentTime(),
 					Network: &runtimeapi.PodSandboxNetworkStatus{
 						Ip: "192.168.192.168",
 					},
@@ -486,7 +487,7 @@ func TestCriProxy(t *testing.T) {
 						Attempt:   0,
 					},
 					State:     runtimeapi.PodSandboxState_SANDBOX_READY,
-					CreatedAt: tester.servers[1].CurrentTime,
+					CreatedAt: tester.servers[1].CurrentTime(),
 					Network: &runtimeapi.PodSandboxNetworkStatus{
 						Ip: "192.168.192.168",
 					},
@@ -595,7 +596,7 @@ func TestCriProxy(t *testing.T) {
 							Image: "image1-1",
 						},
 						ImageRef:  "image1-1",
-						CreatedAt: tester.servers[0].CurrentTime,
+						CreatedAt: tester.servers[0].CurrentTime(),
 						State:     runtimeapi.ContainerState_CONTAINER_CREATED,
 					},
 					{
@@ -609,7 +610,7 @@ func TestCriProxy(t *testing.T) {
 							Image: "alt/image2-1",
 						},
 						ImageRef:  "image2-1",
-						CreatedAt: tester.servers[1].CurrentTime,
+						CreatedAt: tester.servers[1].CurrentTime(),
 						State:     runtimeapi.ContainerState_CONTAINER_CREATED,
 					},
 					{
@@ -623,7 +624,7 @@ func TestCriProxy(t *testing.T) {
 							Image: sampleDigest,
 						},
 						ImageRef:  sampleDigest,
-						CreatedAt: tester.servers[1].CurrentTime,
+						CreatedAt: tester.servers[1].CurrentTime(),
 						State:     runtimeapi.ContainerState_CONTAINER_CREATED,
 					},
 				},
@@ -667,7 +668,7 @@ func TestCriProxy(t *testing.T) {
 							Image: "image1-1",
 						},
 						ImageRef:  "image1-1",
-						CreatedAt: tester.servers[0].CurrentTime,
+						CreatedAt: tester.servers[0].CurrentTime(),
 						State:     runtimeapi.ContainerState_CONTAINER_CREATED,
 					},
 				},
@@ -708,7 +709,7 @@ func TestCriProxy(t *testing.T) {
 							Image: "alt/image2-1",
 						},
 						ImageRef:  "image2-1",
-						CreatedAt: tester.servers[1].CurrentTime,
+						CreatedAt: tester.servers[1].CurrentTime(),
 						State:     runtimeapi.ContainerState_CONTAINER_CREATED,
 					},
 				},
@@ -734,7 +735,7 @@ func TestCriProxy(t *testing.T) {
 							Image: "alt/image2-1",
 						},
 						ImageRef:  "image2-1",
-						CreatedAt: tester.servers[1].CurrentTime,
+						CreatedAt: tester.servers[1].CurrentTime(),
 						State:     runtimeapi.ContainerState_CONTAINER_CREATED,
 					},
 					{
@@ -748,7 +749,7 @@ func TestCriProxy(t *testing.T) {
 							Image: sampleDigest,
 						},
 						ImageRef:  sampleDigest,
-						CreatedAt: tester.servers[1].CurrentTime,
+						CreatedAt: tester.servers[1].CurrentTime(),
 						State:     runtimeapi.ContainerState_CONTAINER_CREATED,
 					},
 				},
@@ -869,7 +870,7 @@ func TestCriProxy(t *testing.T) {
 						Image: "image1-1",
 					},
 					ImageRef:  "image1-1",
-					CreatedAt: tester.servers[0].CurrentTime,
+					CreatedAt: tester.servers[0].CurrentTime(),
 					State:     runtimeapi.ContainerState_CONTAINER_CREATED,
 				},
 			},
@@ -893,7 +894,7 @@ func TestCriProxy(t *testing.T) {
 					},
 					// ImageRef is not prefixed
 					ImageRef:  "image2-1",
-					CreatedAt: tester.servers[1].CurrentTime,
+					CreatedAt: tester.servers[1].CurrentTime(),
 					State:     runtimeapi.ContainerState_CONTAINER_CREATED,
 				},
 			},
@@ -956,6 +957,26 @@ func TestCriProxy(t *testing.T) {
 			},
 			resp:    &runtimeapi.UpdateContainerResourcesResponse{},
 			journal: []string{"2/runtime/UpdateContainerResources"},
+		},
+		{
+			name:   "reopen container log 1 (1.10+)",
+			method: "/runtime.v1alpha2.RuntimeService/ReopenContainerLog",
+			in: &v1_10.ReopenContainerLogRequest{
+				ContainerId: containerId1,
+			},
+			resp:       &v1_10.ReopenContainerLogResponse{},
+			journal:    []string{"1/runtime/ReopenContainerLog"},
+			newVersion: true,
+		},
+		{
+			name:   "reopen container log 2 (1.10+)",
+			method: "/runtime.v1alpha2.RuntimeService/ReopenContainerLog",
+			in: &v1_10.ReopenContainerLogRequest{
+				ContainerId: containerId2,
+			},
+			resp:       &v1_10.ReopenContainerLogResponse{},
+			journal:    []string{"2/runtime/ReopenContainerLog"},
+			newVersion: true,
 		},
 		{
 			name:   "stop container 1",
@@ -1116,7 +1137,7 @@ func TestCriProxy(t *testing.T) {
 							Attempt:   0,
 						},
 						State:     runtimeapi.PodSandboxState_SANDBOX_NOTREADY,
-						CreatedAt: tester.servers[0].CurrentTime,
+						CreatedAt: tester.servers[0].CurrentTime(),
 						Labels:    map[string]string{"name": "pod-1-1"},
 					},
 					{
@@ -1128,7 +1149,7 @@ func TestCriProxy(t *testing.T) {
 							Attempt:   0,
 						},
 						State:     runtimeapi.PodSandboxState_SANDBOX_NOTREADY,
-						CreatedAt: tester.servers[1].CurrentTime,
+						CreatedAt: tester.servers[1].CurrentTime(),
 						Labels:    map[string]string{"name": "pod-2-1"},
 						Annotations: map[string]string{
 							"kubernetes.io/target-runtime": "alt",
@@ -1384,6 +1405,9 @@ func TestCriProxy(t *testing.T) {
 
 	nCalls := 0
 	for _, step := range testCases {
+		if step.newVersion && !useNewCriVersionForProxy {
+			continue
+		}
 		var ins []interface{}
 		if step.ins == nil {
 			ins = []interface{}{step.in}
@@ -1401,9 +1425,28 @@ func TestCriProxy(t *testing.T) {
 			}
 			nCalls++
 			t.Run(name, func(t *testing.T) {
-				tester.verifyCall(t, step.method, in, step.resp, step.error)
+				method := step.method
+				req := in
+				resp := step.resp
+				if useNewCriVersionForProxy && !step.newVersion {
+					method = strings.Replace(method, "runtime.", "runtime.v1alpha2.", 1)
+					var err error
+					req, err = runtimeapis.Upgrade(in)
+					if err != nil {
+						t.Fatalf("Upgrade %T: %v", in, err)
+					}
+					resp, err = runtimeapis.Upgrade(step.resp)
+					if err != nil {
+						t.Fatalf("Upgrade %T: %v", step.resp, err)
+					}
+				}
+				tester.verifyCall(t, method, req, resp, step.error)
 				tester.verifyJournal(t, step.journal)
 			})
+		}
+
+		if step.stopAfter {
+			break
 		}
 	}
 	if tester.hookCallCount != nCalls {
@@ -1411,13 +1454,40 @@ func TestCriProxy(t *testing.T) {
 	}
 }
 
+func TestCriProxy19(t *testing.T) {
+	verifyCRIProxy(t, altSocketSpec, false, []makeFakeCriServerFunc{
+		proxytest.NewFakeCriServer19,
+		proxytest.NewFakeCriServer19,
+	})
+}
+
+func TestCriProxy19To110(t *testing.T) {
+	verifyCRIProxy(t, altSocketSpec, false, []makeFakeCriServerFunc{
+		proxytest.NewFakeCriServer19,
+		proxytest.NewFakeCriServer110,
+	})
+}
+
+func TestCriProxy110(t *testing.T) {
+	verifyCRIProxy(t, altSocketSpec, true, []makeFakeCriServerFunc{
+		proxytest.NewFakeCriServer110,
+		proxytest.NewFakeCriServer110,
+	})
+}
+
 func TestCriProxyInactiveServers(t *testing.T) {
-	tester := newProxyTester(t)
+	tester := newProxyTester(t, altSocketSpec, []makeFakeCriServerFunc{
+		proxytest.NewFakeCriServer19,
+		proxytest.NewFakeCriServer19,
+	})
 	defer tester.stop()
 	tester.startServers(t, 0)
 
 	tester.startProxy(t)
 	tester.connectToProxy(t)
+	// these items may occur at different points, and we try to
+	// make the journal stable
+	tester.skipJournalItems("1/runtime/Version", "2/runtime/Version")
 
 	// should not need 2nd runtime to contact just the first one
 	listReq := &runtimeapi.ListImagesRequest{
@@ -1438,7 +1508,7 @@ func TestCriProxyInactiveServers(t *testing.T) {
 	}, "")
 	// the first Version request is done by CRI proxy itself
 	// to verify the connection
-	tester.verifyJournal(t, []string{"1/runtime/Version", "1/image/ListImages"})
+	tester.verifyJournal(t, []string{"1/image/ListImages"})
 
 	// this one skips 2nd client because it's not connected yet
 	tester.verifyCall(t, "/runtime.ImageService/ListImages", &runtimeapi.ListImagesRequest{}, &runtimeapi.ListImagesResponse{
@@ -1472,11 +1542,7 @@ func TestCriProxyInactiveServers(t *testing.T) {
 			t.Fatalf("ListImages() failed while waiting for 2nd client to connect: %v", err)
 		}
 		if len(resp.GetImages()) == 4 {
-			// the Version request is done by CRI proxy itself
-			// to verify the connection. The order here is undefined
-			// beause "2/runtime/Version" may come either before
-			// or after "1/image/ListImages"
-			tester.verifyJournalUnordered(t, []string{"1/image/ListImages", "2/runtime/Version", "2/image/ListImages"})
+			tester.verifyJournal(t, []string{"1/image/ListImages", "2/image/ListImages"})
 			break
 		} else {
 			tester.verifyJournal(t, []string{"1/image/ListImages"})

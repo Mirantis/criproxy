@@ -22,7 +22,6 @@ import (
 	"strconv"
 	"time"
 
-	"github.com/davecgh/go-spew/spew"
 	"github.com/golang/glog"
 	knet "k8s.io/apimachinery/pkg/util/net"
 )
@@ -72,11 +71,4 @@ func GetStreamUrl(port int) (*url.URL, error) {
 		Scheme: "http",
 		Host:   net.JoinHostPort(bindAddress.String(), strconv.Itoa(port)),
 	}, nil
-}
-
-// TODO: remove this
-func init() {
-	// Make spew output more readable for k8s runtime API objects
-	spew.Config.DisableMethods = true
-	spew.Config.DisablePointerMethods = true
 }

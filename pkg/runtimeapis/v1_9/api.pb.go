@@ -3104,6 +3104,7 @@ func (m *UInt64Value) GetValue() uint64 {
 }
 
 // StorageIdentifier uniquely identify the storage..
+/* +k8s:conversion-gen=false */
 type StorageIdentifier struct {
 	// UUID of the device.
 	Uuid string `protobuf:"bytes,1,opt,name=uuid,proto3" json:"uuid,omitempty"`
@@ -3429,7 +3430,7 @@ func (m *MemoryUsage) GetWorkingSetBytes() *UInt64Value {
 	return nil
 }
 
-func RegisterCRI() {
+func init() {
 	proto.RegisterType((*VersionRequest)(nil), "runtime.VersionRequest")
 	proto.RegisterType((*VersionResponse)(nil), "runtime.VersionResponse")
 	proto.RegisterType((*DNSConfig)(nil), "runtime.DNSConfig")
