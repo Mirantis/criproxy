@@ -917,6 +917,11 @@ func (o *ExecRequest_19) Wrap(v interface{}) {
 		o.inner = &runtimeapi.ExecRequest{}
 	} else {
 		o.inner = v.(*runtimeapi.ExecRequest)
+		// FIXME: this is needed to support k8s 1.8
+		if !o.inner.Stdout && !o.inner.Stderr {
+			o.inner.Stdout = true
+			o.inner.Stderr = true
+		}
 	}
 }
 func (o *ExecRequest_19) Unwrap() interface{}      { return o.inner }
@@ -955,6 +960,11 @@ func (o *AttachRequest_19) Wrap(v interface{}) {
 		o.inner = &runtimeapi.AttachRequest{}
 	} else {
 		o.inner = v.(*runtimeapi.AttachRequest)
+		// FIXME: this is needed to support k8s 1.8
+		if !o.inner.Stdout && !o.inner.Stderr {
+			o.inner.Stdout = true
+			o.inner.Stderr = true
+		}
 	}
 }
 func (o *AttachRequest_19) Unwrap() interface{}      { return o.inner }
