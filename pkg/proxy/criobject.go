@@ -147,6 +147,8 @@ type Image interface {
 	Copy() Image
 	RepoTags() []string
 	SetRepoTags([]string)
+	RepoDigests() []string
+	SetRepoDigests([]string)
 }
 
 // PodSandboxStatus wraps a CRI PodSandboxStatus object

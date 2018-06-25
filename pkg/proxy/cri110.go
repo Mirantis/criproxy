@@ -81,12 +81,14 @@ func (o *Image_110) Wrap(v interface{}) {
 		o.inner = v.(*runtimeapi.Image)
 	}
 }
-func (o *Image_110) Unwrap() interface{}           { return o.inner }
-func (o *Image_110) Copy() Image                   { r := *o.inner; return &Image_110{&r} }
-func (o *Image_110) Id() string                    { return o.inner.Id }
-func (o *Image_110) SetId(id string)               { o.inner.Id = id }
-func (o *Image_110) RepoTags() []string            { return o.inner.RepoTags }
-func (o *Image_110) SetRepoTags(repoTags []string) { o.inner.RepoTags = repoTags }
+func (o *Image_110) Unwrap() interface{}                 { return o.inner }
+func (o *Image_110) Copy() Image                         { r := *o.inner; return &Image_110{&r} }
+func (o *Image_110) Id() string                          { return o.inner.Id }
+func (o *Image_110) SetId(id string)                     { o.inner.Id = id }
+func (o *Image_110) RepoTags() []string                  { return o.inner.RepoTags }
+func (o *Image_110) SetRepoTags(repoTags []string)       { o.inner.RepoTags = repoTags }
+func (o *Image_110) RepoDigests() []string               { return o.inner.RepoDigests }
+func (o *Image_110) SetRepoDigests(repoDigests []string) { o.inner.RepoDigests = repoDigests }
 
 // ---
 
