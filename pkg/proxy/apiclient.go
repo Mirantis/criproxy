@@ -283,6 +283,17 @@ func (c *clientBase) prefixImage(unprefixedImage Image) Image {
 		newRepoTags[n] = c.imageName(tag)
 	}
 	image.SetRepoTags(newRepoTags)
+	// repo digests may or may not include the image name
+	newRepoDigests := make([]string, len(image.RepoDigests()))
+	for n, digest := range image.RepoDigests() {
+		p := strings.Index(digest, "@")
+		if p > 0 {
+			newRepoDigests[n] = c.imageName(digest)
+		} else {
+			newRepoDigests[n] = digest
+		}
+	}
+	image.SetRepoDigests(newRepoDigests)
 	return image
 }
 

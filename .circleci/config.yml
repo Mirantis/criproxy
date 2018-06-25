@@ -1,17 +1,12 @@
 deployment_test: &deployment_test
   docker:
-  - image: ishvedunov/criproxy-build:0.0.4
+  - image: ishvedunov/criproxy-build:0.0.5
   steps:
   - setup-remote-docker
   - checkout
   - run:
-      name: Set up the environment
+      name: Start the port forwarder
       command: |
-        # Install Docker client
-        curl -sSL -o "/tmp/docker-${DOCKER_VERSION}.tgz" "https://get.docker.com/builds/Linux/x86_64/docker-${DOCKER_VERSION}.tgz"
-        tar -xz -C /tmp -f "/tmp/docker-${DOCKER_VERSION}.tgz"
-        mv /tmp/docker/* /usr/bin
-
         # Start port forwarder
         hack/portforward.sh start
   - attach_workspace:
@@ -77,14 +72,17 @@ jobs:
   deployment-test-1.8:
     <<: *deployment_test
     environment:
-      DOCKER_VERSION: "17.03.0-ce"
       K8S_VERSION: "1.8"
 
   deployment-test-1.9:
     <<: *deployment_test
     environment:
-      DOCKER_VERSION: "17.03.0-ce"
       K8S_VERSION: "1.9"
+
+  deployment-test-1.10:
+    <<: *deployment_test
+    environment:
+      K8S_VERSION: "1.10"
 
 workflows:
   version: 2
@@ -112,12 +110,21 @@ workflows:
             only: /^v.*/
           branches:
             only: /.*/
+    - deployment-test-1.10:
+        requires:
+        - build
+        filters:
+          tags:
+            only: /^v.*/
+          branches:
+            only: /.*/
 
     - publish:
         requires:
         - build
         - deployment-test-1.8
         - deployment-test-1.9
+        - deployment-test-1.10
         filters:
           tags:
             only: /v.*/

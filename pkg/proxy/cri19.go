@@ -81,12 +81,14 @@ func (o *Image_19) Wrap(v interface{}) {
 		o.inner = v.(*runtimeapi.Image)
 	}
 }
-func (o *Image_19) Unwrap() interface{}           { return o.inner }
-func (o *Image_19) Copy() Image                   { r := *o.inner; return &Image_19{&r} }
-func (o *Image_19) Id() string                    { return o.inner.Id }
-func (o *Image_19) SetId(id string)               { o.inner.Id = id }
-func (o *Image_19) RepoTags() []string            { return o.inner.RepoTags }
-func (o *Image_19) SetRepoTags(repoTags []string) { o.inner.RepoTags = repoTags }
+func (o *Image_19) Unwrap() interface{}                 { return o.inner }
+func (o *Image_19) Copy() Image                         { r := *o.inner; return &Image_19{&r} }
+func (o *Image_19) Id() string                          { return o.inner.Id }
+func (o *Image_19) SetId(id string)                     { o.inner.Id = id }
+func (o *Image_19) RepoTags() []string                  { return o.inner.RepoTags }
+func (o *Image_19) SetRepoTags(repoTags []string)       { o.inner.RepoTags = repoTags }
+func (o *Image_19) RepoDigests() []string               { return o.inner.RepoDigests }
+func (o *Image_19) SetRepoDigests(repoDigests []string) { o.inner.RepoDigests = repoDigests }
 
 // ---
 
@@ -917,6 +919,11 @@ func (o *ExecRequest_19) Wrap(v interface{}) {
 		o.inner = &runtimeapi.ExecRequest{}
 	} else {
 		o.inner = v.(*runtimeapi.ExecRequest)
+		// FIXME: this is needed to support k8s 1.8
+		if !o.inner.Stdout && !o.inner.Stderr {
+			o.inner.Stdout = true
+			o.inner.Stderr = true
+		}
 	}
 }
 func (o *ExecRequest_19) Unwrap() interface{}      { return o.inner }
@@ -955,6 +962,11 @@ func (o *AttachRequest_19) Wrap(v interface{}) {
 		o.inner = &runtimeapi.AttachRequest{}
 	} else {
 		o.inner = v.(*runtimeapi.AttachRequest)
+		// FIXME: this is needed to support k8s 1.8
+		if !o.inner.Stdout && !o.inner.Stderr {
+			o.inner.Stdout = true
+			o.inner.Stderr = true
+		}
 	}
 }
 func (o *AttachRequest_19) Unwrap() interface{}      { return o.inner }
