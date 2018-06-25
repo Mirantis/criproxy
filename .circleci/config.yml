@@ -79,6 +79,11 @@ jobs:
     environment:
       K8S_VERSION: "1.9"
 
+  deployment-test-1.10:
+    <<: *deployment_test
+    environment:
+      K8S_VERSION: "1.10"
+
 workflows:
   version: 2
   build-test-and-publish:
@@ -105,12 +110,21 @@ workflows:
             only: /^v.*/
           branches:
             only: /.*/
+    - deployment-test-1.10:
+        requires:
+        - build
+        filters:
+          tags:
+            only: /^v.*/
+          branches:
+            only: /.*/
 
     - publish:
         requires:
         - build
         - deployment-test-1.8
         - deployment-test-1.9
+        - deployment-test-1.10
         filters:
           tags:
             only: /v.*/
