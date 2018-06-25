@@ -12,6 +12,7 @@ fi
 TEST_DIR="$(cd $(dirname "$(readlinkf "${BASH_SOURCE}")"); pwd)"
 
 K8S_VERSION="${K8S_VERSION:-1.9}"
+CLEAN_DIND="${CLEAN_DIND:-}"
 kubectl="${HOME}/.kubeadm-dind-cluster/kubectl"
 dind_script="dind-cluster-v${K8S_VERSION}.sh"
 status=0
@@ -68,9 +69,9 @@ chmod +x "${dind_script}"
 
 step "Starting kubeadm-dind-cluster"
 
-# Uncomment to have the cluster cleaned up.  Currently we're not doing
-# it as it slows down local debugging.
-# "./${dind_script}" clean
+if [[ ${CLEAN_DIND} ]]; then
+  "./${dind_script}" clean
+fi
 
 # Use single-worker cluster so as to have all the pods w/o tolerations
 # scheduled on kube-node-1
@@ -83,59 +84,55 @@ else
   docker cp "${CRIPROXY_DEB}" kube-node-1:/criproxy.deb
 fi
 
-step "Copying cri-o files to the node"
-docker exec -i kube-node-1 tar -C / -xvz </crio.tar.gz
-docker cp "${TEST_DIR}"/crio.service kube-node-1:/etc/systemd/system
+step "Copying containerd files to the node"
+docker exec -i kube-node-1 tar -xvz </containerd.tar.gz
+#docker exec kube-node-1 systemctl daemon-reload
+#docker exec kube-node-1 systemctl start containerd
 
-step "Setting up criproxy and cri-o on the node"
+step "Setting up criproxy and containerd on the node"
 docker exec -i kube-node-1 /bin/bash -s <<EOF
 set -o errexit
 set -o nounset
 set -o pipefail
 set -o errtrace
 
-# FIXME: scopeo-containers package contains just a few files which we should
-# probably just include with criproxy
-export DEBIAN_FRONTEND=noninteractive
-apt-get update -qq
-apt-get install -qqy software-properties-common libgpgme11
-add-apt-repository -y ppa:projectatomic/ppa
-apt-get update -qq
-apt-get install -qqy skopeo-containers
+mkdir -p /dind/containerd /var/lib/containerd
+mount --bind /dind/containerd /var/lib/containerd
 
-systemctl enable crio
-systemctl start crio
+systemctl daemon-reload
+systemctl enable containerd
+systemctl start containerd
 
 dpkg -i /criproxy.deb
 mkdir /etc/systemd/system/criproxy.service.d
-echo -e '[Service]\nExecStart=\nExecStart=/usr/bin/criproxy -v 3 -logtostderr -connect /var/run/dockershim.sock,cri.o:/var/run/crio.sock -listen /run/criproxy.sock' >/etc/systemd/system/criproxy.service.d/10-crio.conf
+echo -e '[Service]\nExecStart=\nExecStart=/usr/bin/criproxy -v 3 -logtostderr -connect /var/run/dockershim.sock,containerd.io:/var/run/containerd/containerd.sock -listen /run/criproxy.sock' >/etc/systemd/system/criproxy.service.d/10-containerd.conf
 systemctl daemon-reload
 systemctl restart criproxy
 EOF
 
-step "Starting and verifying busybox pod using CRI-O"
+step "Starting and verifying busybox pod using containerd"
 # Interrupting 'kubectl run' after grep finishes will cause it to exit
 # with a non-zero status, thus '|| true'. It can be considered
 # successful if it displays the message though
-if ! ("${kubectl}" run bbtest-crio --attach \
-        --overrides='{"metadata": {"annotations":{"kubernetes.io/target-runtime":"cri.o"}}}' \
-        --image=cri.o/docker.io/busybox \
+if ! ("${kubectl}" run bbtest-containerd --attach \
+        --overrides='{"metadata": {"annotations":{"kubernetes.io/target-runtime":"containerd.io"}}}' \
+        --image=containerd.io/docker.io/busybox \
         --restart=Never -- \
-        /bin/sh -c 'while true; do echo "this-is-crio-pod"; sleep 1; done' || true) |
-        grep --line-buffered -m 1 this-is-crio-pod; then
-  error "Failed to verify bbtest-crio pod"
+        /bin/sh -c 'while true; do echo "this-is-containerd-pod"; sleep 1; done' || true) |
+        grep --line-buffered -m 1 this-is-contained-pod; then
+  error "Failed to verify bbtest-containerd pod"
 fi
 
-if ! "${kubectl}" logs bbtest-crio | grep -q this-is-crio-pod; then
-  error "kubectl logs failed on bbtest-crio pod or didn't get this-is-crio-pod in its output"
+if ! "${kubectl}" logs bbtest-containerd | grep -q this-is-containerd-pod; then
+  error "kubectl logs failed on bbtest-containerd pod or didn't get this-is-containerd-pod in its output"
 fi
 
-if ! docker exec kube-node-1 crioctl pod list | grep bbtest-crio; then
-  error "Failed to find bbtest-crio pod among CRI-O pods"
+if ! docker exec kube-node-1 crictl pods | grep bbtest-containerd; then
+  error "Failed to find bbtest-containerd pod among containerd pods"
 fi
 
-if docker exec kube-node-1 docker ps -a | grep bbtest-crio; then
-  error "Error: found CRI-O pod's container among docker containers"
+if docker exec kube-node-1 docker ps -a | grep bbtest-containerd; then
+  error "Error: found containerd pod's container among docker containers"
 fi
 
 step "Starting and verifying busybox pod using docker"
@@ -155,7 +152,7 @@ if ! "${kubectl}" logs bbtest-docker | grep -q this-is-docker-pod; then
 fi
 
 if docker exec kube-node-1 crioctl pod list | grep bbtest-docker; then
-  error "Error: found docker pod in CRI-O pod list"
+  error "Error: found docker pod in containerd pod list"
 fi
 
 if ! docker exec kube-node-1 docker ps -a | grep bbtest-docker; then
@@ -163,16 +160,16 @@ if ! docker exec kube-node-1 docker ps -a | grep bbtest-docker; then
 fi
 
 step "Verifying pod listing"
-if ! "${kubectl}" get pods | grep bbtest-crio; then
-  error "Failed to verify bbtest-crio pod"
+if ! "${kubectl}" get pods | grep bbtest-containerd; then
+  error "Failed to verify bbtest-containerd pod"
 fi
 if ! "${kubectl}" get pods | grep bbtest-docker; then
   error "Failed to verify bbtest-docker pod"
 fi
 
-step "Deleting bbtest-crio pod"
-"${kubectl}" delete pod bbtest-crio
-wait-for "bbtest-crio pod to be gone" pod-is-gone bbtest-crio
+step "Deleting bbtest-containerd pod"
+"${kubectl}" delete pod bbtest-containerd
+wait-for "bbtest-containerd pod to be gone" pod-is-gone bbtest-containerd
 
 step "Deleting bbtest-docker pod"
 "${kubectl}" delete pod bbtest-docker
