@@ -206,7 +206,15 @@ func (r *RuntimeProxy) clientForImage(image string, noErrorIfNotConnected bool) 
 }
 
 func (r *RuntimeProxy) fixStreamingUrl(url string) string {
-	if strings.HasPrefix(url, "/") {
+	// The URLs provided by dockershim in k8s 1.11+ look like this:
+	// //[::]:35057/cri/exec/tb8rgDBh
+	// These can be passed as-is to the client because they
+	// include the port.
+	// In k8s 1.10-, the following URLs are passed:
+	// /cri/exec/94B_NhGa
+	// These need to be replaced to make exec/attach work with
+	// dockershim.
+	if strings.HasPrefix(url, "/") && !strings.Contains(url, ":") {
 		u := r.streamUrl
 		u.Path = url
 		return u.String()
