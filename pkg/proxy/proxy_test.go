@@ -98,7 +98,7 @@ func newProxyTester(t *testing.T, secondSocketSpec string, fakeCriServerMakers [
 	journal := proxytest.NewSimpleJournal()
 	servers := []proxytest.FakeCriServer{
 		fakeCriServerMakers[0](proxytest.NewPrefixJournal(journal, "1/"), "/cri"),
-		fakeCriServerMakers[1](proxytest.NewPrefixJournal(journal, "2/"), "http://192.168.0.5:12345/stream"),
+		fakeCriServerMakers[1](proxytest.NewPrefixJournal(journal, "2/"), "//[::]:12345/stream"),
 	}
 
 	fakeImageNames1 := []string{"image1-1", "image1-2"}
@@ -1054,7 +1054,7 @@ func verifyCRIProxy(t *testing.T, secondSocketSpec string, useNewCriVersionForPr
 				Cmd:         []string{"ls"},
 			},
 			resp: &runtimeapi.ExecResponse{
-				Url: "http://192.168.0.5:12345/stream",
+				Url: "//[::]:12345/stream",
 			},
 			journal: []string{"2/runtime/Exec"},
 		},
@@ -1076,7 +1076,7 @@ func verifyCRIProxy(t *testing.T, secondSocketSpec string, useNewCriVersionForPr
 				ContainerId: containerId2,
 			},
 			resp: &runtimeapi.AttachResponse{
-				Url: "http://192.168.0.5:12345/stream",
+				Url: "//[::]:12345/stream",
 			},
 			journal: []string{"2/runtime/Attach"},
 		},
@@ -1100,7 +1100,7 @@ func verifyCRIProxy(t *testing.T, secondSocketSpec string, useNewCriVersionForPr
 				Port:         []int32{80},
 			},
 			resp: &runtimeapi.PortForwardResponse{
-				Url: "http://192.168.0.5:12345/stream",
+				Url: "//[::]:12345/stream",
 			},
 			journal: []string{"2/runtime/PortForward"},
 		},
