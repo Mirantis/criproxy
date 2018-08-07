@@ -5,7 +5,7 @@ same node and run CRI implementations inside pods. CRI Proxy is
 currently used by [Virtlet](https://github.com/Mirantis/virtlet)
 project but it can be used by other CRI implementations, too.
 
-It supports Kubernetes versions 1.7.x, 1.8.x and 1.9.x.
+It supports Kubernetes versions 1.8.x, 1.9.x, 1.10.x and 1.11.x.
 
 ## Installation on kubeadm clusters for use with Virtlet
 
@@ -35,11 +35,10 @@ In order to install the CRI proxy manually, first you need to download
 project and place it under `/usr/local/bin`.
 
 After that you need to configure dockershim service. Dockershim can be
-run using the same binary as kubelet with one catch: Kubernetes 1.7
-prior to 1.7.11 and 1.8 prior to 1.8.4 don't support `kubelet
---experimental-dockershim` in `hyperkube`. If that's your case, you
-can either upgrade Kubernetes binaries on your node or download
-`kubelet` binary for your version from
+run using the same binary as kubelet with one catch: Kubernetes 1.8
+prior to 1.8.4 don't support `kubelet --experimental-dockershim` in
+`hyperkube`. If that's your case, you can either upgrade Kubernetes
+binaries on your node or download `kubelet` binary for your version from
 `https://storage.googleapis.com/kubernetes-release/release/vX.Y.Z/bin/linux/amd64/kubelet`
 (put your version instead of vX.Y.Z) and use it for dockershim.
 
