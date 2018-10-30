@@ -75,7 +75,9 @@ fi
 
 # Use single-worker cluster so as to have all the pods w/o tolerations
 # scheduled on kube-node-1
-NUM_NODES=1 "./${dind_script}" up
+# APISERVER_PORT is set explicitly to avoid dynamic allocation
+# of the port by kdc
+APISERVER_PORT=8080 NUM_NODES=1 "./${dind_script}" up
 
 step "Propagating criproxy deb to the node"
 if [[ ${CRIPROXY_DEB_URL:-} ]]; then
