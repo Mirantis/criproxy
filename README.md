@@ -7,14 +7,18 @@ project but it can be used by other CRI implementations, too.
 
 It supports Kubernetes versions 1.8.x, 1.9.x, 1.10.x and 1.11.x.
 
-## Installation on kubeadm clusters for use with Virtlet
+## Installation
 
-In order to install CRI proxy on a kubeadm-deployed Kubernetes node
-running Ubuntu 16.04, you can go to
+In order to use CRI Proxy on Kubernetes node you have to install it in system
+then reconfigure existing kubelet setup to make it use CRI Proxy.
+
+### Installation on kubeadm clusters for use with Virtlet
+
+For kubeadm-deployed Kubernetes node running Ubuntu 16.04, you can go to
 [Releases](https://github.com/Mirantis/criproxy/releases) page of the
 project, download latest `criproxy_X.Y.Z_amd64.deb` to the node
 and install it with dpkg:
-```
+```bash
 dpkg -i criproxy_X.Y.Z_amd64.deb
 ```
 
@@ -27,14 +31,37 @@ exec -it kube-node-XX ...` and install it there with `dpkg -i`.
 The packages are currently tailored to support Virtlet deployments
 but later they can be made more universal.
 
-## Installation on a systemd-based system in a general case
+### Installation on a systemd-based system in a general case
 
-In order to install the CRI proxy manually, first you need to download
+In order to install the CRI Proxy manually, first you need to download
 `criproxy` binary from
 [Releases](https://github.com/Mirantis/criproxy/releases) page of the
 project and place it under `/usr/local/bin`.
 
-After that you need to configure dockershim service. Dockershim can be
+Create a file named `/etc/systemd/system/criproxy.service` with
+the following content (you can also use `systemctl --force edit criproxy.service` for it):
+
+```ini
+[Unit]
+Description=CRI Proxy
+
+[Service]
+ExecStart=/usr/local/bin/criproxy -v 3 -logtostderr -connect /var/run/dockershim.sock,virtlet.cloud:/run/virtlet.sock -listen /run/criproxy.sock
+Restart=always
+StartLimitInterval=0
+RestartSec=10
+
+[Install]
+WantedBy=kubelet.service
+```
+
+You can remove `-v 3` option to reduce verbosity level of the proxy.
+
+## Reconfiguring kubelet to use CRI Proxy
+
+### Adding dockershim service
+
+Next step is to configure dockershim service. Dockershim can be
 run using the same binary as kubelet with one catch: Kubernetes 1.8
 prior to 1.8.4 doesn't support `kubelet --experimental-dockershim` in
 `hyperkube`. If that's your case, you can either upgrade Kubernetes
@@ -89,30 +116,11 @@ RequiredBy=criproxy.service
 like `kubectl attach`). If you use another port, you'll also need to
 set `-streamPort XX` option for `criproxy`. If you get errors when
 trying to do `kubectl exec`, `kubectl attach` or `kubectl port-forward`
-on the node with CRI proxy, this means that CRI proxy fails to
+on the node with CRI Proxy, this means that CRI Proxy fails to
 determine node address properly and you need to pass `-streamUrl`
 option to `criproxy`, e.g. `-streamUrl http://node-ip-address:11250/`.
 This commonly happens when `--address` flag is passed to kubelet.
 Note that `-streamPort` is ignored if `-streamUrl` is set.
-
-Create a file named `/etc/systemd/system/criproxy.service` with
-the following content (you can also use `systemctl --force edit criproxy.service` for it):
-
-```ini
-[Unit]
-Description=CRI Proxy
-
-[Service]
-ExecStart=/usr/local/bin/criproxy -v 3 -logtostderr -connect /var/run/dockershim.sock,virtlet.cloud:/run/virtlet.sock -listen /run/criproxy.sock
-Restart=always
-StartLimitInterval=0
-RestartSec=10
-
-[Install]
-WantedBy=kubelet.service
-```
-
-You can remove `-v 3` option to reduce verbosity level of the proxy.
 
 Then enable and start the units after stopping kubelet:
 ```bash
@@ -122,14 +130,19 @@ systemctl enable criproxy dockershim
 systemctl start criproxy dockershim
 ```
 
-Then we need to reconfigure kubelet. You need to pass the following extra flags to it
-to make it use CRI Proxy (you will need to do another `systemctl daemon-reload`):
+### Configuring kubelet to use criproxy
+
+You need to pass the following extra flags to kubelet to make it use CRI Proxy:
 ```bash
 --container-runtime=remote \
 --container-runtime-endpoint=unix:///run/criproxy.sock \
 --image-service-endpoint=unix:///run/criproxy.sock \
 --enable-controller-attach-detach=false
 ```
+They should be set in `kubelet.service` file which can be usually found in
+`/lib/systemd/system` directory.
+Finally you will need to do another `systemctl daemon-reload` followed
+by `systemctl start kubelet`.
 
 ## How CRI Proxy works
 
@@ -139,7 +152,7 @@ image name / pod id / container id prefixes.
 
 ![CRI Request Path](criproxy.png)
 
-Let's say CRI proxy is started as follows:
+Let's say CRI Proxy is started as follows:
 ```
 /usr/bin/criproxy -v 3 -logtostderr -connect /var/run/dockershim.sock,virtlet.cloud:/run/virtlet.sock -listen /run/criproxy.sock
 ```
@@ -154,7 +167,7 @@ the state of the runtime. Level 4 enables dumping of pod / container
 status requests. Level 5 adds dumping `List*` requests which may cause
 the log to grow fast. See
 [fixing log throttling](#fixing-log-throttling) below if you're
-starting CRI proxy using systemd with log level set to 3 or higher.
+starting CRI Proxy using systemd with log level set to 3 or higher.
 
 `-logtostderr` directs logging output to stderr (it's part of glog configuration)
 
@@ -204,7 +217,7 @@ annotation that directs `RunPodSandbox` requests to `virtlet.cloud` runtime.
 
 There's also `nodeAffinity` spec that makes the pod run only on the
 nodes that have `extraRuntime=virtlet` label. This is not required
-by CRI proxy mechanism itself and is related to deployment mechanism
+by CRI Proxy mechanism itself and is related to deployment mechanism
 being used.
 
 Another important part is `virtlet.cloud/image-service/cirros` image name.
@@ -215,7 +228,7 @@ virtlet this means downloading QCOW2 image from
 
 In order to distinguish between runtimes during requests that don't
 include image name or pod annotations such as `RemovePodSandbox`, CRI
-proxy adds prefixes to pod and container ids returned by the runtimes.
+Proxy adds prefixes to pod and container ids returned by the runtimes.
 
 ## <a name="fixing-log-throttling"></a>Fixing log throttling
 
