@@ -10,8 +10,6 @@ RUN go get github.com/tcnksm/ghr && \
 
 FROM golang:1.10
 
-ENV CONTAINERD_URL https://storage.googleapis.com/cri-containerd-release/cri-containerd-1.1.0-rc.1.linux-amd64.tar.gz
-ENV CONTAINERD_SHA256 d499826f8206da101d7be90784212bf9e6da000e2a1be2baa809eba36448881e
 ENV DOCKER_VERSION "17.03.0-ce"
 
 # The following is based on https://github.com/kubernetes/release/blob/master/debian/Dockerfile
@@ -27,9 +25,7 @@ RUN apt-get update -y && \
     apt-get clean && \
     rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 
-RUN curl -sSL --retry 5 "${CONTAINERD_URL}" >/containerd.tar.gz && \
-    echo "${CONTAINERD_SHA256}  /containerd.tar.gz" | sha256sum -c && \
-    curl -sSL -o "/tmp/docker-${DOCKER_VERSION}.tgz" "https://get.docker.com/builds/Linux/x86_64/docker-${DOCKER_VERSION}.tgz" && \
+RUN curl -sSL -o "/tmp/docker-${DOCKER_VERSION}.tgz" "https://get.docker.com/builds/Linux/x86_64/docker-${DOCKER_VERSION}.tgz" && \
     tar -xz -C /tmp -f "/tmp/docker-${DOCKER_VERSION}.tgz" && \
     mv /tmp/docker/* /usr/bin
 

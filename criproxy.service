@@ -3,7 +3,10 @@ Description=CRI Proxy
 Wants=dockershim.service
 
 [Service]
-ExecStart=/usr/bin/criproxy -v 3 -logtostderr -connect /var/run/dockershim.sock,virtlet.cloud:/run/virtlet.sock -listen /run/criproxy.sock
+Environment="CRI_PRIMARY=/var/run/dockershim.sock"
+Environment="CRI_OTHER=virtlet.cloud:/run/virtlet.sock"
+EnvironmentFile=-/etc/default/criproxy
+ExecStart=/usr/bin/criproxy -v 3 -logtostderr -connect ${CRI_PRIMARY},${CRI_OTHER} -listen /run/criproxy.sock
 Restart=always
 StartLimitInterval=0
 RestartSec=10

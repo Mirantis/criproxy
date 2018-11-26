@@ -15,6 +15,7 @@ K8S_VERSION="${K8S_VERSION:-1.9}"
 CLEAN_DIND="${CLEAN_DIND:-}"
 kubectl="${HOME}/.kubeadm-dind-cluster/kubectl"
 dind_script="dind-cluster-v${K8S_VERSION}.sh"
+crictl="crictl -r unix:///var/run/containerd/containerd.sock"
 status=0
 
 if [[ ! ${CRIPROXY_DEB_URL:-} && ! ${CRIPROXY_DEB:-} ]]; then
@@ -62,22 +63,28 @@ function pod-is-gone {
   fi
 }
 
-step "Downloading kubeadm-dind-cluster script from ${dind_script}"
-rm -f "${dind_script}"
-wget "https://raw.githubusercontent.com/Mirantis/kubeadm-dind-cluster/master/fixed/${dind_script}"
-chmod +x "${dind_script}"
+function start-kdc {
+  step "Downloading kubeadm-dind-cluster script from ${dind_script}"
+  rm -f "${dind_script}"
+  wget "https://raw.githubusercontent.com/Mirantis/kubeadm-dind-cluster/master/fixed/${dind_script}"
+  chmod +x "${dind_script}"
 
-step "Starting kubeadm-dind-cluster"
+  step "Starting kubeadm-dind-cluster"
 
-if [[ ${CLEAN_DIND} ]]; then
-  "./${dind_script}" clean
+  if [[ ${CLEAN_DIND} ]]; then
+    "./${dind_script}" clean
+  fi
+
+  # Use single-worker cluster so as to have all the pods w/o tolerations
+  # scheduled on kube-node-1
+  # APISERVER_PORT is set explicitly to avoid dynamic allocation
+  # of the port by kdc
+  APISERVER_PORT="${APISERVER_PORT:-8080}" NUM_NODES=1 "./${dind_script}" up
+}
+
+if [[ ! ${SKIP_START_KDC:-} ]]; then
+  start-kdc
 fi
-
-# Use single-worker cluster so as to have all the pods w/o tolerations
-# scheduled on kube-node-1
-# APISERVER_PORT is set explicitly to avoid dynamic allocation
-# of the port by kdc
-APISERVER_PORT=8080 NUM_NODES=1 "./${dind_script}" up
 
 step "Propagating criproxy deb to the node"
 if [[ ${CRIPROXY_DEB_URL:-} ]]; then
@@ -86,28 +93,30 @@ else
   docker cp "${CRIPROXY_DEB}" kube-node-1:/criproxy.deb
 fi
 
-step "Copying containerd files to the node"
-docker exec -i kube-node-1 tar -xvz </containerd.tar.gz
-
-step "Setting up criproxy and containerd on the node"
+step "Setting up criproxy and dockershim+containerd on the node"
 docker exec -i kube-node-1 /bin/bash -s <<EOF
 set -o errexit
 set -o nounset
 set -o pipefail
 set -o errtrace
 
-mkdir -p /dind/containerd /var/lib/containerd
-mount --bind /dind/containerd /var/lib/containerd
+# kill off k8s pods after stopping kubelet
+systemctl stop kubelet
+${crictl} ps -q   | xargs -r ${crictl} stop -t 0
+${crictl} ps -qa  | xargs -r ${crictl} rm
+${crictl} pods -q | xargs -r ${crictl} stopp
+${crictl} pods -q | xargs -r ${crictl} rmp
 
-systemctl daemon-reload
-systemctl enable containerd
-systemctl start containerd
-
+export DEBIAN_FRONTEND=noninteractive
 dpkg -i /criproxy.deb
-mkdir /etc/systemd/system/criproxy.service.d
-echo -e '[Service]\nExecStart=\nExecStart=/usr/bin/criproxy -v 3 -logtostderr -connect /var/run/dockershim.sock,containerd.io:/var/run/containerd/containerd.sock -listen /run/criproxy.sock' >/etc/systemd/system/criproxy.service.d/10-containerd.conf
-systemctl daemon-reload
-systemctl restart criproxy
+sed -i 's@CRI_OTHER=.*@CRI_OTHER=containerd.io:/var/run/containerd/containerd.sock@' /etc/default/criproxy
+cat <<CONF >>/etc/containerd/config.toml
+[plugins]
+  [plugins.cri]
+    stream_server_address = ""
+CONF
+systemctl restart criproxy containerd
+systemctl start kubelet
 EOF
 
 step "Starting and verifying busybox pod using containerd"
@@ -127,7 +136,7 @@ if ! "${kubectl}" logs bbtest-containerd | grep -q this-is-containerd-pod; then
   error "kubectl logs failed on bbtest-containerd pod or didn't get this-is-containerd-pod in its output"
 fi
 
-if ! docker exec kube-node-1 crictl pods | grep bbtest-containerd; then
+if ! docker exec kube-node-1 ${crictl} pods | grep bbtest-containerd; then
   error "Failed to find bbtest-containerd pod among containerd pods"
 fi
 
