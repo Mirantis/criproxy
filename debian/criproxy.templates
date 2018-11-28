@@ -1,0 +1,5 @@
+Template: criproxy/primary_cri
+Type: select
+Default: dockershim
+Choices: dockershim, containerd
+Description: The primary runtime to use

@@ -1,6 +1,9 @@
 #!/bin/bash
 # see: dh_installdeb(1)
 
+# Source debconf library before applying stricter bash options
+. /usr/share/debconf/confmodule
+
 set -o errexit
 set -o nounset
 
@@ -16,7 +19,7 @@ set -o nounset
 # for details, see http://www.debian.org/doc/debian-policy/ or
 # the debian-policy package
 
-function make_dochershim_service {
+function make_dockershim_service {
     kubelet_service_file=/lib/systemd/system/kubelet.service
     if [[ ! -f ${kubelet_service_file} ]]; then
         kubelet_service_file=/etc/systemd/system/kubelet.service
@@ -31,35 +34,37 @@ function make_dochershim_service {
         cp -r /etc/systemd/system/kubelet.service.d /etc/systemd/system/dockershim.service.d
         rm -f /etc/systemd/system/dockershim.service.d/99-criproxy.conf
         if [[ $(ls -A "/etc/systemd/system/dockershim.service.d") ]]; then
-            sed -i 's@\(ExecStart.*kubelet\)@\1 --experimental-dockershim --port 11250@' /etc/systemd/system/dockershim.service.d/*
+            sed -i '/EnvironmentFile=/d;s@\(ExecStart.*kubelet\)@\1 --experimental-dockershim --port 11250@' /etc/systemd/system/dockershim.service.d/*
         fi
     fi
-    sed -i 's@\(ExecStart.*kubelet\)@\1 --experimental-dockershim --port 11250@' /etc/systemd/system/dockershim.service
+    sed -i '/EnvironmentFile=/d;s@\(ExecStart.*kubelet\)@\1 --experimental-dockershim --port 11250@' /etc/systemd/system/dockershim.service
 }
 
-# FIXME: this is temporary hack because 'hyperkube kubelet --experimental-dockershim'
-# used to be broken. The fix is included in k8s 1.8.4 and will be included in k8s 1.7.11.
-# PR link: https://github.com/kubernetes/kubernetes/pull/55335
-function ensure_dockershim_in_kubelet {
-    if [[ -d /dind && -x /k8s/hyperkube && $(/k8s/hyperkube --version | awk '{print $2}') =~ (v[0-9]+\.[0-9]+\.[0-9]+)($|^[0-9]) ]]; then
-        k8s_version="${BASH_REMATCH[1]}"
-        if [[ $((echo "${k8s_version}"; echo v1.8.4 ) | sort -V | head -1) != v1.8.4 ]]; then
-            rm -f /usr/bin/kubelet
-            curl "https://storage.googleapis.com/kubernetes-release/release/${k8s_version}/bin/linux/amd64/kubelet" >/usr/bin/kubelet
-            chmod +x /usr/bin/kubelet
-            sed -i 's@ExecStart=/k8s/hyperkube kubelet@ExecStart=/usr/bin/kubelet@' /etc/systemd/system/dockershim.service
-        fi
-    fi
-    return 0
-}
+use_dockershim=1
+db_get criproxy/primary_cri
+if [[ ${RET} = containerd ]]; then
+    use_dockershim=
+fi
 
 case "$1" in
     configure)
-        make_dochershim_service
-        ensure_dockershim_in_kubelet
+        setup_default=
+        if [[ ! -e /etc/default/criproxy ]]; then
+            setup_default=1
+        fi
+        if [[ ${use_dockershim} ]]; then
+            make_dockershim_service
+            echo "CRI_PRIMARY=/var/run/dockershim.sock" >/etc/default/criproxy
+            systemctl enable criproxy
+        elif [[ ${setup_default} ]]; then
+            echo "CRI_PRIMARY=/var/run/containerd/containerd.sock" >/etc/default/criproxy
+        fi
+        if [[ ${setup_default} ]]; then
+            echo "CRI_OTHER=virtlet.cloud:/run/virtlet.sock" >>/etc/default/criproxy
+        fi
         systemctl stop kubelet
         systemctl daemon-reload
-        systemctl enable dockershim criproxy
+        systemctl enable criproxy
         systemctl start kubelet
     ;;
 
