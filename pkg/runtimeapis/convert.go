@@ -37,13 +37,13 @@ func convertTo(in interface{}, targetProtoPackage string) (interface{}, error) {
 	return out, v1_9.Scheme.Convert(in, out, nil)
 }
 
-// Upgrade converts CRI 1.9 object to CRI 1.10 one. It just returns
-// the object if it's already CRI 1.10.
+// Upgrade converts CRI 1.9 object to CRI 1.12 one. It just returns
+// the object if it's already CRI 1.12.
 func Upgrade(in interface{}) (interface{}, error) {
 	return convertTo(in, "runtime.v1alpha2")
 }
 
-// Downgrade converts CRI 1.10 object to CRI 1.9 one. It just returns
+// Downgrade converts CRI 1.12 object to CRI 1.9 one. It just returns
 // the object if it's already CRI 1.9.
 func Downgrade(in interface{}) (interface{}, error) {
 	return convertTo(in, "runtime")

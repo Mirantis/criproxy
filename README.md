@@ -5,7 +5,7 @@ same node and run CRI implementations inside pods. CRI Proxy is
 currently used by [Virtlet](https://github.com/Mirantis/virtlet)
 project but it can be used by other CRI implementations, too.
 
-It supports Kubernetes versions 1.8.x, 1.9.x, 1.10.x and 1.11.x.
+It supports Kubernetes versions 1.9.x through 1.12.x.
 
 ## Installation
 

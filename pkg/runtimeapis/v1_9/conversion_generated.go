@@ -21,7 +21,7 @@ limitations under the License.
 package runtime
 
 import (
-	v1_10 "github.com/Mirantis/criproxy/pkg/runtimeapis/v1_10"
+	v1_12 "github.com/Mirantis/criproxy/pkg/runtimeapis/v1_12"
 	conversion "k8s.io/apimachinery/pkg/conversion"
 	runtime "k8s.io/apimachinery/pkg/runtime"
 )
@@ -34,202 +34,202 @@ func init() {
 // Public to allow building arbitrary schemes.
 func RegisterConversions(scheme *runtime.Scheme) error {
 	return scheme.AddGeneratedConversionFuncs(
-		Convert_v1_9_AttachRequest_To_v1_10_AttachRequest,
-		Convert_v1_10_AttachRequest_To_v1_9_AttachRequest,
-		Convert_v1_9_AttachResponse_To_v1_10_AttachResponse,
-		Convert_v1_10_AttachResponse_To_v1_9_AttachResponse,
-		Convert_v1_9_AuthConfig_To_v1_10_AuthConfig,
-		Convert_v1_10_AuthConfig_To_v1_9_AuthConfig,
-		Convert_v1_9_Capability_To_v1_10_Capability,
-		Convert_v1_10_Capability_To_v1_9_Capability,
-		Convert_v1_9_Container_To_v1_10_Container,
-		Convert_v1_10_Container_To_v1_9_Container,
-		Convert_v1_9_ContainerAttributes_To_v1_10_ContainerAttributes,
-		Convert_v1_10_ContainerAttributes_To_v1_9_ContainerAttributes,
-		Convert_v1_9_ContainerConfig_To_v1_10_ContainerConfig,
-		Convert_v1_10_ContainerConfig_To_v1_9_ContainerConfig,
-		Convert_v1_9_ContainerFilter_To_v1_10_ContainerFilter,
-		Convert_v1_10_ContainerFilter_To_v1_9_ContainerFilter,
-		Convert_v1_9_ContainerMetadata_To_v1_10_ContainerMetadata,
-		Convert_v1_10_ContainerMetadata_To_v1_9_ContainerMetadata,
-		Convert_v1_9_ContainerStateValue_To_v1_10_ContainerStateValue,
-		Convert_v1_10_ContainerStateValue_To_v1_9_ContainerStateValue,
-		Convert_v1_9_ContainerStats_To_v1_10_ContainerStats,
-		Convert_v1_10_ContainerStats_To_v1_9_ContainerStats,
-		Convert_v1_9_ContainerStatsFilter_To_v1_10_ContainerStatsFilter,
-		Convert_v1_10_ContainerStatsFilter_To_v1_9_ContainerStatsFilter,
-		Convert_v1_9_ContainerStatsRequest_To_v1_10_ContainerStatsRequest,
-		Convert_v1_10_ContainerStatsRequest_To_v1_9_ContainerStatsRequest,
-		Convert_v1_9_ContainerStatsResponse_To_v1_10_ContainerStatsResponse,
-		Convert_v1_10_ContainerStatsResponse_To_v1_9_ContainerStatsResponse,
-		Convert_v1_9_ContainerStatus_To_v1_10_ContainerStatus,
-		Convert_v1_10_ContainerStatus_To_v1_9_ContainerStatus,
-		Convert_v1_9_ContainerStatusRequest_To_v1_10_ContainerStatusRequest,
-		Convert_v1_10_ContainerStatusRequest_To_v1_9_ContainerStatusRequest,
-		Convert_v1_9_ContainerStatusResponse_To_v1_10_ContainerStatusResponse,
-		Convert_v1_10_ContainerStatusResponse_To_v1_9_ContainerStatusResponse,
-		Convert_v1_9_CpuUsage_To_v1_10_CpuUsage,
-		Convert_v1_10_CpuUsage_To_v1_9_CpuUsage,
-		Convert_v1_9_CreateContainerRequest_To_v1_10_CreateContainerRequest,
-		Convert_v1_10_CreateContainerRequest_To_v1_9_CreateContainerRequest,
-		Convert_v1_9_CreateContainerResponse_To_v1_10_CreateContainerResponse,
-		Convert_v1_10_CreateContainerResponse_To_v1_9_CreateContainerResponse,
-		Convert_v1_9_DNSConfig_To_v1_10_DNSConfig,
-		Convert_v1_10_DNSConfig_To_v1_9_DNSConfig,
-		Convert_v1_9_Device_To_v1_10_Device,
-		Convert_v1_10_Device_To_v1_9_Device,
-		Convert_v1_9_ExecRequest_To_v1_10_ExecRequest,
-		Convert_v1_10_ExecRequest_To_v1_9_ExecRequest,
-		Convert_v1_9_ExecResponse_To_v1_10_ExecResponse,
-		Convert_v1_10_ExecResponse_To_v1_9_ExecResponse,
-		Convert_v1_9_ExecSyncRequest_To_v1_10_ExecSyncRequest,
-		Convert_v1_10_ExecSyncRequest_To_v1_9_ExecSyncRequest,
-		Convert_v1_9_ExecSyncResponse_To_v1_10_ExecSyncResponse,
-		Convert_v1_10_ExecSyncResponse_To_v1_9_ExecSyncResponse,
-		Convert_v1_9_FilesystemUsage_To_v1_10_FilesystemUsage,
-		Convert_v1_10_FilesystemUsage_To_v1_9_FilesystemUsage,
-		Convert_v1_9_Image_To_v1_10_Image,
-		Convert_v1_10_Image_To_v1_9_Image,
-		Convert_v1_9_ImageFilter_To_v1_10_ImageFilter,
-		Convert_v1_10_ImageFilter_To_v1_9_ImageFilter,
-		Convert_v1_9_ImageFsInfoRequest_To_v1_10_ImageFsInfoRequest,
-		Convert_v1_10_ImageFsInfoRequest_To_v1_9_ImageFsInfoRequest,
-		Convert_v1_9_ImageFsInfoResponse_To_v1_10_ImageFsInfoResponse,
-		Convert_v1_10_ImageFsInfoResponse_To_v1_9_ImageFsInfoResponse,
-		Convert_v1_9_ImageSpec_To_v1_10_ImageSpec,
-		Convert_v1_10_ImageSpec_To_v1_9_ImageSpec,
-		Convert_v1_9_ImageStatusRequest_To_v1_10_ImageStatusRequest,
-		Convert_v1_10_ImageStatusRequest_To_v1_9_ImageStatusRequest,
-		Convert_v1_9_ImageStatusResponse_To_v1_10_ImageStatusResponse,
-		Convert_v1_10_ImageStatusResponse_To_v1_9_ImageStatusResponse,
-		Convert_v1_9_Int64Value_To_v1_10_Int64Value,
-		Convert_v1_10_Int64Value_To_v1_9_Int64Value,
-		Convert_v1_9_KeyValue_To_v1_10_KeyValue,
-		Convert_v1_10_KeyValue_To_v1_9_KeyValue,
-		Convert_v1_9_LinuxContainerConfig_To_v1_10_LinuxContainerConfig,
-		Convert_v1_10_LinuxContainerConfig_To_v1_9_LinuxContainerConfig,
-		Convert_v1_9_LinuxContainerResources_To_v1_10_LinuxContainerResources,
-		Convert_v1_10_LinuxContainerResources_To_v1_9_LinuxContainerResources,
-		Convert_v1_9_LinuxContainerSecurityContext_To_v1_10_LinuxContainerSecurityContext,
-		Convert_v1_10_LinuxContainerSecurityContext_To_v1_9_LinuxContainerSecurityContext,
-		Convert_v1_9_LinuxPodSandboxConfig_To_v1_10_LinuxPodSandboxConfig,
-		Convert_v1_10_LinuxPodSandboxConfig_To_v1_9_LinuxPodSandboxConfig,
-		Convert_v1_9_LinuxPodSandboxStatus_To_v1_10_LinuxPodSandboxStatus,
-		Convert_v1_10_LinuxPodSandboxStatus_To_v1_9_LinuxPodSandboxStatus,
-		Convert_v1_9_LinuxSandboxSecurityContext_To_v1_10_LinuxSandboxSecurityContext,
-		Convert_v1_10_LinuxSandboxSecurityContext_To_v1_9_LinuxSandboxSecurityContext,
-		Convert_v1_9_ListContainerStatsRequest_To_v1_10_ListContainerStatsRequest,
-		Convert_v1_10_ListContainerStatsRequest_To_v1_9_ListContainerStatsRequest,
-		Convert_v1_9_ListContainerStatsResponse_To_v1_10_ListContainerStatsResponse,
-		Convert_v1_10_ListContainerStatsResponse_To_v1_9_ListContainerStatsResponse,
-		Convert_v1_9_ListContainersRequest_To_v1_10_ListContainersRequest,
-		Convert_v1_10_ListContainersRequest_To_v1_9_ListContainersRequest,
-		Convert_v1_9_ListContainersResponse_To_v1_10_ListContainersResponse,
-		Convert_v1_10_ListContainersResponse_To_v1_9_ListContainersResponse,
-		Convert_v1_9_ListImagesRequest_To_v1_10_ListImagesRequest,
-		Convert_v1_10_ListImagesRequest_To_v1_9_ListImagesRequest,
-		Convert_v1_9_ListImagesResponse_To_v1_10_ListImagesResponse,
-		Convert_v1_10_ListImagesResponse_To_v1_9_ListImagesResponse,
-		Convert_v1_9_ListPodSandboxRequest_To_v1_10_ListPodSandboxRequest,
-		Convert_v1_10_ListPodSandboxRequest_To_v1_9_ListPodSandboxRequest,
-		Convert_v1_9_ListPodSandboxResponse_To_v1_10_ListPodSandboxResponse,
-		Convert_v1_10_ListPodSandboxResponse_To_v1_9_ListPodSandboxResponse,
-		Convert_v1_9_MemoryUsage_To_v1_10_MemoryUsage,
-		Convert_v1_10_MemoryUsage_To_v1_9_MemoryUsage,
-		Convert_v1_9_Mount_To_v1_10_Mount,
-		Convert_v1_10_Mount_To_v1_9_Mount,
-		Convert_v1_9_Namespace_To_v1_10_Namespace,
-		Convert_v1_10_Namespace_To_v1_9_Namespace,
-		Convert_v1_9_NamespaceOption_To_v1_10_NamespaceOption,
-		Convert_v1_10_NamespaceOption_To_v1_9_NamespaceOption,
-		Convert_v1_9_NetworkConfig_To_v1_10_NetworkConfig,
-		Convert_v1_10_NetworkConfig_To_v1_9_NetworkConfig,
-		Convert_v1_9_PodSandbox_To_v1_10_PodSandbox,
-		Convert_v1_10_PodSandbox_To_v1_9_PodSandbox,
-		Convert_v1_9_PodSandboxConfig_To_v1_10_PodSandboxConfig,
-		Convert_v1_10_PodSandboxConfig_To_v1_9_PodSandboxConfig,
-		Convert_v1_9_PodSandboxFilter_To_v1_10_PodSandboxFilter,
-		Convert_v1_10_PodSandboxFilter_To_v1_9_PodSandboxFilter,
-		Convert_v1_9_PodSandboxMetadata_To_v1_10_PodSandboxMetadata,
-		Convert_v1_10_PodSandboxMetadata_To_v1_9_PodSandboxMetadata,
-		Convert_v1_9_PodSandboxNetworkStatus_To_v1_10_PodSandboxNetworkStatus,
-		Convert_v1_10_PodSandboxNetworkStatus_To_v1_9_PodSandboxNetworkStatus,
-		Convert_v1_9_PodSandboxStateValue_To_v1_10_PodSandboxStateValue,
-		Convert_v1_10_PodSandboxStateValue_To_v1_9_PodSandboxStateValue,
-		Convert_v1_9_PodSandboxStatus_To_v1_10_PodSandboxStatus,
-		Convert_v1_10_PodSandboxStatus_To_v1_9_PodSandboxStatus,
-		Convert_v1_9_PodSandboxStatusRequest_To_v1_10_PodSandboxStatusRequest,
-		Convert_v1_10_PodSandboxStatusRequest_To_v1_9_PodSandboxStatusRequest,
-		Convert_v1_9_PodSandboxStatusResponse_To_v1_10_PodSandboxStatusResponse,
-		Convert_v1_10_PodSandboxStatusResponse_To_v1_9_PodSandboxStatusResponse,
-		Convert_v1_9_PortForwardRequest_To_v1_10_PortForwardRequest,
-		Convert_v1_10_PortForwardRequest_To_v1_9_PortForwardRequest,
-		Convert_v1_9_PortForwardResponse_To_v1_10_PortForwardResponse,
-		Convert_v1_10_PortForwardResponse_To_v1_9_PortForwardResponse,
-		Convert_v1_9_PortMapping_To_v1_10_PortMapping,
-		Convert_v1_10_PortMapping_To_v1_9_PortMapping,
-		Convert_v1_9_PullImageRequest_To_v1_10_PullImageRequest,
-		Convert_v1_10_PullImageRequest_To_v1_9_PullImageRequest,
-		Convert_v1_9_PullImageResponse_To_v1_10_PullImageResponse,
-		Convert_v1_10_PullImageResponse_To_v1_9_PullImageResponse,
-		Convert_v1_9_RemoveContainerRequest_To_v1_10_RemoveContainerRequest,
-		Convert_v1_10_RemoveContainerRequest_To_v1_9_RemoveContainerRequest,
-		Convert_v1_9_RemoveContainerResponse_To_v1_10_RemoveContainerResponse,
-		Convert_v1_10_RemoveContainerResponse_To_v1_9_RemoveContainerResponse,
-		Convert_v1_9_RemoveImageRequest_To_v1_10_RemoveImageRequest,
-		Convert_v1_10_RemoveImageRequest_To_v1_9_RemoveImageRequest,
-		Convert_v1_9_RemoveImageResponse_To_v1_10_RemoveImageResponse,
-		Convert_v1_10_RemoveImageResponse_To_v1_9_RemoveImageResponse,
-		Convert_v1_9_RemovePodSandboxRequest_To_v1_10_RemovePodSandboxRequest,
-		Convert_v1_10_RemovePodSandboxRequest_To_v1_9_RemovePodSandboxRequest,
-		Convert_v1_9_RemovePodSandboxResponse_To_v1_10_RemovePodSandboxResponse,
-		Convert_v1_10_RemovePodSandboxResponse_To_v1_9_RemovePodSandboxResponse,
-		Convert_v1_9_RunPodSandboxRequest_To_v1_10_RunPodSandboxRequest,
-		Convert_v1_10_RunPodSandboxRequest_To_v1_9_RunPodSandboxRequest,
-		Convert_v1_9_RunPodSandboxResponse_To_v1_10_RunPodSandboxResponse,
-		Convert_v1_10_RunPodSandboxResponse_To_v1_9_RunPodSandboxResponse,
-		Convert_v1_9_RuntimeCondition_To_v1_10_RuntimeCondition,
-		Convert_v1_10_RuntimeCondition_To_v1_9_RuntimeCondition,
-		Convert_v1_9_RuntimeConfig_To_v1_10_RuntimeConfig,
-		Convert_v1_10_RuntimeConfig_To_v1_9_RuntimeConfig,
-		Convert_v1_9_RuntimeStatus_To_v1_10_RuntimeStatus,
-		Convert_v1_10_RuntimeStatus_To_v1_9_RuntimeStatus,
-		Convert_v1_9_SELinuxOption_To_v1_10_SELinuxOption,
-		Convert_v1_10_SELinuxOption_To_v1_9_SELinuxOption,
-		Convert_v1_9_StartContainerRequest_To_v1_10_StartContainerRequest,
-		Convert_v1_10_StartContainerRequest_To_v1_9_StartContainerRequest,
-		Convert_v1_9_StartContainerResponse_To_v1_10_StartContainerResponse,
-		Convert_v1_10_StartContainerResponse_To_v1_9_StartContainerResponse,
-		Convert_v1_9_StatusRequest_To_v1_10_StatusRequest,
-		Convert_v1_10_StatusRequest_To_v1_9_StatusRequest,
-		Convert_v1_9_StatusResponse_To_v1_10_StatusResponse,
-		Convert_v1_10_StatusResponse_To_v1_9_StatusResponse,
-		Convert_v1_9_StopContainerRequest_To_v1_10_StopContainerRequest,
-		Convert_v1_10_StopContainerRequest_To_v1_9_StopContainerRequest,
-		Convert_v1_9_StopContainerResponse_To_v1_10_StopContainerResponse,
-		Convert_v1_10_StopContainerResponse_To_v1_9_StopContainerResponse,
-		Convert_v1_9_StopPodSandboxRequest_To_v1_10_StopPodSandboxRequest,
-		Convert_v1_10_StopPodSandboxRequest_To_v1_9_StopPodSandboxRequest,
-		Convert_v1_9_StopPodSandboxResponse_To_v1_10_StopPodSandboxResponse,
-		Convert_v1_10_StopPodSandboxResponse_To_v1_9_StopPodSandboxResponse,
-		Convert_v1_9_UInt64Value_To_v1_10_UInt64Value,
-		Convert_v1_10_UInt64Value_To_v1_9_UInt64Value,
-		Convert_v1_9_UpdateContainerResourcesRequest_To_v1_10_UpdateContainerResourcesRequest,
-		Convert_v1_10_UpdateContainerResourcesRequest_To_v1_9_UpdateContainerResourcesRequest,
-		Convert_v1_9_UpdateContainerResourcesResponse_To_v1_10_UpdateContainerResourcesResponse,
-		Convert_v1_10_UpdateContainerResourcesResponse_To_v1_9_UpdateContainerResourcesResponse,
-		Convert_v1_9_UpdateRuntimeConfigRequest_To_v1_10_UpdateRuntimeConfigRequest,
-		Convert_v1_10_UpdateRuntimeConfigRequest_To_v1_9_UpdateRuntimeConfigRequest,
-		Convert_v1_9_UpdateRuntimeConfigResponse_To_v1_10_UpdateRuntimeConfigResponse,
-		Convert_v1_10_UpdateRuntimeConfigResponse_To_v1_9_UpdateRuntimeConfigResponse,
-		Convert_v1_9_VersionRequest_To_v1_10_VersionRequest,
-		Convert_v1_10_VersionRequest_To_v1_9_VersionRequest,
-		Convert_v1_9_VersionResponse_To_v1_10_VersionResponse,
-		Convert_v1_10_VersionResponse_To_v1_9_VersionResponse,
+		Convert_v1_9_AttachRequest_To_v1_12_AttachRequest,
+		Convert_v1_12_AttachRequest_To_v1_9_AttachRequest,
+		Convert_v1_9_AttachResponse_To_v1_12_AttachResponse,
+		Convert_v1_12_AttachResponse_To_v1_9_AttachResponse,
+		Convert_v1_9_AuthConfig_To_v1_12_AuthConfig,
+		Convert_v1_12_AuthConfig_To_v1_9_AuthConfig,
+		Convert_v1_9_Capability_To_v1_12_Capability,
+		Convert_v1_12_Capability_To_v1_9_Capability,
+		Convert_v1_9_Container_To_v1_12_Container,
+		Convert_v1_12_Container_To_v1_9_Container,
+		Convert_v1_9_ContainerAttributes_To_v1_12_ContainerAttributes,
+		Convert_v1_12_ContainerAttributes_To_v1_9_ContainerAttributes,
+		Convert_v1_9_ContainerConfig_To_v1_12_ContainerConfig,
+		Convert_v1_12_ContainerConfig_To_v1_9_ContainerConfig,
+		Convert_v1_9_ContainerFilter_To_v1_12_ContainerFilter,
+		Convert_v1_12_ContainerFilter_To_v1_9_ContainerFilter,
+		Convert_v1_9_ContainerMetadata_To_v1_12_ContainerMetadata,
+		Convert_v1_12_ContainerMetadata_To_v1_9_ContainerMetadata,
+		Convert_v1_9_ContainerStateValue_To_v1_12_ContainerStateValue,
+		Convert_v1_12_ContainerStateValue_To_v1_9_ContainerStateValue,
+		Convert_v1_9_ContainerStats_To_v1_12_ContainerStats,
+		Convert_v1_12_ContainerStats_To_v1_9_ContainerStats,
+		Convert_v1_9_ContainerStatsFilter_To_v1_12_ContainerStatsFilter,
+		Convert_v1_12_ContainerStatsFilter_To_v1_9_ContainerStatsFilter,
+		Convert_v1_9_ContainerStatsRequest_To_v1_12_ContainerStatsRequest,
+		Convert_v1_12_ContainerStatsRequest_To_v1_9_ContainerStatsRequest,
+		Convert_v1_9_ContainerStatsResponse_To_v1_12_ContainerStatsResponse,
+		Convert_v1_12_ContainerStatsResponse_To_v1_9_ContainerStatsResponse,
+		Convert_v1_9_ContainerStatus_To_v1_12_ContainerStatus,
+		Convert_v1_12_ContainerStatus_To_v1_9_ContainerStatus,
+		Convert_v1_9_ContainerStatusRequest_To_v1_12_ContainerStatusRequest,
+		Convert_v1_12_ContainerStatusRequest_To_v1_9_ContainerStatusRequest,
+		Convert_v1_9_ContainerStatusResponse_To_v1_12_ContainerStatusResponse,
+		Convert_v1_12_ContainerStatusResponse_To_v1_9_ContainerStatusResponse,
+		Convert_v1_9_CpuUsage_To_v1_12_CpuUsage,
+		Convert_v1_12_CpuUsage_To_v1_9_CpuUsage,
+		Convert_v1_9_CreateContainerRequest_To_v1_12_CreateContainerRequest,
+		Convert_v1_12_CreateContainerRequest_To_v1_9_CreateContainerRequest,
+		Convert_v1_9_CreateContainerResponse_To_v1_12_CreateContainerResponse,
+		Convert_v1_12_CreateContainerResponse_To_v1_9_CreateContainerResponse,
+		Convert_v1_9_DNSConfig_To_v1_12_DNSConfig,
+		Convert_v1_12_DNSConfig_To_v1_9_DNSConfig,
+		Convert_v1_9_Device_To_v1_12_Device,
+		Convert_v1_12_Device_To_v1_9_Device,
+		Convert_v1_9_ExecRequest_To_v1_12_ExecRequest,
+		Convert_v1_12_ExecRequest_To_v1_9_ExecRequest,
+		Convert_v1_9_ExecResponse_To_v1_12_ExecResponse,
+		Convert_v1_12_ExecResponse_To_v1_9_ExecResponse,
+		Convert_v1_9_ExecSyncRequest_To_v1_12_ExecSyncRequest,
+		Convert_v1_12_ExecSyncRequest_To_v1_9_ExecSyncRequest,
+		Convert_v1_9_ExecSyncResponse_To_v1_12_ExecSyncResponse,
+		Convert_v1_12_ExecSyncResponse_To_v1_9_ExecSyncResponse,
+		Convert_v1_9_FilesystemUsage_To_v1_12_FilesystemUsage,
+		Convert_v1_12_FilesystemUsage_To_v1_9_FilesystemUsage,
+		Convert_v1_9_Image_To_v1_12_Image,
+		Convert_v1_12_Image_To_v1_9_Image,
+		Convert_v1_9_ImageFilter_To_v1_12_ImageFilter,
+		Convert_v1_12_ImageFilter_To_v1_9_ImageFilter,
+		Convert_v1_9_ImageFsInfoRequest_To_v1_12_ImageFsInfoRequest,
+		Convert_v1_12_ImageFsInfoRequest_To_v1_9_ImageFsInfoRequest,
+		Convert_v1_9_ImageFsInfoResponse_To_v1_12_ImageFsInfoResponse,
+		Convert_v1_12_ImageFsInfoResponse_To_v1_9_ImageFsInfoResponse,
+		Convert_v1_9_ImageSpec_To_v1_12_ImageSpec,
+		Convert_v1_12_ImageSpec_To_v1_9_ImageSpec,
+		Convert_v1_9_ImageStatusRequest_To_v1_12_ImageStatusRequest,
+		Convert_v1_12_ImageStatusRequest_To_v1_9_ImageStatusRequest,
+		Convert_v1_9_ImageStatusResponse_To_v1_12_ImageStatusResponse,
+		Convert_v1_12_ImageStatusResponse_To_v1_9_ImageStatusResponse,
+		Convert_v1_9_Int64Value_To_v1_12_Int64Value,
+		Convert_v1_12_Int64Value_To_v1_9_Int64Value,
+		Convert_v1_9_KeyValue_To_v1_12_KeyValue,
+		Convert_v1_12_KeyValue_To_v1_9_KeyValue,
+		Convert_v1_9_LinuxContainerConfig_To_v1_12_LinuxContainerConfig,
+		Convert_v1_12_LinuxContainerConfig_To_v1_9_LinuxContainerConfig,
+		Convert_v1_9_LinuxContainerResources_To_v1_12_LinuxContainerResources,
+		Convert_v1_12_LinuxContainerResources_To_v1_9_LinuxContainerResources,
+		Convert_v1_9_LinuxContainerSecurityContext_To_v1_12_LinuxContainerSecurityContext,
+		Convert_v1_12_LinuxContainerSecurityContext_To_v1_9_LinuxContainerSecurityContext,
+		Convert_v1_9_LinuxPodSandboxConfig_To_v1_12_LinuxPodSandboxConfig,
+		Convert_v1_12_LinuxPodSandboxConfig_To_v1_9_LinuxPodSandboxConfig,
+		Convert_v1_9_LinuxPodSandboxStatus_To_v1_12_LinuxPodSandboxStatus,
+		Convert_v1_12_LinuxPodSandboxStatus_To_v1_9_LinuxPodSandboxStatus,
+		Convert_v1_9_LinuxSandboxSecurityContext_To_v1_12_LinuxSandboxSecurityContext,
+		Convert_v1_12_LinuxSandboxSecurityContext_To_v1_9_LinuxSandboxSecurityContext,
+		Convert_v1_9_ListContainerStatsRequest_To_v1_12_ListContainerStatsRequest,
+		Convert_v1_12_ListContainerStatsRequest_To_v1_9_ListContainerStatsRequest,
+		Convert_v1_9_ListContainerStatsResponse_To_v1_12_ListContainerStatsResponse,
+		Convert_v1_12_ListContainerStatsResponse_To_v1_9_ListContainerStatsResponse,
+		Convert_v1_9_ListContainersRequest_To_v1_12_ListContainersRequest,
+		Convert_v1_12_ListContainersRequest_To_v1_9_ListContainersRequest,
+		Convert_v1_9_ListContainersResponse_To_v1_12_ListContainersResponse,
+		Convert_v1_12_ListContainersResponse_To_v1_9_ListContainersResponse,
+		Convert_v1_9_ListImagesRequest_To_v1_12_ListImagesRequest,
+		Convert_v1_12_ListImagesRequest_To_v1_9_ListImagesRequest,
+		Convert_v1_9_ListImagesResponse_To_v1_12_ListImagesResponse,
+		Convert_v1_12_ListImagesResponse_To_v1_9_ListImagesResponse,
+		Convert_v1_9_ListPodSandboxRequest_To_v1_12_ListPodSandboxRequest,
+		Convert_v1_12_ListPodSandboxRequest_To_v1_9_ListPodSandboxRequest,
+		Convert_v1_9_ListPodSandboxResponse_To_v1_12_ListPodSandboxResponse,
+		Convert_v1_12_ListPodSandboxResponse_To_v1_9_ListPodSandboxResponse,
+		Convert_v1_9_MemoryUsage_To_v1_12_MemoryUsage,
+		Convert_v1_12_MemoryUsage_To_v1_9_MemoryUsage,
+		Convert_v1_9_Mount_To_v1_12_Mount,
+		Convert_v1_12_Mount_To_v1_9_Mount,
+		Convert_v1_9_Namespace_To_v1_12_Namespace,
+		Convert_v1_12_Namespace_To_v1_9_Namespace,
+		Convert_v1_9_NamespaceOption_To_v1_12_NamespaceOption,
+		Convert_v1_12_NamespaceOption_To_v1_9_NamespaceOption,
+		Convert_v1_9_NetworkConfig_To_v1_12_NetworkConfig,
+		Convert_v1_12_NetworkConfig_To_v1_9_NetworkConfig,
+		Convert_v1_9_PodSandbox_To_v1_12_PodSandbox,
+		Convert_v1_12_PodSandbox_To_v1_9_PodSandbox,
+		Convert_v1_9_PodSandboxConfig_To_v1_12_PodSandboxConfig,
+		Convert_v1_12_PodSandboxConfig_To_v1_9_PodSandboxConfig,
+		Convert_v1_9_PodSandboxFilter_To_v1_12_PodSandboxFilter,
+		Convert_v1_12_PodSandboxFilter_To_v1_9_PodSandboxFilter,
+		Convert_v1_9_PodSandboxMetadata_To_v1_12_PodSandboxMetadata,
+		Convert_v1_12_PodSandboxMetadata_To_v1_9_PodSandboxMetadata,
+		Convert_v1_9_PodSandboxNetworkStatus_To_v1_12_PodSandboxNetworkStatus,
+		Convert_v1_12_PodSandboxNetworkStatus_To_v1_9_PodSandboxNetworkStatus,
+		Convert_v1_9_PodSandboxStateValue_To_v1_12_PodSandboxStateValue,
+		Convert_v1_12_PodSandboxStateValue_To_v1_9_PodSandboxStateValue,
+		Convert_v1_9_PodSandboxStatus_To_v1_12_PodSandboxStatus,
+		Convert_v1_12_PodSandboxStatus_To_v1_9_PodSandboxStatus,
+		Convert_v1_9_PodSandboxStatusRequest_To_v1_12_PodSandboxStatusRequest,
+		Convert_v1_12_PodSandboxStatusRequest_To_v1_9_PodSandboxStatusRequest,
+		Convert_v1_9_PodSandboxStatusResponse_To_v1_12_PodSandboxStatusResponse,
+		Convert_v1_12_PodSandboxStatusResponse_To_v1_9_PodSandboxStatusResponse,
+		Convert_v1_9_PortForwardRequest_To_v1_12_PortForwardRequest,
+		Convert_v1_12_PortForwardRequest_To_v1_9_PortForwardRequest,
+		Convert_v1_9_PortForwardResponse_To_v1_12_PortForwardResponse,
+		Convert_v1_12_PortForwardResponse_To_v1_9_PortForwardResponse,
+		Convert_v1_9_PortMapping_To_v1_12_PortMapping,
+		Convert_v1_12_PortMapping_To_v1_9_PortMapping,
+		Convert_v1_9_PullImageRequest_To_v1_12_PullImageRequest,
+		Convert_v1_12_PullImageRequest_To_v1_9_PullImageRequest,
+		Convert_v1_9_PullImageResponse_To_v1_12_PullImageResponse,
+		Convert_v1_12_PullImageResponse_To_v1_9_PullImageResponse,
+		Convert_v1_9_RemoveContainerRequest_To_v1_12_RemoveContainerRequest,
+		Convert_v1_12_RemoveContainerRequest_To_v1_9_RemoveContainerRequest,
+		Convert_v1_9_RemoveContainerResponse_To_v1_12_RemoveContainerResponse,
+		Convert_v1_12_RemoveContainerResponse_To_v1_9_RemoveContainerResponse,
+		Convert_v1_9_RemoveImageRequest_To_v1_12_RemoveImageRequest,
+		Convert_v1_12_RemoveImageRequest_To_v1_9_RemoveImageRequest,
+		Convert_v1_9_RemoveImageResponse_To_v1_12_RemoveImageResponse,
+		Convert_v1_12_RemoveImageResponse_To_v1_9_RemoveImageResponse,
+		Convert_v1_9_RemovePodSandboxRequest_To_v1_12_RemovePodSandboxRequest,
+		Convert_v1_12_RemovePodSandboxRequest_To_v1_9_RemovePodSandboxRequest,
+		Convert_v1_9_RemovePodSandboxResponse_To_v1_12_RemovePodSandboxResponse,
+		Convert_v1_12_RemovePodSandboxResponse_To_v1_9_RemovePodSandboxResponse,
+		Convert_v1_9_RunPodSandboxRequest_To_v1_12_RunPodSandboxRequest,
+		Convert_v1_12_RunPodSandboxRequest_To_v1_9_RunPodSandboxRequest,
+		Convert_v1_9_RunPodSandboxResponse_To_v1_12_RunPodSandboxResponse,
+		Convert_v1_12_RunPodSandboxResponse_To_v1_9_RunPodSandboxResponse,
+		Convert_v1_9_RuntimeCondition_To_v1_12_RuntimeCondition,
+		Convert_v1_12_RuntimeCondition_To_v1_9_RuntimeCondition,
+		Convert_v1_9_RuntimeConfig_To_v1_12_RuntimeConfig,
+		Convert_v1_12_RuntimeConfig_To_v1_9_RuntimeConfig,
+		Convert_v1_9_RuntimeStatus_To_v1_12_RuntimeStatus,
+		Convert_v1_12_RuntimeStatus_To_v1_9_RuntimeStatus,
+		Convert_v1_9_SELinuxOption_To_v1_12_SELinuxOption,
+		Convert_v1_12_SELinuxOption_To_v1_9_SELinuxOption,
+		Convert_v1_9_StartContainerRequest_To_v1_12_StartContainerRequest,
+		Convert_v1_12_StartContainerRequest_To_v1_9_StartContainerRequest,
+		Convert_v1_9_StartContainerResponse_To_v1_12_StartContainerResponse,
+		Convert_v1_12_StartContainerResponse_To_v1_9_StartContainerResponse,
+		Convert_v1_9_StatusRequest_To_v1_12_StatusRequest,
+		Convert_v1_12_StatusRequest_To_v1_9_StatusRequest,
+		Convert_v1_9_StatusResponse_To_v1_12_StatusResponse,
+		Convert_v1_12_StatusResponse_To_v1_9_StatusResponse,
+		Convert_v1_9_StopContainerRequest_To_v1_12_StopContainerRequest,
+		Convert_v1_12_StopContainerRequest_To_v1_9_StopContainerRequest,
+		Convert_v1_9_StopContainerResponse_To_v1_12_StopContainerResponse,
+		Convert_v1_12_StopContainerResponse_To_v1_9_StopContainerResponse,
+		Convert_v1_9_StopPodSandboxRequest_To_v1_12_StopPodSandboxRequest,
+		Convert_v1_12_StopPodSandboxRequest_To_v1_9_StopPodSandboxRequest,
+		Convert_v1_9_StopPodSandboxResponse_To_v1_12_StopPodSandboxResponse,
+		Convert_v1_12_StopPodSandboxResponse_To_v1_9_StopPodSandboxResponse,
+		Convert_v1_9_UInt64Value_To_v1_12_UInt64Value,
+		Convert_v1_12_UInt64Value_To_v1_9_UInt64Value,
+		Convert_v1_9_UpdateContainerResourcesRequest_To_v1_12_UpdateContainerResourcesRequest,
+		Convert_v1_12_UpdateContainerResourcesRequest_To_v1_9_UpdateContainerResourcesRequest,
+		Convert_v1_9_UpdateContainerResourcesResponse_To_v1_12_UpdateContainerResourcesResponse,
+		Convert_v1_12_UpdateContainerResourcesResponse_To_v1_9_UpdateContainerResourcesResponse,
+		Convert_v1_9_UpdateRuntimeConfigRequest_To_v1_12_UpdateRuntimeConfigRequest,
+		Convert_v1_12_UpdateRuntimeConfigRequest_To_v1_9_UpdateRuntimeConfigRequest,
+		Convert_v1_9_UpdateRuntimeConfigResponse_To_v1_12_UpdateRuntimeConfigResponse,
+		Convert_v1_12_UpdateRuntimeConfigResponse_To_v1_9_UpdateRuntimeConfigResponse,
+		Convert_v1_9_VersionRequest_To_v1_12_VersionRequest,
+		Convert_v1_12_VersionRequest_To_v1_9_VersionRequest,
+		Convert_v1_9_VersionResponse_To_v1_12_VersionResponse,
+		Convert_v1_12_VersionResponse_To_v1_9_VersionResponse,
 	)
 }
 
-func autoConvert_v1_9_AttachRequest_To_v1_10_AttachRequest(in *AttachRequest, out *v1_10.AttachRequest, s conversion.Scope) error {
+func autoConvert_v1_9_AttachRequest_To_v1_12_AttachRequest(in *AttachRequest, out *v1_12.AttachRequest, s conversion.Scope) error {
 	out.ContainerId = in.ContainerId
 	out.Stdin = in.Stdin
 	out.Tty = in.Tty
@@ -238,12 +238,12 @@ func autoConvert_v1_9_AttachRequest_To_v1_10_AttachRequest(in *AttachRequest, ou
 	return nil
 }
 
-// Convert_v1_9_AttachRequest_To_v1_10_AttachRequest is an autogenerated conversion function.
-func Convert_v1_9_AttachRequest_To_v1_10_AttachRequest(in *AttachRequest, out *v1_10.AttachRequest, s conversion.Scope) error {
-	return autoConvert_v1_9_AttachRequest_To_v1_10_AttachRequest(in, out, s)
+// Convert_v1_9_AttachRequest_To_v1_12_AttachRequest is an autogenerated conversion function.
+func Convert_v1_9_AttachRequest_To_v1_12_AttachRequest(in *AttachRequest, out *v1_12.AttachRequest, s conversion.Scope) error {
+	return autoConvert_v1_9_AttachRequest_To_v1_12_AttachRequest(in, out, s)
 }
 
-func autoConvert_v1_10_AttachRequest_To_v1_9_AttachRequest(in *v1_10.AttachRequest, out *AttachRequest, s conversion.Scope) error {
+func autoConvert_v1_12_AttachRequest_To_v1_9_AttachRequest(in *v1_12.AttachRequest, out *AttachRequest, s conversion.Scope) error {
 	out.ContainerId = in.ContainerId
 	out.Stdin = in.Stdin
 	out.Tty = in.Tty
@@ -252,32 +252,32 @@ func autoConvert_v1_10_AttachRequest_To_v1_9_AttachRequest(in *v1_10.AttachReque
 	return nil
 }
 
-// Convert_v1_10_AttachRequest_To_v1_9_AttachRequest is an autogenerated conversion function.
-func Convert_v1_10_AttachRequest_To_v1_9_AttachRequest(in *v1_10.AttachRequest, out *AttachRequest, s conversion.Scope) error {
-	return autoConvert_v1_10_AttachRequest_To_v1_9_AttachRequest(in, out, s)
+// Convert_v1_12_AttachRequest_To_v1_9_AttachRequest is an autogenerated conversion function.
+func Convert_v1_12_AttachRequest_To_v1_9_AttachRequest(in *v1_12.AttachRequest, out *AttachRequest, s conversion.Scope) error {
+	return autoConvert_v1_12_AttachRequest_To_v1_9_AttachRequest(in, out, s)
 }
 
-func autoConvert_v1_9_AttachResponse_To_v1_10_AttachResponse(in *AttachResponse, out *v1_10.AttachResponse, s conversion.Scope) error {
+func autoConvert_v1_9_AttachResponse_To_v1_12_AttachResponse(in *AttachResponse, out *v1_12.AttachResponse, s conversion.Scope) error {
 	out.Url = in.Url
 	return nil
 }
 
-// Convert_v1_9_AttachResponse_To_v1_10_AttachResponse is an autogenerated conversion function.
-func Convert_v1_9_AttachResponse_To_v1_10_AttachResponse(in *AttachResponse, out *v1_10.AttachResponse, s conversion.Scope) error {
-	return autoConvert_v1_9_AttachResponse_To_v1_10_AttachResponse(in, out, s)
+// Convert_v1_9_AttachResponse_To_v1_12_AttachResponse is an autogenerated conversion function.
+func Convert_v1_9_AttachResponse_To_v1_12_AttachResponse(in *AttachResponse, out *v1_12.AttachResponse, s conversion.Scope) error {
+	return autoConvert_v1_9_AttachResponse_To_v1_12_AttachResponse(in, out, s)
 }
 
-func autoConvert_v1_10_AttachResponse_To_v1_9_AttachResponse(in *v1_10.AttachResponse, out *AttachResponse, s conversion.Scope) error {
+func autoConvert_v1_12_AttachResponse_To_v1_9_AttachResponse(in *v1_12.AttachResponse, out *AttachResponse, s conversion.Scope) error {
 	out.Url = in.Url
 	return nil
 }
 
-// Convert_v1_10_AttachResponse_To_v1_9_AttachResponse is an autogenerated conversion function.
-func Convert_v1_10_AttachResponse_To_v1_9_AttachResponse(in *v1_10.AttachResponse, out *AttachResponse, s conversion.Scope) error {
-	return autoConvert_v1_10_AttachResponse_To_v1_9_AttachResponse(in, out, s)
+// Convert_v1_12_AttachResponse_To_v1_9_AttachResponse is an autogenerated conversion function.
+func Convert_v1_12_AttachResponse_To_v1_9_AttachResponse(in *v1_12.AttachResponse, out *AttachResponse, s conversion.Scope) error {
+	return autoConvert_v1_12_AttachResponse_To_v1_9_AttachResponse(in, out, s)
 }
 
-func autoConvert_v1_9_AuthConfig_To_v1_10_AuthConfig(in *AuthConfig, out *v1_10.AuthConfig, s conversion.Scope) error {
+func autoConvert_v1_9_AuthConfig_To_v1_12_AuthConfig(in *AuthConfig, out *v1_12.AuthConfig, s conversion.Scope) error {
 	out.Username = in.Username
 	out.Password = in.Password
 	out.Auth = in.Auth
@@ -287,12 +287,12 @@ func autoConvert_v1_9_AuthConfig_To_v1_10_AuthConfig(in *AuthConfig, out *v1_10.
 	return nil
 }
 
-// Convert_v1_9_AuthConfig_To_v1_10_AuthConfig is an autogenerated conversion function.
-func Convert_v1_9_AuthConfig_To_v1_10_AuthConfig(in *AuthConfig, out *v1_10.AuthConfig, s conversion.Scope) error {
-	return autoConvert_v1_9_AuthConfig_To_v1_10_AuthConfig(in, out, s)
+// Convert_v1_9_AuthConfig_To_v1_12_AuthConfig is an autogenerated conversion function.
+func Convert_v1_9_AuthConfig_To_v1_12_AuthConfig(in *AuthConfig, out *v1_12.AuthConfig, s conversion.Scope) error {
+	return autoConvert_v1_9_AuthConfig_To_v1_12_AuthConfig(in, out, s)
 }
 
-func autoConvert_v1_10_AuthConfig_To_v1_9_AuthConfig(in *v1_10.AuthConfig, out *AuthConfig, s conversion.Scope) error {
+func autoConvert_v1_12_AuthConfig_To_v1_9_AuthConfig(in *v1_12.AuthConfig, out *AuthConfig, s conversion.Scope) error {
 	out.Username = in.Username
 	out.Password = in.Password
 	out.Auth = in.Auth
@@ -302,40 +302,40 @@ func autoConvert_v1_10_AuthConfig_To_v1_9_AuthConfig(in *v1_10.AuthConfig, out *
 	return nil
 }
 
-// Convert_v1_10_AuthConfig_To_v1_9_AuthConfig is an autogenerated conversion function.
-func Convert_v1_10_AuthConfig_To_v1_9_AuthConfig(in *v1_10.AuthConfig, out *AuthConfig, s conversion.Scope) error {
-	return autoConvert_v1_10_AuthConfig_To_v1_9_AuthConfig(in, out, s)
+// Convert_v1_12_AuthConfig_To_v1_9_AuthConfig is an autogenerated conversion function.
+func Convert_v1_12_AuthConfig_To_v1_9_AuthConfig(in *v1_12.AuthConfig, out *AuthConfig, s conversion.Scope) error {
+	return autoConvert_v1_12_AuthConfig_To_v1_9_AuthConfig(in, out, s)
 }
 
-func autoConvert_v1_9_Capability_To_v1_10_Capability(in *Capability, out *v1_10.Capability, s conversion.Scope) error {
+func autoConvert_v1_9_Capability_To_v1_12_Capability(in *Capability, out *v1_12.Capability, s conversion.Scope) error {
 	out.AddCapabilities = in.AddCapabilities
 	out.DropCapabilities = in.DropCapabilities
 	return nil
 }
 
-// Convert_v1_9_Capability_To_v1_10_Capability is an autogenerated conversion function.
-func Convert_v1_9_Capability_To_v1_10_Capability(in *Capability, out *v1_10.Capability, s conversion.Scope) error {
-	return autoConvert_v1_9_Capability_To_v1_10_Capability(in, out, s)
+// Convert_v1_9_Capability_To_v1_12_Capability is an autogenerated conversion function.
+func Convert_v1_9_Capability_To_v1_12_Capability(in *Capability, out *v1_12.Capability, s conversion.Scope) error {
+	return autoConvert_v1_9_Capability_To_v1_12_Capability(in, out, s)
 }
 
-func autoConvert_v1_10_Capability_To_v1_9_Capability(in *v1_10.Capability, out *Capability, s conversion.Scope) error {
+func autoConvert_v1_12_Capability_To_v1_9_Capability(in *v1_12.Capability, out *Capability, s conversion.Scope) error {
 	out.AddCapabilities = in.AddCapabilities
 	out.DropCapabilities = in.DropCapabilities
 	return nil
 }
 
-// Convert_v1_10_Capability_To_v1_9_Capability is an autogenerated conversion function.
-func Convert_v1_10_Capability_To_v1_9_Capability(in *v1_10.Capability, out *Capability, s conversion.Scope) error {
-	return autoConvert_v1_10_Capability_To_v1_9_Capability(in, out, s)
+// Convert_v1_12_Capability_To_v1_9_Capability is an autogenerated conversion function.
+func Convert_v1_12_Capability_To_v1_9_Capability(in *v1_12.Capability, out *Capability, s conversion.Scope) error {
+	return autoConvert_v1_12_Capability_To_v1_9_Capability(in, out, s)
 }
 
-func autoConvert_v1_9_Container_To_v1_10_Container(in *Container, out *v1_10.Container, s conversion.Scope) error {
+func autoConvert_v1_9_Container_To_v1_12_Container(in *Container, out *v1_12.Container, s conversion.Scope) error {
 	out.Id = in.Id
 	out.PodSandboxId = in.PodSandboxId
 	if in.Metadata != nil {
 		in, out := &in.Metadata, &out.Metadata
-		*out = new(v1_10.ContainerMetadata)
-		if err := Convert_v1_9_ContainerMetadata_To_v1_10_ContainerMetadata(*in, *out, s); err != nil {
+		*out = new(v1_12.ContainerMetadata)
+		if err := Convert_v1_9_ContainerMetadata_To_v1_12_ContainerMetadata(*in, *out, s); err != nil {
 			return err
 		}
 	} else {
@@ -343,33 +343,33 @@ func autoConvert_v1_9_Container_To_v1_10_Container(in *Container, out *v1_10.Con
 	}
 	if in.Image != nil {
 		in, out := &in.Image, &out.Image
-		*out = new(v1_10.ImageSpec)
-		if err := Convert_v1_9_ImageSpec_To_v1_10_ImageSpec(*in, *out, s); err != nil {
+		*out = new(v1_12.ImageSpec)
+		if err := Convert_v1_9_ImageSpec_To_v1_12_ImageSpec(*in, *out, s); err != nil {
 			return err
 		}
 	} else {
 		out.Image = nil
 	}
 	out.ImageRef = in.ImageRef
-	out.State = v1_10.ContainerState(in.State)
+	out.State = v1_12.ContainerState(in.State)
 	out.CreatedAt = in.CreatedAt
 	out.Labels = in.Labels
 	out.Annotations = in.Annotations
 	return nil
 }
 
-// Convert_v1_9_Container_To_v1_10_Container is an autogenerated conversion function.
-func Convert_v1_9_Container_To_v1_10_Container(in *Container, out *v1_10.Container, s conversion.Scope) error {
-	return autoConvert_v1_9_Container_To_v1_10_Container(in, out, s)
+// Convert_v1_9_Container_To_v1_12_Container is an autogenerated conversion function.
+func Convert_v1_9_Container_To_v1_12_Container(in *Container, out *v1_12.Container, s conversion.Scope) error {
+	return autoConvert_v1_9_Container_To_v1_12_Container(in, out, s)
 }
 
-func autoConvert_v1_10_Container_To_v1_9_Container(in *v1_10.Container, out *Container, s conversion.Scope) error {
+func autoConvert_v1_12_Container_To_v1_9_Container(in *v1_12.Container, out *Container, s conversion.Scope) error {
 	out.Id = in.Id
 	out.PodSandboxId = in.PodSandboxId
 	if in.Metadata != nil {
 		in, out := &in.Metadata, &out.Metadata
 		*out = new(ContainerMetadata)
-		if err := Convert_v1_10_ContainerMetadata_To_v1_9_ContainerMetadata(*in, *out, s); err != nil {
+		if err := Convert_v1_12_ContainerMetadata_To_v1_9_ContainerMetadata(*in, *out, s); err != nil {
 			return err
 		}
 	} else {
@@ -378,7 +378,7 @@ func autoConvert_v1_10_Container_To_v1_9_Container(in *v1_10.Container, out *Con
 	if in.Image != nil {
 		in, out := &in.Image, &out.Image
 		*out = new(ImageSpec)
-		if err := Convert_v1_10_ImageSpec_To_v1_9_ImageSpec(*in, *out, s); err != nil {
+		if err := Convert_v1_12_ImageSpec_To_v1_9_ImageSpec(*in, *out, s); err != nil {
 			return err
 		}
 	} else {
@@ -392,17 +392,17 @@ func autoConvert_v1_10_Container_To_v1_9_Container(in *v1_10.Container, out *Con
 	return nil
 }
 
-// Convert_v1_10_Container_To_v1_9_Container is an autogenerated conversion function.
-func Convert_v1_10_Container_To_v1_9_Container(in *v1_10.Container, out *Container, s conversion.Scope) error {
-	return autoConvert_v1_10_Container_To_v1_9_Container(in, out, s)
+// Convert_v1_12_Container_To_v1_9_Container is an autogenerated conversion function.
+func Convert_v1_12_Container_To_v1_9_Container(in *v1_12.Container, out *Container, s conversion.Scope) error {
+	return autoConvert_v1_12_Container_To_v1_9_Container(in, out, s)
 }
 
-func autoConvert_v1_9_ContainerAttributes_To_v1_10_ContainerAttributes(in *ContainerAttributes, out *v1_10.ContainerAttributes, s conversion.Scope) error {
+func autoConvert_v1_9_ContainerAttributes_To_v1_12_ContainerAttributes(in *ContainerAttributes, out *v1_12.ContainerAttributes, s conversion.Scope) error {
 	out.Id = in.Id
 	if in.Metadata != nil {
 		in, out := &in.Metadata, &out.Metadata
-		*out = new(v1_10.ContainerMetadata)
-		if err := Convert_v1_9_ContainerMetadata_To_v1_10_ContainerMetadata(*in, *out, s); err != nil {
+		*out = new(v1_12.ContainerMetadata)
+		if err := Convert_v1_9_ContainerMetadata_To_v1_12_ContainerMetadata(*in, *out, s); err != nil {
 			return err
 		}
 	} else {
@@ -413,17 +413,17 @@ func autoConvert_v1_9_ContainerAttributes_To_v1_10_ContainerAttributes(in *Conta
 	return nil
 }
 
-// Convert_v1_9_ContainerAttributes_To_v1_10_ContainerAttributes is an autogenerated conversion function.
-func Convert_v1_9_ContainerAttributes_To_v1_10_ContainerAttributes(in *ContainerAttributes, out *v1_10.ContainerAttributes, s conversion.Scope) error {
-	return autoConvert_v1_9_ContainerAttributes_To_v1_10_ContainerAttributes(in, out, s)
+// Convert_v1_9_ContainerAttributes_To_v1_12_ContainerAttributes is an autogenerated conversion function.
+func Convert_v1_9_ContainerAttributes_To_v1_12_ContainerAttributes(in *ContainerAttributes, out *v1_12.ContainerAttributes, s conversion.Scope) error {
+	return autoConvert_v1_9_ContainerAttributes_To_v1_12_ContainerAttributes(in, out, s)
 }
 
-func autoConvert_v1_10_ContainerAttributes_To_v1_9_ContainerAttributes(in *v1_10.ContainerAttributes, out *ContainerAttributes, s conversion.Scope) error {
+func autoConvert_v1_12_ContainerAttributes_To_v1_9_ContainerAttributes(in *v1_12.ContainerAttributes, out *ContainerAttributes, s conversion.Scope) error {
 	out.Id = in.Id
 	if in.Metadata != nil {
 		in, out := &in.Metadata, &out.Metadata
 		*out = new(ContainerMetadata)
-		if err := Convert_v1_10_ContainerMetadata_To_v1_9_ContainerMetadata(*in, *out, s); err != nil {
+		if err := Convert_v1_12_ContainerMetadata_To_v1_9_ContainerMetadata(*in, *out, s); err != nil {
 			return err
 		}
 	} else {
@@ -434,16 +434,16 @@ func autoConvert_v1_10_ContainerAttributes_To_v1_9_ContainerAttributes(in *v1_10
 	return nil
 }
 
-// Convert_v1_10_ContainerAttributes_To_v1_9_ContainerAttributes is an autogenerated conversion function.
-func Convert_v1_10_ContainerAttributes_To_v1_9_ContainerAttributes(in *v1_10.ContainerAttributes, out *ContainerAttributes, s conversion.Scope) error {
-	return autoConvert_v1_10_ContainerAttributes_To_v1_9_ContainerAttributes(in, out, s)
+// Convert_v1_12_ContainerAttributes_To_v1_9_ContainerAttributes is an autogenerated conversion function.
+func Convert_v1_12_ContainerAttributes_To_v1_9_ContainerAttributes(in *v1_12.ContainerAttributes, out *ContainerAttributes, s conversion.Scope) error {
+	return autoConvert_v1_12_ContainerAttributes_To_v1_9_ContainerAttributes(in, out, s)
 }
 
-func autoConvert_v1_9_ContainerConfig_To_v1_10_ContainerConfig(in *ContainerConfig, out *v1_10.ContainerConfig, s conversion.Scope) error {
+func autoConvert_v1_9_ContainerConfig_To_v1_12_ContainerConfig(in *ContainerConfig, out *v1_12.ContainerConfig, s conversion.Scope) error {
 	if in.Metadata != nil {
 		in, out := &in.Metadata, &out.Metadata
-		*out = new(v1_10.ContainerMetadata)
-		if err := Convert_v1_9_ContainerMetadata_To_v1_10_ContainerMetadata(*in, *out, s); err != nil {
+		*out = new(v1_12.ContainerMetadata)
+		if err := Convert_v1_9_ContainerMetadata_To_v1_12_ContainerMetadata(*in, *out, s); err != nil {
 			return err
 		}
 	} else {
@@ -451,8 +451,8 @@ func autoConvert_v1_9_ContainerConfig_To_v1_10_ContainerConfig(in *ContainerConf
 	}
 	if in.Image != nil {
 		in, out := &in.Image, &out.Image
-		*out = new(v1_10.ImageSpec)
-		if err := Convert_v1_9_ImageSpec_To_v1_10_ImageSpec(*in, *out, s); err != nil {
+		*out = new(v1_12.ImageSpec)
+		if err := Convert_v1_9_ImageSpec_To_v1_12_ImageSpec(*in, *out, s); err != nil {
 			return err
 		}
 	} else {
@@ -463,7 +463,7 @@ func autoConvert_v1_9_ContainerConfig_To_v1_10_ContainerConfig(in *ContainerConf
 	out.WorkingDir = in.WorkingDir
 	if in.Envs != nil {
 		in, out := &in.Envs, &out.Envs
-		*out = make([]*v1_10.KeyValue, len(*in))
+		*out = make([]*v1_12.KeyValue, len(*in))
 		for i := range *in {
 			// TODO: Inefficient conversion - can we improve it?
 			if err := s.Convert(&(*in)[i], &(*out)[i], 0); err != nil {
@@ -475,7 +475,7 @@ func autoConvert_v1_9_ContainerConfig_To_v1_10_ContainerConfig(in *ContainerConf
 	}
 	if in.Mounts != nil {
 		in, out := &in.Mounts, &out.Mounts
-		*out = make([]*v1_10.Mount, len(*in))
+		*out = make([]*v1_12.Mount, len(*in))
 		for i := range *in {
 			// TODO: Inefficient conversion - can we improve it?
 			if err := s.Convert(&(*in)[i], &(*out)[i], 0); err != nil {
@@ -487,7 +487,7 @@ func autoConvert_v1_9_ContainerConfig_To_v1_10_ContainerConfig(in *ContainerConf
 	}
 	if in.Devices != nil {
 		in, out := &in.Devices, &out.Devices
-		*out = make([]*v1_10.Device, len(*in))
+		*out = make([]*v1_12.Device, len(*in))
 		for i := range *in {
 			// TODO: Inefficient conversion - can we improve it?
 			if err := s.Convert(&(*in)[i], &(*out)[i], 0); err != nil {
@@ -505,8 +505,8 @@ func autoConvert_v1_9_ContainerConfig_To_v1_10_ContainerConfig(in *ContainerConf
 	out.Tty = in.Tty
 	if in.Linux != nil {
 		in, out := &in.Linux, &out.Linux
-		*out = new(v1_10.LinuxContainerConfig)
-		if err := Convert_v1_9_LinuxContainerConfig_To_v1_10_LinuxContainerConfig(*in, *out, s); err != nil {
+		*out = new(v1_12.LinuxContainerConfig)
+		if err := Convert_v1_9_LinuxContainerConfig_To_v1_12_LinuxContainerConfig(*in, *out, s); err != nil {
 			return err
 		}
 	} else {
@@ -515,16 +515,16 @@ func autoConvert_v1_9_ContainerConfig_To_v1_10_ContainerConfig(in *ContainerConf
 	return nil
 }
 
-// Convert_v1_9_ContainerConfig_To_v1_10_ContainerConfig is an autogenerated conversion function.
-func Convert_v1_9_ContainerConfig_To_v1_10_ContainerConfig(in *ContainerConfig, out *v1_10.ContainerConfig, s conversion.Scope) error {
-	return autoConvert_v1_9_ContainerConfig_To_v1_10_ContainerConfig(in, out, s)
+// Convert_v1_9_ContainerConfig_To_v1_12_ContainerConfig is an autogenerated conversion function.
+func Convert_v1_9_ContainerConfig_To_v1_12_ContainerConfig(in *ContainerConfig, out *v1_12.ContainerConfig, s conversion.Scope) error {
+	return autoConvert_v1_9_ContainerConfig_To_v1_12_ContainerConfig(in, out, s)
 }
 
-func autoConvert_v1_10_ContainerConfig_To_v1_9_ContainerConfig(in *v1_10.ContainerConfig, out *ContainerConfig, s conversion.Scope) error {
+func autoConvert_v1_12_ContainerConfig_To_v1_9_ContainerConfig(in *v1_12.ContainerConfig, out *ContainerConfig, s conversion.Scope) error {
 	if in.Metadata != nil {
 		in, out := &in.Metadata, &out.Metadata
 		*out = new(ContainerMetadata)
-		if err := Convert_v1_10_ContainerMetadata_To_v1_9_ContainerMetadata(*in, *out, s); err != nil {
+		if err := Convert_v1_12_ContainerMetadata_To_v1_9_ContainerMetadata(*in, *out, s); err != nil {
 			return err
 		}
 	} else {
@@ -533,7 +533,7 @@ func autoConvert_v1_10_ContainerConfig_To_v1_9_ContainerConfig(in *v1_10.Contain
 	if in.Image != nil {
 		in, out := &in.Image, &out.Image
 		*out = new(ImageSpec)
-		if err := Convert_v1_10_ImageSpec_To_v1_9_ImageSpec(*in, *out, s); err != nil {
+		if err := Convert_v1_12_ImageSpec_To_v1_9_ImageSpec(*in, *out, s); err != nil {
 			return err
 		}
 	} else {
@@ -587,7 +587,7 @@ func autoConvert_v1_10_ContainerConfig_To_v1_9_ContainerConfig(in *v1_10.Contain
 	if in.Linux != nil {
 		in, out := &in.Linux, &out.Linux
 		*out = new(LinuxContainerConfig)
-		if err := Convert_v1_10_LinuxContainerConfig_To_v1_9_LinuxContainerConfig(*in, *out, s); err != nil {
+		if err := Convert_v1_12_LinuxContainerConfig_To_v1_9_LinuxContainerConfig(*in, *out, s); err != nil {
 			return err
 		}
 	} else {
@@ -597,12 +597,12 @@ func autoConvert_v1_10_ContainerConfig_To_v1_9_ContainerConfig(in *v1_10.Contain
 	return nil
 }
 
-func autoConvert_v1_9_ContainerFilter_To_v1_10_ContainerFilter(in *ContainerFilter, out *v1_10.ContainerFilter, s conversion.Scope) error {
+func autoConvert_v1_9_ContainerFilter_To_v1_12_ContainerFilter(in *ContainerFilter, out *v1_12.ContainerFilter, s conversion.Scope) error {
 	out.Id = in.Id
 	if in.State != nil {
 		in, out := &in.State, &out.State
-		*out = new(v1_10.ContainerStateValue)
-		if err := Convert_v1_9_ContainerStateValue_To_v1_10_ContainerStateValue(*in, *out, s); err != nil {
+		*out = new(v1_12.ContainerStateValue)
+		if err := Convert_v1_9_ContainerStateValue_To_v1_12_ContainerStateValue(*in, *out, s); err != nil {
 			return err
 		}
 	} else {
@@ -613,17 +613,17 @@ func autoConvert_v1_9_ContainerFilter_To_v1_10_ContainerFilter(in *ContainerFilt
 	return nil
 }
 
-// Convert_v1_9_ContainerFilter_To_v1_10_ContainerFilter is an autogenerated conversion function.
-func Convert_v1_9_ContainerFilter_To_v1_10_ContainerFilter(in *ContainerFilter, out *v1_10.ContainerFilter, s conversion.Scope) error {
-	return autoConvert_v1_9_ContainerFilter_To_v1_10_ContainerFilter(in, out, s)
+// Convert_v1_9_ContainerFilter_To_v1_12_ContainerFilter is an autogenerated conversion function.
+func Convert_v1_9_ContainerFilter_To_v1_12_ContainerFilter(in *ContainerFilter, out *v1_12.ContainerFilter, s conversion.Scope) error {
+	return autoConvert_v1_9_ContainerFilter_To_v1_12_ContainerFilter(in, out, s)
 }
 
-func autoConvert_v1_10_ContainerFilter_To_v1_9_ContainerFilter(in *v1_10.ContainerFilter, out *ContainerFilter, s conversion.Scope) error {
+func autoConvert_v1_12_ContainerFilter_To_v1_9_ContainerFilter(in *v1_12.ContainerFilter, out *ContainerFilter, s conversion.Scope) error {
 	out.Id = in.Id
 	if in.State != nil {
 		in, out := &in.State, &out.State
 		*out = new(ContainerStateValue)
-		if err := Convert_v1_10_ContainerStateValue_To_v1_9_ContainerStateValue(*in, *out, s); err != nil {
+		if err := Convert_v1_12_ContainerStateValue_To_v1_9_ContainerStateValue(*in, *out, s); err != nil {
 			return err
 		}
 	} else {
@@ -634,58 +634,58 @@ func autoConvert_v1_10_ContainerFilter_To_v1_9_ContainerFilter(in *v1_10.Contain
 	return nil
 }
 
-// Convert_v1_10_ContainerFilter_To_v1_9_ContainerFilter is an autogenerated conversion function.
-func Convert_v1_10_ContainerFilter_To_v1_9_ContainerFilter(in *v1_10.ContainerFilter, out *ContainerFilter, s conversion.Scope) error {
-	return autoConvert_v1_10_ContainerFilter_To_v1_9_ContainerFilter(in, out, s)
+// Convert_v1_12_ContainerFilter_To_v1_9_ContainerFilter is an autogenerated conversion function.
+func Convert_v1_12_ContainerFilter_To_v1_9_ContainerFilter(in *v1_12.ContainerFilter, out *ContainerFilter, s conversion.Scope) error {
+	return autoConvert_v1_12_ContainerFilter_To_v1_9_ContainerFilter(in, out, s)
 }
 
-func autoConvert_v1_9_ContainerMetadata_To_v1_10_ContainerMetadata(in *ContainerMetadata, out *v1_10.ContainerMetadata, s conversion.Scope) error {
+func autoConvert_v1_9_ContainerMetadata_To_v1_12_ContainerMetadata(in *ContainerMetadata, out *v1_12.ContainerMetadata, s conversion.Scope) error {
 	out.Name = in.Name
 	out.Attempt = in.Attempt
 	return nil
 }
 
-// Convert_v1_9_ContainerMetadata_To_v1_10_ContainerMetadata is an autogenerated conversion function.
-func Convert_v1_9_ContainerMetadata_To_v1_10_ContainerMetadata(in *ContainerMetadata, out *v1_10.ContainerMetadata, s conversion.Scope) error {
-	return autoConvert_v1_9_ContainerMetadata_To_v1_10_ContainerMetadata(in, out, s)
+// Convert_v1_9_ContainerMetadata_To_v1_12_ContainerMetadata is an autogenerated conversion function.
+func Convert_v1_9_ContainerMetadata_To_v1_12_ContainerMetadata(in *ContainerMetadata, out *v1_12.ContainerMetadata, s conversion.Scope) error {
+	return autoConvert_v1_9_ContainerMetadata_To_v1_12_ContainerMetadata(in, out, s)
 }
 
-func autoConvert_v1_10_ContainerMetadata_To_v1_9_ContainerMetadata(in *v1_10.ContainerMetadata, out *ContainerMetadata, s conversion.Scope) error {
+func autoConvert_v1_12_ContainerMetadata_To_v1_9_ContainerMetadata(in *v1_12.ContainerMetadata, out *ContainerMetadata, s conversion.Scope) error {
 	out.Name = in.Name
 	out.Attempt = in.Attempt
 	return nil
 }
 
-// Convert_v1_10_ContainerMetadata_To_v1_9_ContainerMetadata is an autogenerated conversion function.
-func Convert_v1_10_ContainerMetadata_To_v1_9_ContainerMetadata(in *v1_10.ContainerMetadata, out *ContainerMetadata, s conversion.Scope) error {
-	return autoConvert_v1_10_ContainerMetadata_To_v1_9_ContainerMetadata(in, out, s)
+// Convert_v1_12_ContainerMetadata_To_v1_9_ContainerMetadata is an autogenerated conversion function.
+func Convert_v1_12_ContainerMetadata_To_v1_9_ContainerMetadata(in *v1_12.ContainerMetadata, out *ContainerMetadata, s conversion.Scope) error {
+	return autoConvert_v1_12_ContainerMetadata_To_v1_9_ContainerMetadata(in, out, s)
 }
 
-func autoConvert_v1_9_ContainerStateValue_To_v1_10_ContainerStateValue(in *ContainerStateValue, out *v1_10.ContainerStateValue, s conversion.Scope) error {
-	out.State = v1_10.ContainerState(in.State)
+func autoConvert_v1_9_ContainerStateValue_To_v1_12_ContainerStateValue(in *ContainerStateValue, out *v1_12.ContainerStateValue, s conversion.Scope) error {
+	out.State = v1_12.ContainerState(in.State)
 	return nil
 }
 
-// Convert_v1_9_ContainerStateValue_To_v1_10_ContainerStateValue is an autogenerated conversion function.
-func Convert_v1_9_ContainerStateValue_To_v1_10_ContainerStateValue(in *ContainerStateValue, out *v1_10.ContainerStateValue, s conversion.Scope) error {
-	return autoConvert_v1_9_ContainerStateValue_To_v1_10_ContainerStateValue(in, out, s)
+// Convert_v1_9_ContainerStateValue_To_v1_12_ContainerStateValue is an autogenerated conversion function.
+func Convert_v1_9_ContainerStateValue_To_v1_12_ContainerStateValue(in *ContainerStateValue, out *v1_12.ContainerStateValue, s conversion.Scope) error {
+	return autoConvert_v1_9_ContainerStateValue_To_v1_12_ContainerStateValue(in, out, s)
 }
 
-func autoConvert_v1_10_ContainerStateValue_To_v1_9_ContainerStateValue(in *v1_10.ContainerStateValue, out *ContainerStateValue, s conversion.Scope) error {
+func autoConvert_v1_12_ContainerStateValue_To_v1_9_ContainerStateValue(in *v1_12.ContainerStateValue, out *ContainerStateValue, s conversion.Scope) error {
 	out.State = ContainerState(in.State)
 	return nil
 }
 
-// Convert_v1_10_ContainerStateValue_To_v1_9_ContainerStateValue is an autogenerated conversion function.
-func Convert_v1_10_ContainerStateValue_To_v1_9_ContainerStateValue(in *v1_10.ContainerStateValue, out *ContainerStateValue, s conversion.Scope) error {
-	return autoConvert_v1_10_ContainerStateValue_To_v1_9_ContainerStateValue(in, out, s)
+// Convert_v1_12_ContainerStateValue_To_v1_9_ContainerStateValue is an autogenerated conversion function.
+func Convert_v1_12_ContainerStateValue_To_v1_9_ContainerStateValue(in *v1_12.ContainerStateValue, out *ContainerStateValue, s conversion.Scope) error {
+	return autoConvert_v1_12_ContainerStateValue_To_v1_9_ContainerStateValue(in, out, s)
 }
 
-func autoConvert_v1_9_ContainerStats_To_v1_10_ContainerStats(in *ContainerStats, out *v1_10.ContainerStats, s conversion.Scope) error {
+func autoConvert_v1_9_ContainerStats_To_v1_12_ContainerStats(in *ContainerStats, out *v1_12.ContainerStats, s conversion.Scope) error {
 	if in.Attributes != nil {
 		in, out := &in.Attributes, &out.Attributes
-		*out = new(v1_10.ContainerAttributes)
-		if err := Convert_v1_9_ContainerAttributes_To_v1_10_ContainerAttributes(*in, *out, s); err != nil {
+		*out = new(v1_12.ContainerAttributes)
+		if err := Convert_v1_9_ContainerAttributes_To_v1_12_ContainerAttributes(*in, *out, s); err != nil {
 			return err
 		}
 	} else {
@@ -693,8 +693,8 @@ func autoConvert_v1_9_ContainerStats_To_v1_10_ContainerStats(in *ContainerStats,
 	}
 	if in.Cpu != nil {
 		in, out := &in.Cpu, &out.Cpu
-		*out = new(v1_10.CpuUsage)
-		if err := Convert_v1_9_CpuUsage_To_v1_10_CpuUsage(*in, *out, s); err != nil {
+		*out = new(v1_12.CpuUsage)
+		if err := Convert_v1_9_CpuUsage_To_v1_12_CpuUsage(*in, *out, s); err != nil {
 			return err
 		}
 	} else {
@@ -702,8 +702,8 @@ func autoConvert_v1_9_ContainerStats_To_v1_10_ContainerStats(in *ContainerStats,
 	}
 	if in.Memory != nil {
 		in, out := &in.Memory, &out.Memory
-		*out = new(v1_10.MemoryUsage)
-		if err := Convert_v1_9_MemoryUsage_To_v1_10_MemoryUsage(*in, *out, s); err != nil {
+		*out = new(v1_12.MemoryUsage)
+		if err := Convert_v1_9_MemoryUsage_To_v1_12_MemoryUsage(*in, *out, s); err != nil {
 			return err
 		}
 	} else {
@@ -711,8 +711,8 @@ func autoConvert_v1_9_ContainerStats_To_v1_10_ContainerStats(in *ContainerStats,
 	}
 	if in.WritableLayer != nil {
 		in, out := &in.WritableLayer, &out.WritableLayer
-		*out = new(v1_10.FilesystemUsage)
-		if err := Convert_v1_9_FilesystemUsage_To_v1_10_FilesystemUsage(*in, *out, s); err != nil {
+		*out = new(v1_12.FilesystemUsage)
+		if err := Convert_v1_9_FilesystemUsage_To_v1_12_FilesystemUsage(*in, *out, s); err != nil {
 			return err
 		}
 	} else {
@@ -721,16 +721,16 @@ func autoConvert_v1_9_ContainerStats_To_v1_10_ContainerStats(in *ContainerStats,
 	return nil
 }
 
-// Convert_v1_9_ContainerStats_To_v1_10_ContainerStats is an autogenerated conversion function.
-func Convert_v1_9_ContainerStats_To_v1_10_ContainerStats(in *ContainerStats, out *v1_10.ContainerStats, s conversion.Scope) error {
-	return autoConvert_v1_9_ContainerStats_To_v1_10_ContainerStats(in, out, s)
+// Convert_v1_9_ContainerStats_To_v1_12_ContainerStats is an autogenerated conversion function.
+func Convert_v1_9_ContainerStats_To_v1_12_ContainerStats(in *ContainerStats, out *v1_12.ContainerStats, s conversion.Scope) error {
+	return autoConvert_v1_9_ContainerStats_To_v1_12_ContainerStats(in, out, s)
 }
 
-func autoConvert_v1_10_ContainerStats_To_v1_9_ContainerStats(in *v1_10.ContainerStats, out *ContainerStats, s conversion.Scope) error {
+func autoConvert_v1_12_ContainerStats_To_v1_9_ContainerStats(in *v1_12.ContainerStats, out *ContainerStats, s conversion.Scope) error {
 	if in.Attributes != nil {
 		in, out := &in.Attributes, &out.Attributes
 		*out = new(ContainerAttributes)
-		if err := Convert_v1_10_ContainerAttributes_To_v1_9_ContainerAttributes(*in, *out, s); err != nil {
+		if err := Convert_v1_12_ContainerAttributes_To_v1_9_ContainerAttributes(*in, *out, s); err != nil {
 			return err
 		}
 	} else {
@@ -739,7 +739,7 @@ func autoConvert_v1_10_ContainerStats_To_v1_9_ContainerStats(in *v1_10.Container
 	if in.Cpu != nil {
 		in, out := &in.Cpu, &out.Cpu
 		*out = new(CpuUsage)
-		if err := Convert_v1_10_CpuUsage_To_v1_9_CpuUsage(*in, *out, s); err != nil {
+		if err := Convert_v1_12_CpuUsage_To_v1_9_CpuUsage(*in, *out, s); err != nil {
 			return err
 		}
 	} else {
@@ -748,7 +748,7 @@ func autoConvert_v1_10_ContainerStats_To_v1_9_ContainerStats(in *v1_10.Container
 	if in.Memory != nil {
 		in, out := &in.Memory, &out.Memory
 		*out = new(MemoryUsage)
-		if err := Convert_v1_10_MemoryUsage_To_v1_9_MemoryUsage(*in, *out, s); err != nil {
+		if err := Convert_v1_12_MemoryUsage_To_v1_9_MemoryUsage(*in, *out, s); err != nil {
 			return err
 		}
 	} else {
@@ -757,7 +757,7 @@ func autoConvert_v1_10_ContainerStats_To_v1_9_ContainerStats(in *v1_10.Container
 	if in.WritableLayer != nil {
 		in, out := &in.WritableLayer, &out.WritableLayer
 		*out = new(FilesystemUsage)
-		if err := Convert_v1_10_FilesystemUsage_To_v1_9_FilesystemUsage(*in, *out, s); err != nil {
+		if err := Convert_v1_12_FilesystemUsage_To_v1_9_FilesystemUsage(*in, *out, s); err != nil {
 			return err
 		}
 	} else {
@@ -766,60 +766,60 @@ func autoConvert_v1_10_ContainerStats_To_v1_9_ContainerStats(in *v1_10.Container
 	return nil
 }
 
-// Convert_v1_10_ContainerStats_To_v1_9_ContainerStats is an autogenerated conversion function.
-func Convert_v1_10_ContainerStats_To_v1_9_ContainerStats(in *v1_10.ContainerStats, out *ContainerStats, s conversion.Scope) error {
-	return autoConvert_v1_10_ContainerStats_To_v1_9_ContainerStats(in, out, s)
+// Convert_v1_12_ContainerStats_To_v1_9_ContainerStats is an autogenerated conversion function.
+func Convert_v1_12_ContainerStats_To_v1_9_ContainerStats(in *v1_12.ContainerStats, out *ContainerStats, s conversion.Scope) error {
+	return autoConvert_v1_12_ContainerStats_To_v1_9_ContainerStats(in, out, s)
 }
 
-func autoConvert_v1_9_ContainerStatsFilter_To_v1_10_ContainerStatsFilter(in *ContainerStatsFilter, out *v1_10.ContainerStatsFilter, s conversion.Scope) error {
+func autoConvert_v1_9_ContainerStatsFilter_To_v1_12_ContainerStatsFilter(in *ContainerStatsFilter, out *v1_12.ContainerStatsFilter, s conversion.Scope) error {
 	out.Id = in.Id
 	out.PodSandboxId = in.PodSandboxId
 	out.LabelSelector = in.LabelSelector
 	return nil
 }
 
-// Convert_v1_9_ContainerStatsFilter_To_v1_10_ContainerStatsFilter is an autogenerated conversion function.
-func Convert_v1_9_ContainerStatsFilter_To_v1_10_ContainerStatsFilter(in *ContainerStatsFilter, out *v1_10.ContainerStatsFilter, s conversion.Scope) error {
-	return autoConvert_v1_9_ContainerStatsFilter_To_v1_10_ContainerStatsFilter(in, out, s)
+// Convert_v1_9_ContainerStatsFilter_To_v1_12_ContainerStatsFilter is an autogenerated conversion function.
+func Convert_v1_9_ContainerStatsFilter_To_v1_12_ContainerStatsFilter(in *ContainerStatsFilter, out *v1_12.ContainerStatsFilter, s conversion.Scope) error {
+	return autoConvert_v1_9_ContainerStatsFilter_To_v1_12_ContainerStatsFilter(in, out, s)
 }
 
-func autoConvert_v1_10_ContainerStatsFilter_To_v1_9_ContainerStatsFilter(in *v1_10.ContainerStatsFilter, out *ContainerStatsFilter, s conversion.Scope) error {
+func autoConvert_v1_12_ContainerStatsFilter_To_v1_9_ContainerStatsFilter(in *v1_12.ContainerStatsFilter, out *ContainerStatsFilter, s conversion.Scope) error {
 	out.Id = in.Id
 	out.PodSandboxId = in.PodSandboxId
 	out.LabelSelector = in.LabelSelector
 	return nil
 }
 
-// Convert_v1_10_ContainerStatsFilter_To_v1_9_ContainerStatsFilter is an autogenerated conversion function.
-func Convert_v1_10_ContainerStatsFilter_To_v1_9_ContainerStatsFilter(in *v1_10.ContainerStatsFilter, out *ContainerStatsFilter, s conversion.Scope) error {
-	return autoConvert_v1_10_ContainerStatsFilter_To_v1_9_ContainerStatsFilter(in, out, s)
+// Convert_v1_12_ContainerStatsFilter_To_v1_9_ContainerStatsFilter is an autogenerated conversion function.
+func Convert_v1_12_ContainerStatsFilter_To_v1_9_ContainerStatsFilter(in *v1_12.ContainerStatsFilter, out *ContainerStatsFilter, s conversion.Scope) error {
+	return autoConvert_v1_12_ContainerStatsFilter_To_v1_9_ContainerStatsFilter(in, out, s)
 }
 
-func autoConvert_v1_9_ContainerStatsRequest_To_v1_10_ContainerStatsRequest(in *ContainerStatsRequest, out *v1_10.ContainerStatsRequest, s conversion.Scope) error {
+func autoConvert_v1_9_ContainerStatsRequest_To_v1_12_ContainerStatsRequest(in *ContainerStatsRequest, out *v1_12.ContainerStatsRequest, s conversion.Scope) error {
 	out.ContainerId = in.ContainerId
 	return nil
 }
 
-// Convert_v1_9_ContainerStatsRequest_To_v1_10_ContainerStatsRequest is an autogenerated conversion function.
-func Convert_v1_9_ContainerStatsRequest_To_v1_10_ContainerStatsRequest(in *ContainerStatsRequest, out *v1_10.ContainerStatsRequest, s conversion.Scope) error {
-	return autoConvert_v1_9_ContainerStatsRequest_To_v1_10_ContainerStatsRequest(in, out, s)
+// Convert_v1_9_ContainerStatsRequest_To_v1_12_ContainerStatsRequest is an autogenerated conversion function.
+func Convert_v1_9_ContainerStatsRequest_To_v1_12_ContainerStatsRequest(in *ContainerStatsRequest, out *v1_12.ContainerStatsRequest, s conversion.Scope) error {
+	return autoConvert_v1_9_ContainerStatsRequest_To_v1_12_ContainerStatsRequest(in, out, s)
 }
 
-func autoConvert_v1_10_ContainerStatsRequest_To_v1_9_ContainerStatsRequest(in *v1_10.ContainerStatsRequest, out *ContainerStatsRequest, s conversion.Scope) error {
+func autoConvert_v1_12_ContainerStatsRequest_To_v1_9_ContainerStatsRequest(in *v1_12.ContainerStatsRequest, out *ContainerStatsRequest, s conversion.Scope) error {
 	out.ContainerId = in.ContainerId
 	return nil
 }
 
-// Convert_v1_10_ContainerStatsRequest_To_v1_9_ContainerStatsRequest is an autogenerated conversion function.
-func Convert_v1_10_ContainerStatsRequest_To_v1_9_ContainerStatsRequest(in *v1_10.ContainerStatsRequest, out *ContainerStatsRequest, s conversion.Scope) error {
-	return autoConvert_v1_10_ContainerStatsRequest_To_v1_9_ContainerStatsRequest(in, out, s)
+// Convert_v1_12_ContainerStatsRequest_To_v1_9_ContainerStatsRequest is an autogenerated conversion function.
+func Convert_v1_12_ContainerStatsRequest_To_v1_9_ContainerStatsRequest(in *v1_12.ContainerStatsRequest, out *ContainerStatsRequest, s conversion.Scope) error {
+	return autoConvert_v1_12_ContainerStatsRequest_To_v1_9_ContainerStatsRequest(in, out, s)
 }
 
-func autoConvert_v1_9_ContainerStatsResponse_To_v1_10_ContainerStatsResponse(in *ContainerStatsResponse, out *v1_10.ContainerStatsResponse, s conversion.Scope) error {
+func autoConvert_v1_9_ContainerStatsResponse_To_v1_12_ContainerStatsResponse(in *ContainerStatsResponse, out *v1_12.ContainerStatsResponse, s conversion.Scope) error {
 	if in.Stats != nil {
 		in, out := &in.Stats, &out.Stats
-		*out = new(v1_10.ContainerStats)
-		if err := Convert_v1_9_ContainerStats_To_v1_10_ContainerStats(*in, *out, s); err != nil {
+		*out = new(v1_12.ContainerStats)
+		if err := Convert_v1_9_ContainerStats_To_v1_12_ContainerStats(*in, *out, s); err != nil {
 			return err
 		}
 	} else {
@@ -828,16 +828,16 @@ func autoConvert_v1_9_ContainerStatsResponse_To_v1_10_ContainerStatsResponse(in 
 	return nil
 }
 
-// Convert_v1_9_ContainerStatsResponse_To_v1_10_ContainerStatsResponse is an autogenerated conversion function.
-func Convert_v1_9_ContainerStatsResponse_To_v1_10_ContainerStatsResponse(in *ContainerStatsResponse, out *v1_10.ContainerStatsResponse, s conversion.Scope) error {
-	return autoConvert_v1_9_ContainerStatsResponse_To_v1_10_ContainerStatsResponse(in, out, s)
+// Convert_v1_9_ContainerStatsResponse_To_v1_12_ContainerStatsResponse is an autogenerated conversion function.
+func Convert_v1_9_ContainerStatsResponse_To_v1_12_ContainerStatsResponse(in *ContainerStatsResponse, out *v1_12.ContainerStatsResponse, s conversion.Scope) error {
+	return autoConvert_v1_9_ContainerStatsResponse_To_v1_12_ContainerStatsResponse(in, out, s)
 }
 
-func autoConvert_v1_10_ContainerStatsResponse_To_v1_9_ContainerStatsResponse(in *v1_10.ContainerStatsResponse, out *ContainerStatsResponse, s conversion.Scope) error {
+func autoConvert_v1_12_ContainerStatsResponse_To_v1_9_ContainerStatsResponse(in *v1_12.ContainerStatsResponse, out *ContainerStatsResponse, s conversion.Scope) error {
 	if in.Stats != nil {
 		in, out := &in.Stats, &out.Stats
 		*out = new(ContainerStats)
-		if err := Convert_v1_10_ContainerStats_To_v1_9_ContainerStats(*in, *out, s); err != nil {
+		if err := Convert_v1_12_ContainerStats_To_v1_9_ContainerStats(*in, *out, s); err != nil {
 			return err
 		}
 	} else {
@@ -846,31 +846,31 @@ func autoConvert_v1_10_ContainerStatsResponse_To_v1_9_ContainerStatsResponse(in 
 	return nil
 }
 
-// Convert_v1_10_ContainerStatsResponse_To_v1_9_ContainerStatsResponse is an autogenerated conversion function.
-func Convert_v1_10_ContainerStatsResponse_To_v1_9_ContainerStatsResponse(in *v1_10.ContainerStatsResponse, out *ContainerStatsResponse, s conversion.Scope) error {
-	return autoConvert_v1_10_ContainerStatsResponse_To_v1_9_ContainerStatsResponse(in, out, s)
+// Convert_v1_12_ContainerStatsResponse_To_v1_9_ContainerStatsResponse is an autogenerated conversion function.
+func Convert_v1_12_ContainerStatsResponse_To_v1_9_ContainerStatsResponse(in *v1_12.ContainerStatsResponse, out *ContainerStatsResponse, s conversion.Scope) error {
+	return autoConvert_v1_12_ContainerStatsResponse_To_v1_9_ContainerStatsResponse(in, out, s)
 }
 
-func autoConvert_v1_9_ContainerStatus_To_v1_10_ContainerStatus(in *ContainerStatus, out *v1_10.ContainerStatus, s conversion.Scope) error {
+func autoConvert_v1_9_ContainerStatus_To_v1_12_ContainerStatus(in *ContainerStatus, out *v1_12.ContainerStatus, s conversion.Scope) error {
 	out.Id = in.Id
 	if in.Metadata != nil {
 		in, out := &in.Metadata, &out.Metadata
-		*out = new(v1_10.ContainerMetadata)
-		if err := Convert_v1_9_ContainerMetadata_To_v1_10_ContainerMetadata(*in, *out, s); err != nil {
+		*out = new(v1_12.ContainerMetadata)
+		if err := Convert_v1_9_ContainerMetadata_To_v1_12_ContainerMetadata(*in, *out, s); err != nil {
 			return err
 		}
 	} else {
 		out.Metadata = nil
 	}
-	out.State = v1_10.ContainerState(in.State)
+	out.State = v1_12.ContainerState(in.State)
 	out.CreatedAt = in.CreatedAt
 	out.StartedAt = in.StartedAt
 	out.FinishedAt = in.FinishedAt
 	out.ExitCode = in.ExitCode
 	if in.Image != nil {
 		in, out := &in.Image, &out.Image
-		*out = new(v1_10.ImageSpec)
-		if err := Convert_v1_9_ImageSpec_To_v1_10_ImageSpec(*in, *out, s); err != nil {
+		*out = new(v1_12.ImageSpec)
+		if err := Convert_v1_9_ImageSpec_To_v1_12_ImageSpec(*in, *out, s); err != nil {
 			return err
 		}
 	} else {
@@ -883,7 +883,7 @@ func autoConvert_v1_9_ContainerStatus_To_v1_10_ContainerStatus(in *ContainerStat
 	out.Annotations = in.Annotations
 	if in.Mounts != nil {
 		in, out := &in.Mounts, &out.Mounts
-		*out = make([]*v1_10.Mount, len(*in))
+		*out = make([]*v1_12.Mount, len(*in))
 		for i := range *in {
 			// TODO: Inefficient conversion - can we improve it?
 			if err := s.Convert(&(*in)[i], &(*out)[i], 0); err != nil {
@@ -897,17 +897,17 @@ func autoConvert_v1_9_ContainerStatus_To_v1_10_ContainerStatus(in *ContainerStat
 	return nil
 }
 
-// Convert_v1_9_ContainerStatus_To_v1_10_ContainerStatus is an autogenerated conversion function.
-func Convert_v1_9_ContainerStatus_To_v1_10_ContainerStatus(in *ContainerStatus, out *v1_10.ContainerStatus, s conversion.Scope) error {
-	return autoConvert_v1_9_ContainerStatus_To_v1_10_ContainerStatus(in, out, s)
+// Convert_v1_9_ContainerStatus_To_v1_12_ContainerStatus is an autogenerated conversion function.
+func Convert_v1_9_ContainerStatus_To_v1_12_ContainerStatus(in *ContainerStatus, out *v1_12.ContainerStatus, s conversion.Scope) error {
+	return autoConvert_v1_9_ContainerStatus_To_v1_12_ContainerStatus(in, out, s)
 }
 
-func autoConvert_v1_10_ContainerStatus_To_v1_9_ContainerStatus(in *v1_10.ContainerStatus, out *ContainerStatus, s conversion.Scope) error {
+func autoConvert_v1_12_ContainerStatus_To_v1_9_ContainerStatus(in *v1_12.ContainerStatus, out *ContainerStatus, s conversion.Scope) error {
 	out.Id = in.Id
 	if in.Metadata != nil {
 		in, out := &in.Metadata, &out.Metadata
 		*out = new(ContainerMetadata)
-		if err := Convert_v1_10_ContainerMetadata_To_v1_9_ContainerMetadata(*in, *out, s); err != nil {
+		if err := Convert_v1_12_ContainerMetadata_To_v1_9_ContainerMetadata(*in, *out, s); err != nil {
 			return err
 		}
 	} else {
@@ -921,7 +921,7 @@ func autoConvert_v1_10_ContainerStatus_To_v1_9_ContainerStatus(in *v1_10.Contain
 	if in.Image != nil {
 		in, out := &in.Image, &out.Image
 		*out = new(ImageSpec)
-		if err := Convert_v1_10_ImageSpec_To_v1_9_ImageSpec(*in, *out, s); err != nil {
+		if err := Convert_v1_12_ImageSpec_To_v1_9_ImageSpec(*in, *out, s); err != nil {
 			return err
 		}
 	} else {
@@ -948,38 +948,38 @@ func autoConvert_v1_10_ContainerStatus_To_v1_9_ContainerStatus(in *v1_10.Contain
 	return nil
 }
 
-// Convert_v1_10_ContainerStatus_To_v1_9_ContainerStatus is an autogenerated conversion function.
-func Convert_v1_10_ContainerStatus_To_v1_9_ContainerStatus(in *v1_10.ContainerStatus, out *ContainerStatus, s conversion.Scope) error {
-	return autoConvert_v1_10_ContainerStatus_To_v1_9_ContainerStatus(in, out, s)
+// Convert_v1_12_ContainerStatus_To_v1_9_ContainerStatus is an autogenerated conversion function.
+func Convert_v1_12_ContainerStatus_To_v1_9_ContainerStatus(in *v1_12.ContainerStatus, out *ContainerStatus, s conversion.Scope) error {
+	return autoConvert_v1_12_ContainerStatus_To_v1_9_ContainerStatus(in, out, s)
 }
 
-func autoConvert_v1_9_ContainerStatusRequest_To_v1_10_ContainerStatusRequest(in *ContainerStatusRequest, out *v1_10.ContainerStatusRequest, s conversion.Scope) error {
+func autoConvert_v1_9_ContainerStatusRequest_To_v1_12_ContainerStatusRequest(in *ContainerStatusRequest, out *v1_12.ContainerStatusRequest, s conversion.Scope) error {
 	out.ContainerId = in.ContainerId
 	out.Verbose = in.Verbose
 	return nil
 }
 
-// Convert_v1_9_ContainerStatusRequest_To_v1_10_ContainerStatusRequest is an autogenerated conversion function.
-func Convert_v1_9_ContainerStatusRequest_To_v1_10_ContainerStatusRequest(in *ContainerStatusRequest, out *v1_10.ContainerStatusRequest, s conversion.Scope) error {
-	return autoConvert_v1_9_ContainerStatusRequest_To_v1_10_ContainerStatusRequest(in, out, s)
+// Convert_v1_9_ContainerStatusRequest_To_v1_12_ContainerStatusRequest is an autogenerated conversion function.
+func Convert_v1_9_ContainerStatusRequest_To_v1_12_ContainerStatusRequest(in *ContainerStatusRequest, out *v1_12.ContainerStatusRequest, s conversion.Scope) error {
+	return autoConvert_v1_9_ContainerStatusRequest_To_v1_12_ContainerStatusRequest(in, out, s)
 }
 
-func autoConvert_v1_10_ContainerStatusRequest_To_v1_9_ContainerStatusRequest(in *v1_10.ContainerStatusRequest, out *ContainerStatusRequest, s conversion.Scope) error {
+func autoConvert_v1_12_ContainerStatusRequest_To_v1_9_ContainerStatusRequest(in *v1_12.ContainerStatusRequest, out *ContainerStatusRequest, s conversion.Scope) error {
 	out.ContainerId = in.ContainerId
 	out.Verbose = in.Verbose
 	return nil
 }
 
-// Convert_v1_10_ContainerStatusRequest_To_v1_9_ContainerStatusRequest is an autogenerated conversion function.
-func Convert_v1_10_ContainerStatusRequest_To_v1_9_ContainerStatusRequest(in *v1_10.ContainerStatusRequest, out *ContainerStatusRequest, s conversion.Scope) error {
-	return autoConvert_v1_10_ContainerStatusRequest_To_v1_9_ContainerStatusRequest(in, out, s)
+// Convert_v1_12_ContainerStatusRequest_To_v1_9_ContainerStatusRequest is an autogenerated conversion function.
+func Convert_v1_12_ContainerStatusRequest_To_v1_9_ContainerStatusRequest(in *v1_12.ContainerStatusRequest, out *ContainerStatusRequest, s conversion.Scope) error {
+	return autoConvert_v1_12_ContainerStatusRequest_To_v1_9_ContainerStatusRequest(in, out, s)
 }
 
-func autoConvert_v1_9_ContainerStatusResponse_To_v1_10_ContainerStatusResponse(in *ContainerStatusResponse, out *v1_10.ContainerStatusResponse, s conversion.Scope) error {
+func autoConvert_v1_9_ContainerStatusResponse_To_v1_12_ContainerStatusResponse(in *ContainerStatusResponse, out *v1_12.ContainerStatusResponse, s conversion.Scope) error {
 	if in.Status != nil {
 		in, out := &in.Status, &out.Status
-		*out = new(v1_10.ContainerStatus)
-		if err := Convert_v1_9_ContainerStatus_To_v1_10_ContainerStatus(*in, *out, s); err != nil {
+		*out = new(v1_12.ContainerStatus)
+		if err := Convert_v1_9_ContainerStatus_To_v1_12_ContainerStatus(*in, *out, s); err != nil {
 			return err
 		}
 	} else {
@@ -989,16 +989,16 @@ func autoConvert_v1_9_ContainerStatusResponse_To_v1_10_ContainerStatusResponse(i
 	return nil
 }
 
-// Convert_v1_9_ContainerStatusResponse_To_v1_10_ContainerStatusResponse is an autogenerated conversion function.
-func Convert_v1_9_ContainerStatusResponse_To_v1_10_ContainerStatusResponse(in *ContainerStatusResponse, out *v1_10.ContainerStatusResponse, s conversion.Scope) error {
-	return autoConvert_v1_9_ContainerStatusResponse_To_v1_10_ContainerStatusResponse(in, out, s)
+// Convert_v1_9_ContainerStatusResponse_To_v1_12_ContainerStatusResponse is an autogenerated conversion function.
+func Convert_v1_9_ContainerStatusResponse_To_v1_12_ContainerStatusResponse(in *ContainerStatusResponse, out *v1_12.ContainerStatusResponse, s conversion.Scope) error {
+	return autoConvert_v1_9_ContainerStatusResponse_To_v1_12_ContainerStatusResponse(in, out, s)
 }
 
-func autoConvert_v1_10_ContainerStatusResponse_To_v1_9_ContainerStatusResponse(in *v1_10.ContainerStatusResponse, out *ContainerStatusResponse, s conversion.Scope) error {
+func autoConvert_v1_12_ContainerStatusResponse_To_v1_9_ContainerStatusResponse(in *v1_12.ContainerStatusResponse, out *ContainerStatusResponse, s conversion.Scope) error {
 	if in.Status != nil {
 		in, out := &in.Status, &out.Status
 		*out = new(ContainerStatus)
-		if err := Convert_v1_10_ContainerStatus_To_v1_9_ContainerStatus(*in, *out, s); err != nil {
+		if err := Convert_v1_12_ContainerStatus_To_v1_9_ContainerStatus(*in, *out, s); err != nil {
 			return err
 		}
 	} else {
@@ -1008,17 +1008,17 @@ func autoConvert_v1_10_ContainerStatusResponse_To_v1_9_ContainerStatusResponse(i
 	return nil
 }
 
-// Convert_v1_10_ContainerStatusResponse_To_v1_9_ContainerStatusResponse is an autogenerated conversion function.
-func Convert_v1_10_ContainerStatusResponse_To_v1_9_ContainerStatusResponse(in *v1_10.ContainerStatusResponse, out *ContainerStatusResponse, s conversion.Scope) error {
-	return autoConvert_v1_10_ContainerStatusResponse_To_v1_9_ContainerStatusResponse(in, out, s)
+// Convert_v1_12_ContainerStatusResponse_To_v1_9_ContainerStatusResponse is an autogenerated conversion function.
+func Convert_v1_12_ContainerStatusResponse_To_v1_9_ContainerStatusResponse(in *v1_12.ContainerStatusResponse, out *ContainerStatusResponse, s conversion.Scope) error {
+	return autoConvert_v1_12_ContainerStatusResponse_To_v1_9_ContainerStatusResponse(in, out, s)
 }
 
-func autoConvert_v1_9_CpuUsage_To_v1_10_CpuUsage(in *CpuUsage, out *v1_10.CpuUsage, s conversion.Scope) error {
+func autoConvert_v1_9_CpuUsage_To_v1_12_CpuUsage(in *CpuUsage, out *v1_12.CpuUsage, s conversion.Scope) error {
 	out.Timestamp = in.Timestamp
 	if in.UsageCoreNanoSeconds != nil {
 		in, out := &in.UsageCoreNanoSeconds, &out.UsageCoreNanoSeconds
-		*out = new(v1_10.UInt64Value)
-		if err := Convert_v1_9_UInt64Value_To_v1_10_UInt64Value(*in, *out, s); err != nil {
+		*out = new(v1_12.UInt64Value)
+		if err := Convert_v1_9_UInt64Value_To_v1_12_UInt64Value(*in, *out, s); err != nil {
 			return err
 		}
 	} else {
@@ -1027,17 +1027,17 @@ func autoConvert_v1_9_CpuUsage_To_v1_10_CpuUsage(in *CpuUsage, out *v1_10.CpuUsa
 	return nil
 }
 
-// Convert_v1_9_CpuUsage_To_v1_10_CpuUsage is an autogenerated conversion function.
-func Convert_v1_9_CpuUsage_To_v1_10_CpuUsage(in *CpuUsage, out *v1_10.CpuUsage, s conversion.Scope) error {
-	return autoConvert_v1_9_CpuUsage_To_v1_10_CpuUsage(in, out, s)
+// Convert_v1_9_CpuUsage_To_v1_12_CpuUsage is an autogenerated conversion function.
+func Convert_v1_9_CpuUsage_To_v1_12_CpuUsage(in *CpuUsage, out *v1_12.CpuUsage, s conversion.Scope) error {
+	return autoConvert_v1_9_CpuUsage_To_v1_12_CpuUsage(in, out, s)
 }
 
-func autoConvert_v1_10_CpuUsage_To_v1_9_CpuUsage(in *v1_10.CpuUsage, out *CpuUsage, s conversion.Scope) error {
+func autoConvert_v1_12_CpuUsage_To_v1_9_CpuUsage(in *v1_12.CpuUsage, out *CpuUsage, s conversion.Scope) error {
 	out.Timestamp = in.Timestamp
 	if in.UsageCoreNanoSeconds != nil {
 		in, out := &in.UsageCoreNanoSeconds, &out.UsageCoreNanoSeconds
 		*out = new(UInt64Value)
-		if err := Convert_v1_10_UInt64Value_To_v1_9_UInt64Value(*in, *out, s); err != nil {
+		if err := Convert_v1_12_UInt64Value_To_v1_9_UInt64Value(*in, *out, s); err != nil {
 			return err
 		}
 	} else {
@@ -1046,17 +1046,17 @@ func autoConvert_v1_10_CpuUsage_To_v1_9_CpuUsage(in *v1_10.CpuUsage, out *CpuUsa
 	return nil
 }
 
-// Convert_v1_10_CpuUsage_To_v1_9_CpuUsage is an autogenerated conversion function.
-func Convert_v1_10_CpuUsage_To_v1_9_CpuUsage(in *v1_10.CpuUsage, out *CpuUsage, s conversion.Scope) error {
-	return autoConvert_v1_10_CpuUsage_To_v1_9_CpuUsage(in, out, s)
+// Convert_v1_12_CpuUsage_To_v1_9_CpuUsage is an autogenerated conversion function.
+func Convert_v1_12_CpuUsage_To_v1_9_CpuUsage(in *v1_12.CpuUsage, out *CpuUsage, s conversion.Scope) error {
+	return autoConvert_v1_12_CpuUsage_To_v1_9_CpuUsage(in, out, s)
 }
 
-func autoConvert_v1_9_CreateContainerRequest_To_v1_10_CreateContainerRequest(in *CreateContainerRequest, out *v1_10.CreateContainerRequest, s conversion.Scope) error {
+func autoConvert_v1_9_CreateContainerRequest_To_v1_12_CreateContainerRequest(in *CreateContainerRequest, out *v1_12.CreateContainerRequest, s conversion.Scope) error {
 	out.PodSandboxId = in.PodSandboxId
 	if in.Config != nil {
 		in, out := &in.Config, &out.Config
-		*out = new(v1_10.ContainerConfig)
-		if err := Convert_v1_9_ContainerConfig_To_v1_10_ContainerConfig(*in, *out, s); err != nil {
+		*out = new(v1_12.ContainerConfig)
+		if err := Convert_v1_9_ContainerConfig_To_v1_12_ContainerConfig(*in, *out, s); err != nil {
 			return err
 		}
 	} else {
@@ -1064,8 +1064,8 @@ func autoConvert_v1_9_CreateContainerRequest_To_v1_10_CreateContainerRequest(in 
 	}
 	if in.SandboxConfig != nil {
 		in, out := &in.SandboxConfig, &out.SandboxConfig
-		*out = new(v1_10.PodSandboxConfig)
-		if err := Convert_v1_9_PodSandboxConfig_To_v1_10_PodSandboxConfig(*in, *out, s); err != nil {
+		*out = new(v1_12.PodSandboxConfig)
+		if err := Convert_v1_9_PodSandboxConfig_To_v1_12_PodSandboxConfig(*in, *out, s); err != nil {
 			return err
 		}
 	} else {
@@ -1074,17 +1074,17 @@ func autoConvert_v1_9_CreateContainerRequest_To_v1_10_CreateContainerRequest(in 
 	return nil
 }
 
-// Convert_v1_9_CreateContainerRequest_To_v1_10_CreateContainerRequest is an autogenerated conversion function.
-func Convert_v1_9_CreateContainerRequest_To_v1_10_CreateContainerRequest(in *CreateContainerRequest, out *v1_10.CreateContainerRequest, s conversion.Scope) error {
-	return autoConvert_v1_9_CreateContainerRequest_To_v1_10_CreateContainerRequest(in, out, s)
+// Convert_v1_9_CreateContainerRequest_To_v1_12_CreateContainerRequest is an autogenerated conversion function.
+func Convert_v1_9_CreateContainerRequest_To_v1_12_CreateContainerRequest(in *CreateContainerRequest, out *v1_12.CreateContainerRequest, s conversion.Scope) error {
+	return autoConvert_v1_9_CreateContainerRequest_To_v1_12_CreateContainerRequest(in, out, s)
 }
 
-func autoConvert_v1_10_CreateContainerRequest_To_v1_9_CreateContainerRequest(in *v1_10.CreateContainerRequest, out *CreateContainerRequest, s conversion.Scope) error {
+func autoConvert_v1_12_CreateContainerRequest_To_v1_9_CreateContainerRequest(in *v1_12.CreateContainerRequest, out *CreateContainerRequest, s conversion.Scope) error {
 	out.PodSandboxId = in.PodSandboxId
 	if in.Config != nil {
 		in, out := &in.Config, &out.Config
 		*out = new(ContainerConfig)
-		if err := Convert_v1_10_ContainerConfig_To_v1_9_ContainerConfig(*in, *out, s); err != nil {
+		if err := Convert_v1_12_ContainerConfig_To_v1_9_ContainerConfig(*in, *out, s); err != nil {
 			return err
 		}
 	} else {
@@ -1093,7 +1093,7 @@ func autoConvert_v1_10_CreateContainerRequest_To_v1_9_CreateContainerRequest(in 
 	if in.SandboxConfig != nil {
 		in, out := &in.SandboxConfig, &out.SandboxConfig
 		*out = new(PodSandboxConfig)
-		if err := Convert_v1_10_PodSandboxConfig_To_v1_9_PodSandboxConfig(*in, *out, s); err != nil {
+		if err := Convert_v1_12_PodSandboxConfig_To_v1_9_PodSandboxConfig(*in, *out, s); err != nil {
 			return err
 		}
 	} else {
@@ -1102,80 +1102,80 @@ func autoConvert_v1_10_CreateContainerRequest_To_v1_9_CreateContainerRequest(in 
 	return nil
 }
 
-// Convert_v1_10_CreateContainerRequest_To_v1_9_CreateContainerRequest is an autogenerated conversion function.
-func Convert_v1_10_CreateContainerRequest_To_v1_9_CreateContainerRequest(in *v1_10.CreateContainerRequest, out *CreateContainerRequest, s conversion.Scope) error {
-	return autoConvert_v1_10_CreateContainerRequest_To_v1_9_CreateContainerRequest(in, out, s)
+// Convert_v1_12_CreateContainerRequest_To_v1_9_CreateContainerRequest is an autogenerated conversion function.
+func Convert_v1_12_CreateContainerRequest_To_v1_9_CreateContainerRequest(in *v1_12.CreateContainerRequest, out *CreateContainerRequest, s conversion.Scope) error {
+	return autoConvert_v1_12_CreateContainerRequest_To_v1_9_CreateContainerRequest(in, out, s)
 }
 
-func autoConvert_v1_9_CreateContainerResponse_To_v1_10_CreateContainerResponse(in *CreateContainerResponse, out *v1_10.CreateContainerResponse, s conversion.Scope) error {
+func autoConvert_v1_9_CreateContainerResponse_To_v1_12_CreateContainerResponse(in *CreateContainerResponse, out *v1_12.CreateContainerResponse, s conversion.Scope) error {
 	out.ContainerId = in.ContainerId
 	return nil
 }
 
-// Convert_v1_9_CreateContainerResponse_To_v1_10_CreateContainerResponse is an autogenerated conversion function.
-func Convert_v1_9_CreateContainerResponse_To_v1_10_CreateContainerResponse(in *CreateContainerResponse, out *v1_10.CreateContainerResponse, s conversion.Scope) error {
-	return autoConvert_v1_9_CreateContainerResponse_To_v1_10_CreateContainerResponse(in, out, s)
+// Convert_v1_9_CreateContainerResponse_To_v1_12_CreateContainerResponse is an autogenerated conversion function.
+func Convert_v1_9_CreateContainerResponse_To_v1_12_CreateContainerResponse(in *CreateContainerResponse, out *v1_12.CreateContainerResponse, s conversion.Scope) error {
+	return autoConvert_v1_9_CreateContainerResponse_To_v1_12_CreateContainerResponse(in, out, s)
 }
 
-func autoConvert_v1_10_CreateContainerResponse_To_v1_9_CreateContainerResponse(in *v1_10.CreateContainerResponse, out *CreateContainerResponse, s conversion.Scope) error {
+func autoConvert_v1_12_CreateContainerResponse_To_v1_9_CreateContainerResponse(in *v1_12.CreateContainerResponse, out *CreateContainerResponse, s conversion.Scope) error {
 	out.ContainerId = in.ContainerId
 	return nil
 }
 
-// Convert_v1_10_CreateContainerResponse_To_v1_9_CreateContainerResponse is an autogenerated conversion function.
-func Convert_v1_10_CreateContainerResponse_To_v1_9_CreateContainerResponse(in *v1_10.CreateContainerResponse, out *CreateContainerResponse, s conversion.Scope) error {
-	return autoConvert_v1_10_CreateContainerResponse_To_v1_9_CreateContainerResponse(in, out, s)
+// Convert_v1_12_CreateContainerResponse_To_v1_9_CreateContainerResponse is an autogenerated conversion function.
+func Convert_v1_12_CreateContainerResponse_To_v1_9_CreateContainerResponse(in *v1_12.CreateContainerResponse, out *CreateContainerResponse, s conversion.Scope) error {
+	return autoConvert_v1_12_CreateContainerResponse_To_v1_9_CreateContainerResponse(in, out, s)
 }
 
-func autoConvert_v1_9_DNSConfig_To_v1_10_DNSConfig(in *DNSConfig, out *v1_10.DNSConfig, s conversion.Scope) error {
+func autoConvert_v1_9_DNSConfig_To_v1_12_DNSConfig(in *DNSConfig, out *v1_12.DNSConfig, s conversion.Scope) error {
 	out.Servers = in.Servers
 	out.Searches = in.Searches
 	out.Options = in.Options
 	return nil
 }
 
-// Convert_v1_9_DNSConfig_To_v1_10_DNSConfig is an autogenerated conversion function.
-func Convert_v1_9_DNSConfig_To_v1_10_DNSConfig(in *DNSConfig, out *v1_10.DNSConfig, s conversion.Scope) error {
-	return autoConvert_v1_9_DNSConfig_To_v1_10_DNSConfig(in, out, s)
+// Convert_v1_9_DNSConfig_To_v1_12_DNSConfig is an autogenerated conversion function.
+func Convert_v1_9_DNSConfig_To_v1_12_DNSConfig(in *DNSConfig, out *v1_12.DNSConfig, s conversion.Scope) error {
+	return autoConvert_v1_9_DNSConfig_To_v1_12_DNSConfig(in, out, s)
 }
 
-func autoConvert_v1_10_DNSConfig_To_v1_9_DNSConfig(in *v1_10.DNSConfig, out *DNSConfig, s conversion.Scope) error {
+func autoConvert_v1_12_DNSConfig_To_v1_9_DNSConfig(in *v1_12.DNSConfig, out *DNSConfig, s conversion.Scope) error {
 	out.Servers = in.Servers
 	out.Searches = in.Searches
 	out.Options = in.Options
 	return nil
 }
 
-// Convert_v1_10_DNSConfig_To_v1_9_DNSConfig is an autogenerated conversion function.
-func Convert_v1_10_DNSConfig_To_v1_9_DNSConfig(in *v1_10.DNSConfig, out *DNSConfig, s conversion.Scope) error {
-	return autoConvert_v1_10_DNSConfig_To_v1_9_DNSConfig(in, out, s)
+// Convert_v1_12_DNSConfig_To_v1_9_DNSConfig is an autogenerated conversion function.
+func Convert_v1_12_DNSConfig_To_v1_9_DNSConfig(in *v1_12.DNSConfig, out *DNSConfig, s conversion.Scope) error {
+	return autoConvert_v1_12_DNSConfig_To_v1_9_DNSConfig(in, out, s)
 }
 
-func autoConvert_v1_9_Device_To_v1_10_Device(in *Device, out *v1_10.Device, s conversion.Scope) error {
+func autoConvert_v1_9_Device_To_v1_12_Device(in *Device, out *v1_12.Device, s conversion.Scope) error {
 	out.ContainerPath = in.ContainerPath
 	out.HostPath = in.HostPath
 	out.Permissions = in.Permissions
 	return nil
 }
 
-// Convert_v1_9_Device_To_v1_10_Device is an autogenerated conversion function.
-func Convert_v1_9_Device_To_v1_10_Device(in *Device, out *v1_10.Device, s conversion.Scope) error {
-	return autoConvert_v1_9_Device_To_v1_10_Device(in, out, s)
+// Convert_v1_9_Device_To_v1_12_Device is an autogenerated conversion function.
+func Convert_v1_9_Device_To_v1_12_Device(in *Device, out *v1_12.Device, s conversion.Scope) error {
+	return autoConvert_v1_9_Device_To_v1_12_Device(in, out, s)
 }
 
-func autoConvert_v1_10_Device_To_v1_9_Device(in *v1_10.Device, out *Device, s conversion.Scope) error {
+func autoConvert_v1_12_Device_To_v1_9_Device(in *v1_12.Device, out *Device, s conversion.Scope) error {
 	out.ContainerPath = in.ContainerPath
 	out.HostPath = in.HostPath
 	out.Permissions = in.Permissions
 	return nil
 }
 
-// Convert_v1_10_Device_To_v1_9_Device is an autogenerated conversion function.
-func Convert_v1_10_Device_To_v1_9_Device(in *v1_10.Device, out *Device, s conversion.Scope) error {
-	return autoConvert_v1_10_Device_To_v1_9_Device(in, out, s)
+// Convert_v1_12_Device_To_v1_9_Device is an autogenerated conversion function.
+func Convert_v1_12_Device_To_v1_9_Device(in *v1_12.Device, out *Device, s conversion.Scope) error {
+	return autoConvert_v1_12_Device_To_v1_9_Device(in, out, s)
 }
 
-func autoConvert_v1_9_ExecRequest_To_v1_10_ExecRequest(in *ExecRequest, out *v1_10.ExecRequest, s conversion.Scope) error {
+func autoConvert_v1_9_ExecRequest_To_v1_12_ExecRequest(in *ExecRequest, out *v1_12.ExecRequest, s conversion.Scope) error {
 	out.ContainerId = in.ContainerId
 	out.Cmd = in.Cmd
 	out.Tty = in.Tty
@@ -1185,12 +1185,12 @@ func autoConvert_v1_9_ExecRequest_To_v1_10_ExecRequest(in *ExecRequest, out *v1_
 	return nil
 }
 
-// Convert_v1_9_ExecRequest_To_v1_10_ExecRequest is an autogenerated conversion function.
-func Convert_v1_9_ExecRequest_To_v1_10_ExecRequest(in *ExecRequest, out *v1_10.ExecRequest, s conversion.Scope) error {
-	return autoConvert_v1_9_ExecRequest_To_v1_10_ExecRequest(in, out, s)
+// Convert_v1_9_ExecRequest_To_v1_12_ExecRequest is an autogenerated conversion function.
+func Convert_v1_9_ExecRequest_To_v1_12_ExecRequest(in *ExecRequest, out *v1_12.ExecRequest, s conversion.Scope) error {
+	return autoConvert_v1_9_ExecRequest_To_v1_12_ExecRequest(in, out, s)
 }
 
-func autoConvert_v1_10_ExecRequest_To_v1_9_ExecRequest(in *v1_10.ExecRequest, out *ExecRequest, s conversion.Scope) error {
+func autoConvert_v1_12_ExecRequest_To_v1_9_ExecRequest(in *v1_12.ExecRequest, out *ExecRequest, s conversion.Scope) error {
 	out.ContainerId = in.ContainerId
 	out.Cmd = in.Cmd
 	out.Tty = in.Tty
@@ -1200,86 +1200,86 @@ func autoConvert_v1_10_ExecRequest_To_v1_9_ExecRequest(in *v1_10.ExecRequest, ou
 	return nil
 }
 
-// Convert_v1_10_ExecRequest_To_v1_9_ExecRequest is an autogenerated conversion function.
-func Convert_v1_10_ExecRequest_To_v1_9_ExecRequest(in *v1_10.ExecRequest, out *ExecRequest, s conversion.Scope) error {
-	return autoConvert_v1_10_ExecRequest_To_v1_9_ExecRequest(in, out, s)
+// Convert_v1_12_ExecRequest_To_v1_9_ExecRequest is an autogenerated conversion function.
+func Convert_v1_12_ExecRequest_To_v1_9_ExecRequest(in *v1_12.ExecRequest, out *ExecRequest, s conversion.Scope) error {
+	return autoConvert_v1_12_ExecRequest_To_v1_9_ExecRequest(in, out, s)
 }
 
-func autoConvert_v1_9_ExecResponse_To_v1_10_ExecResponse(in *ExecResponse, out *v1_10.ExecResponse, s conversion.Scope) error {
+func autoConvert_v1_9_ExecResponse_To_v1_12_ExecResponse(in *ExecResponse, out *v1_12.ExecResponse, s conversion.Scope) error {
 	out.Url = in.Url
 	return nil
 }
 
-// Convert_v1_9_ExecResponse_To_v1_10_ExecResponse is an autogenerated conversion function.
-func Convert_v1_9_ExecResponse_To_v1_10_ExecResponse(in *ExecResponse, out *v1_10.ExecResponse, s conversion.Scope) error {
-	return autoConvert_v1_9_ExecResponse_To_v1_10_ExecResponse(in, out, s)
+// Convert_v1_9_ExecResponse_To_v1_12_ExecResponse is an autogenerated conversion function.
+func Convert_v1_9_ExecResponse_To_v1_12_ExecResponse(in *ExecResponse, out *v1_12.ExecResponse, s conversion.Scope) error {
+	return autoConvert_v1_9_ExecResponse_To_v1_12_ExecResponse(in, out, s)
 }
 
-func autoConvert_v1_10_ExecResponse_To_v1_9_ExecResponse(in *v1_10.ExecResponse, out *ExecResponse, s conversion.Scope) error {
+func autoConvert_v1_12_ExecResponse_To_v1_9_ExecResponse(in *v1_12.ExecResponse, out *ExecResponse, s conversion.Scope) error {
 	out.Url = in.Url
 	return nil
 }
 
-// Convert_v1_10_ExecResponse_To_v1_9_ExecResponse is an autogenerated conversion function.
-func Convert_v1_10_ExecResponse_To_v1_9_ExecResponse(in *v1_10.ExecResponse, out *ExecResponse, s conversion.Scope) error {
-	return autoConvert_v1_10_ExecResponse_To_v1_9_ExecResponse(in, out, s)
+// Convert_v1_12_ExecResponse_To_v1_9_ExecResponse is an autogenerated conversion function.
+func Convert_v1_12_ExecResponse_To_v1_9_ExecResponse(in *v1_12.ExecResponse, out *ExecResponse, s conversion.Scope) error {
+	return autoConvert_v1_12_ExecResponse_To_v1_9_ExecResponse(in, out, s)
 }
 
-func autoConvert_v1_9_ExecSyncRequest_To_v1_10_ExecSyncRequest(in *ExecSyncRequest, out *v1_10.ExecSyncRequest, s conversion.Scope) error {
+func autoConvert_v1_9_ExecSyncRequest_To_v1_12_ExecSyncRequest(in *ExecSyncRequest, out *v1_12.ExecSyncRequest, s conversion.Scope) error {
 	out.ContainerId = in.ContainerId
 	out.Cmd = in.Cmd
 	out.Timeout = in.Timeout
 	return nil
 }
 
-// Convert_v1_9_ExecSyncRequest_To_v1_10_ExecSyncRequest is an autogenerated conversion function.
-func Convert_v1_9_ExecSyncRequest_To_v1_10_ExecSyncRequest(in *ExecSyncRequest, out *v1_10.ExecSyncRequest, s conversion.Scope) error {
-	return autoConvert_v1_9_ExecSyncRequest_To_v1_10_ExecSyncRequest(in, out, s)
+// Convert_v1_9_ExecSyncRequest_To_v1_12_ExecSyncRequest is an autogenerated conversion function.
+func Convert_v1_9_ExecSyncRequest_To_v1_12_ExecSyncRequest(in *ExecSyncRequest, out *v1_12.ExecSyncRequest, s conversion.Scope) error {
+	return autoConvert_v1_9_ExecSyncRequest_To_v1_12_ExecSyncRequest(in, out, s)
 }
 
-func autoConvert_v1_10_ExecSyncRequest_To_v1_9_ExecSyncRequest(in *v1_10.ExecSyncRequest, out *ExecSyncRequest, s conversion.Scope) error {
+func autoConvert_v1_12_ExecSyncRequest_To_v1_9_ExecSyncRequest(in *v1_12.ExecSyncRequest, out *ExecSyncRequest, s conversion.Scope) error {
 	out.ContainerId = in.ContainerId
 	out.Cmd = in.Cmd
 	out.Timeout = in.Timeout
 	return nil
 }
 
-// Convert_v1_10_ExecSyncRequest_To_v1_9_ExecSyncRequest is an autogenerated conversion function.
-func Convert_v1_10_ExecSyncRequest_To_v1_9_ExecSyncRequest(in *v1_10.ExecSyncRequest, out *ExecSyncRequest, s conversion.Scope) error {
-	return autoConvert_v1_10_ExecSyncRequest_To_v1_9_ExecSyncRequest(in, out, s)
+// Convert_v1_12_ExecSyncRequest_To_v1_9_ExecSyncRequest is an autogenerated conversion function.
+func Convert_v1_12_ExecSyncRequest_To_v1_9_ExecSyncRequest(in *v1_12.ExecSyncRequest, out *ExecSyncRequest, s conversion.Scope) error {
+	return autoConvert_v1_12_ExecSyncRequest_To_v1_9_ExecSyncRequest(in, out, s)
 }
 
-func autoConvert_v1_9_ExecSyncResponse_To_v1_10_ExecSyncResponse(in *ExecSyncResponse, out *v1_10.ExecSyncResponse, s conversion.Scope) error {
+func autoConvert_v1_9_ExecSyncResponse_To_v1_12_ExecSyncResponse(in *ExecSyncResponse, out *v1_12.ExecSyncResponse, s conversion.Scope) error {
 	out.Stdout = in.Stdout
 	out.Stderr = in.Stderr
 	out.ExitCode = in.ExitCode
 	return nil
 }
 
-// Convert_v1_9_ExecSyncResponse_To_v1_10_ExecSyncResponse is an autogenerated conversion function.
-func Convert_v1_9_ExecSyncResponse_To_v1_10_ExecSyncResponse(in *ExecSyncResponse, out *v1_10.ExecSyncResponse, s conversion.Scope) error {
-	return autoConvert_v1_9_ExecSyncResponse_To_v1_10_ExecSyncResponse(in, out, s)
+// Convert_v1_9_ExecSyncResponse_To_v1_12_ExecSyncResponse is an autogenerated conversion function.
+func Convert_v1_9_ExecSyncResponse_To_v1_12_ExecSyncResponse(in *ExecSyncResponse, out *v1_12.ExecSyncResponse, s conversion.Scope) error {
+	return autoConvert_v1_9_ExecSyncResponse_To_v1_12_ExecSyncResponse(in, out, s)
 }
 
-func autoConvert_v1_10_ExecSyncResponse_To_v1_9_ExecSyncResponse(in *v1_10.ExecSyncResponse, out *ExecSyncResponse, s conversion.Scope) error {
+func autoConvert_v1_12_ExecSyncResponse_To_v1_9_ExecSyncResponse(in *v1_12.ExecSyncResponse, out *ExecSyncResponse, s conversion.Scope) error {
 	out.Stdout = in.Stdout
 	out.Stderr = in.Stderr
 	out.ExitCode = in.ExitCode
 	return nil
 }
 
-// Convert_v1_10_ExecSyncResponse_To_v1_9_ExecSyncResponse is an autogenerated conversion function.
-func Convert_v1_10_ExecSyncResponse_To_v1_9_ExecSyncResponse(in *v1_10.ExecSyncResponse, out *ExecSyncResponse, s conversion.Scope) error {
-	return autoConvert_v1_10_ExecSyncResponse_To_v1_9_ExecSyncResponse(in, out, s)
+// Convert_v1_12_ExecSyncResponse_To_v1_9_ExecSyncResponse is an autogenerated conversion function.
+func Convert_v1_12_ExecSyncResponse_To_v1_9_ExecSyncResponse(in *v1_12.ExecSyncResponse, out *ExecSyncResponse, s conversion.Scope) error {
+	return autoConvert_v1_12_ExecSyncResponse_To_v1_9_ExecSyncResponse(in, out, s)
 }
 
-func autoConvert_v1_9_FilesystemUsage_To_v1_10_FilesystemUsage(in *FilesystemUsage, out *v1_10.FilesystemUsage, s conversion.Scope) error {
+func autoConvert_v1_9_FilesystemUsage_To_v1_12_FilesystemUsage(in *FilesystemUsage, out *v1_12.FilesystemUsage, s conversion.Scope) error {
 	out.Timestamp = in.Timestamp
 	// WARNING: in.StorageId requires manual conversion: does not exist in peer-type
 	if in.UsedBytes != nil {
 		in, out := &in.UsedBytes, &out.UsedBytes
-		*out = new(v1_10.UInt64Value)
-		if err := Convert_v1_9_UInt64Value_To_v1_10_UInt64Value(*in, *out, s); err != nil {
+		*out = new(v1_12.UInt64Value)
+		if err := Convert_v1_9_UInt64Value_To_v1_12_UInt64Value(*in, *out, s); err != nil {
 			return err
 		}
 	} else {
@@ -1287,8 +1287,8 @@ func autoConvert_v1_9_FilesystemUsage_To_v1_10_FilesystemUsage(in *FilesystemUsa
 	}
 	if in.InodesUsed != nil {
 		in, out := &in.InodesUsed, &out.InodesUsed
-		*out = new(v1_10.UInt64Value)
-		if err := Convert_v1_9_UInt64Value_To_v1_10_UInt64Value(*in, *out, s); err != nil {
+		*out = new(v1_12.UInt64Value)
+		if err := Convert_v1_9_UInt64Value_To_v1_12_UInt64Value(*in, *out, s); err != nil {
 			return err
 		}
 	} else {
@@ -1297,13 +1297,13 @@ func autoConvert_v1_9_FilesystemUsage_To_v1_10_FilesystemUsage(in *FilesystemUsa
 	return nil
 }
 
-func autoConvert_v1_10_FilesystemUsage_To_v1_9_FilesystemUsage(in *v1_10.FilesystemUsage, out *FilesystemUsage, s conversion.Scope) error {
+func autoConvert_v1_12_FilesystemUsage_To_v1_9_FilesystemUsage(in *v1_12.FilesystemUsage, out *FilesystemUsage, s conversion.Scope) error {
 	out.Timestamp = in.Timestamp
 	// WARNING: in.FsId requires manual conversion: does not exist in peer-type
 	if in.UsedBytes != nil {
 		in, out := &in.UsedBytes, &out.UsedBytes
 		*out = new(UInt64Value)
-		if err := Convert_v1_10_UInt64Value_To_v1_9_UInt64Value(*in, *out, s); err != nil {
+		if err := Convert_v1_12_UInt64Value_To_v1_9_UInt64Value(*in, *out, s); err != nil {
 			return err
 		}
 	} else {
@@ -1312,7 +1312,7 @@ func autoConvert_v1_10_FilesystemUsage_To_v1_9_FilesystemUsage(in *v1_10.Filesys
 	if in.InodesUsed != nil {
 		in, out := &in.InodesUsed, &out.InodesUsed
 		*out = new(UInt64Value)
-		if err := Convert_v1_10_UInt64Value_To_v1_9_UInt64Value(*in, *out, s); err != nil {
+		if err := Convert_v1_12_UInt64Value_To_v1_9_UInt64Value(*in, *out, s); err != nil {
 			return err
 		}
 	} else {
@@ -1321,15 +1321,15 @@ func autoConvert_v1_10_FilesystemUsage_To_v1_9_FilesystemUsage(in *v1_10.Filesys
 	return nil
 }
 
-func autoConvert_v1_9_Image_To_v1_10_Image(in *Image, out *v1_10.Image, s conversion.Scope) error {
+func autoConvert_v1_9_Image_To_v1_12_Image(in *Image, out *v1_12.Image, s conversion.Scope) error {
 	out.Id = in.Id
 	out.RepoTags = in.RepoTags
 	out.RepoDigests = in.RepoDigests
 	out.Size_ = in.Size_
 	if in.Uid != nil {
 		in, out := &in.Uid, &out.Uid
-		*out = new(v1_10.Int64Value)
-		if err := Convert_v1_9_Int64Value_To_v1_10_Int64Value(*in, *out, s); err != nil {
+		*out = new(v1_12.Int64Value)
+		if err := Convert_v1_9_Int64Value_To_v1_12_Int64Value(*in, *out, s); err != nil {
 			return err
 		}
 	} else {
@@ -1339,12 +1339,12 @@ func autoConvert_v1_9_Image_To_v1_10_Image(in *Image, out *v1_10.Image, s conver
 	return nil
 }
 
-// Convert_v1_9_Image_To_v1_10_Image is an autogenerated conversion function.
-func Convert_v1_9_Image_To_v1_10_Image(in *Image, out *v1_10.Image, s conversion.Scope) error {
-	return autoConvert_v1_9_Image_To_v1_10_Image(in, out, s)
+// Convert_v1_9_Image_To_v1_12_Image is an autogenerated conversion function.
+func Convert_v1_9_Image_To_v1_12_Image(in *Image, out *v1_12.Image, s conversion.Scope) error {
+	return autoConvert_v1_9_Image_To_v1_12_Image(in, out, s)
 }
 
-func autoConvert_v1_10_Image_To_v1_9_Image(in *v1_10.Image, out *Image, s conversion.Scope) error {
+func autoConvert_v1_12_Image_To_v1_9_Image(in *v1_12.Image, out *Image, s conversion.Scope) error {
 	out.Id = in.Id
 	out.RepoTags = in.RepoTags
 	out.RepoDigests = in.RepoDigests
@@ -1352,7 +1352,7 @@ func autoConvert_v1_10_Image_To_v1_9_Image(in *v1_10.Image, out *Image, s conver
 	if in.Uid != nil {
 		in, out := &in.Uid, &out.Uid
 		*out = new(Int64Value)
-		if err := Convert_v1_10_Int64Value_To_v1_9_Int64Value(*in, *out, s); err != nil {
+		if err := Convert_v1_12_Int64Value_To_v1_9_Int64Value(*in, *out, s); err != nil {
 			return err
 		}
 	} else {
@@ -1362,16 +1362,16 @@ func autoConvert_v1_10_Image_To_v1_9_Image(in *v1_10.Image, out *Image, s conver
 	return nil
 }
 
-// Convert_v1_10_Image_To_v1_9_Image is an autogenerated conversion function.
-func Convert_v1_10_Image_To_v1_9_Image(in *v1_10.Image, out *Image, s conversion.Scope) error {
-	return autoConvert_v1_10_Image_To_v1_9_Image(in, out, s)
+// Convert_v1_12_Image_To_v1_9_Image is an autogenerated conversion function.
+func Convert_v1_12_Image_To_v1_9_Image(in *v1_12.Image, out *Image, s conversion.Scope) error {
+	return autoConvert_v1_12_Image_To_v1_9_Image(in, out, s)
 }
 
-func autoConvert_v1_9_ImageFilter_To_v1_10_ImageFilter(in *ImageFilter, out *v1_10.ImageFilter, s conversion.Scope) error {
+func autoConvert_v1_9_ImageFilter_To_v1_12_ImageFilter(in *ImageFilter, out *v1_12.ImageFilter, s conversion.Scope) error {
 	if in.Image != nil {
 		in, out := &in.Image, &out.Image
-		*out = new(v1_10.ImageSpec)
-		if err := Convert_v1_9_ImageSpec_To_v1_10_ImageSpec(*in, *out, s); err != nil {
+		*out = new(v1_12.ImageSpec)
+		if err := Convert_v1_9_ImageSpec_To_v1_12_ImageSpec(*in, *out, s); err != nil {
 			return err
 		}
 	} else {
@@ -1380,16 +1380,16 @@ func autoConvert_v1_9_ImageFilter_To_v1_10_ImageFilter(in *ImageFilter, out *v1_
 	return nil
 }
 
-// Convert_v1_9_ImageFilter_To_v1_10_ImageFilter is an autogenerated conversion function.
-func Convert_v1_9_ImageFilter_To_v1_10_ImageFilter(in *ImageFilter, out *v1_10.ImageFilter, s conversion.Scope) error {
-	return autoConvert_v1_9_ImageFilter_To_v1_10_ImageFilter(in, out, s)
+// Convert_v1_9_ImageFilter_To_v1_12_ImageFilter is an autogenerated conversion function.
+func Convert_v1_9_ImageFilter_To_v1_12_ImageFilter(in *ImageFilter, out *v1_12.ImageFilter, s conversion.Scope) error {
+	return autoConvert_v1_9_ImageFilter_To_v1_12_ImageFilter(in, out, s)
 }
 
-func autoConvert_v1_10_ImageFilter_To_v1_9_ImageFilter(in *v1_10.ImageFilter, out *ImageFilter, s conversion.Scope) error {
+func autoConvert_v1_12_ImageFilter_To_v1_9_ImageFilter(in *v1_12.ImageFilter, out *ImageFilter, s conversion.Scope) error {
 	if in.Image != nil {
 		in, out := &in.Image, &out.Image
 		*out = new(ImageSpec)
-		if err := Convert_v1_10_ImageSpec_To_v1_9_ImageSpec(*in, *out, s); err != nil {
+		if err := Convert_v1_12_ImageSpec_To_v1_9_ImageSpec(*in, *out, s); err != nil {
 			return err
 		}
 	} else {
@@ -1398,33 +1398,33 @@ func autoConvert_v1_10_ImageFilter_To_v1_9_ImageFilter(in *v1_10.ImageFilter, ou
 	return nil
 }
 
-// Convert_v1_10_ImageFilter_To_v1_9_ImageFilter is an autogenerated conversion function.
-func Convert_v1_10_ImageFilter_To_v1_9_ImageFilter(in *v1_10.ImageFilter, out *ImageFilter, s conversion.Scope) error {
-	return autoConvert_v1_10_ImageFilter_To_v1_9_ImageFilter(in, out, s)
+// Convert_v1_12_ImageFilter_To_v1_9_ImageFilter is an autogenerated conversion function.
+func Convert_v1_12_ImageFilter_To_v1_9_ImageFilter(in *v1_12.ImageFilter, out *ImageFilter, s conversion.Scope) error {
+	return autoConvert_v1_12_ImageFilter_To_v1_9_ImageFilter(in, out, s)
 }
 
-func autoConvert_v1_9_ImageFsInfoRequest_To_v1_10_ImageFsInfoRequest(in *ImageFsInfoRequest, out *v1_10.ImageFsInfoRequest, s conversion.Scope) error {
+func autoConvert_v1_9_ImageFsInfoRequest_To_v1_12_ImageFsInfoRequest(in *ImageFsInfoRequest, out *v1_12.ImageFsInfoRequest, s conversion.Scope) error {
 	return nil
 }
 
-// Convert_v1_9_ImageFsInfoRequest_To_v1_10_ImageFsInfoRequest is an autogenerated conversion function.
-func Convert_v1_9_ImageFsInfoRequest_To_v1_10_ImageFsInfoRequest(in *ImageFsInfoRequest, out *v1_10.ImageFsInfoRequest, s conversion.Scope) error {
-	return autoConvert_v1_9_ImageFsInfoRequest_To_v1_10_ImageFsInfoRequest(in, out, s)
+// Convert_v1_9_ImageFsInfoRequest_To_v1_12_ImageFsInfoRequest is an autogenerated conversion function.
+func Convert_v1_9_ImageFsInfoRequest_To_v1_12_ImageFsInfoRequest(in *ImageFsInfoRequest, out *v1_12.ImageFsInfoRequest, s conversion.Scope) error {
+	return autoConvert_v1_9_ImageFsInfoRequest_To_v1_12_ImageFsInfoRequest(in, out, s)
 }
 
-func autoConvert_v1_10_ImageFsInfoRequest_To_v1_9_ImageFsInfoRequest(in *v1_10.ImageFsInfoRequest, out *ImageFsInfoRequest, s conversion.Scope) error {
+func autoConvert_v1_12_ImageFsInfoRequest_To_v1_9_ImageFsInfoRequest(in *v1_12.ImageFsInfoRequest, out *ImageFsInfoRequest, s conversion.Scope) error {
 	return nil
 }
 
-// Convert_v1_10_ImageFsInfoRequest_To_v1_9_ImageFsInfoRequest is an autogenerated conversion function.
-func Convert_v1_10_ImageFsInfoRequest_To_v1_9_ImageFsInfoRequest(in *v1_10.ImageFsInfoRequest, out *ImageFsInfoRequest, s conversion.Scope) error {
-	return autoConvert_v1_10_ImageFsInfoRequest_To_v1_9_ImageFsInfoRequest(in, out, s)
+// Convert_v1_12_ImageFsInfoRequest_To_v1_9_ImageFsInfoRequest is an autogenerated conversion function.
+func Convert_v1_12_ImageFsInfoRequest_To_v1_9_ImageFsInfoRequest(in *v1_12.ImageFsInfoRequest, out *ImageFsInfoRequest, s conversion.Scope) error {
+	return autoConvert_v1_12_ImageFsInfoRequest_To_v1_9_ImageFsInfoRequest(in, out, s)
 }
 
-func autoConvert_v1_9_ImageFsInfoResponse_To_v1_10_ImageFsInfoResponse(in *ImageFsInfoResponse, out *v1_10.ImageFsInfoResponse, s conversion.Scope) error {
+func autoConvert_v1_9_ImageFsInfoResponse_To_v1_12_ImageFsInfoResponse(in *ImageFsInfoResponse, out *v1_12.ImageFsInfoResponse, s conversion.Scope) error {
 	if in.ImageFilesystems != nil {
 		in, out := &in.ImageFilesystems, &out.ImageFilesystems
-		*out = make([]*v1_10.FilesystemUsage, len(*in))
+		*out = make([]*v1_12.FilesystemUsage, len(*in))
 		for i := range *in {
 			// TODO: Inefficient conversion - can we improve it?
 			if err := s.Convert(&(*in)[i], &(*out)[i], 0); err != nil {
@@ -1437,12 +1437,12 @@ func autoConvert_v1_9_ImageFsInfoResponse_To_v1_10_ImageFsInfoResponse(in *Image
 	return nil
 }
 
-// Convert_v1_9_ImageFsInfoResponse_To_v1_10_ImageFsInfoResponse is an autogenerated conversion function.
-func Convert_v1_9_ImageFsInfoResponse_To_v1_10_ImageFsInfoResponse(in *ImageFsInfoResponse, out *v1_10.ImageFsInfoResponse, s conversion.Scope) error {
-	return autoConvert_v1_9_ImageFsInfoResponse_To_v1_10_ImageFsInfoResponse(in, out, s)
+// Convert_v1_9_ImageFsInfoResponse_To_v1_12_ImageFsInfoResponse is an autogenerated conversion function.
+func Convert_v1_9_ImageFsInfoResponse_To_v1_12_ImageFsInfoResponse(in *ImageFsInfoResponse, out *v1_12.ImageFsInfoResponse, s conversion.Scope) error {
+	return autoConvert_v1_9_ImageFsInfoResponse_To_v1_12_ImageFsInfoResponse(in, out, s)
 }
 
-func autoConvert_v1_10_ImageFsInfoResponse_To_v1_9_ImageFsInfoResponse(in *v1_10.ImageFsInfoResponse, out *ImageFsInfoResponse, s conversion.Scope) error {
+func autoConvert_v1_12_ImageFsInfoResponse_To_v1_9_ImageFsInfoResponse(in *v1_12.ImageFsInfoResponse, out *ImageFsInfoResponse, s conversion.Scope) error {
 	if in.ImageFilesystems != nil {
 		in, out := &in.ImageFilesystems, &out.ImageFilesystems
 		*out = make([]*FilesystemUsage, len(*in))
@@ -1458,36 +1458,36 @@ func autoConvert_v1_10_ImageFsInfoResponse_To_v1_9_ImageFsInfoResponse(in *v1_10
 	return nil
 }
 
-// Convert_v1_10_ImageFsInfoResponse_To_v1_9_ImageFsInfoResponse is an autogenerated conversion function.
-func Convert_v1_10_ImageFsInfoResponse_To_v1_9_ImageFsInfoResponse(in *v1_10.ImageFsInfoResponse, out *ImageFsInfoResponse, s conversion.Scope) error {
-	return autoConvert_v1_10_ImageFsInfoResponse_To_v1_9_ImageFsInfoResponse(in, out, s)
+// Convert_v1_12_ImageFsInfoResponse_To_v1_9_ImageFsInfoResponse is an autogenerated conversion function.
+func Convert_v1_12_ImageFsInfoResponse_To_v1_9_ImageFsInfoResponse(in *v1_12.ImageFsInfoResponse, out *ImageFsInfoResponse, s conversion.Scope) error {
+	return autoConvert_v1_12_ImageFsInfoResponse_To_v1_9_ImageFsInfoResponse(in, out, s)
 }
 
-func autoConvert_v1_9_ImageSpec_To_v1_10_ImageSpec(in *ImageSpec, out *v1_10.ImageSpec, s conversion.Scope) error {
+func autoConvert_v1_9_ImageSpec_To_v1_12_ImageSpec(in *ImageSpec, out *v1_12.ImageSpec, s conversion.Scope) error {
 	out.Image = in.Image
 	return nil
 }
 
-// Convert_v1_9_ImageSpec_To_v1_10_ImageSpec is an autogenerated conversion function.
-func Convert_v1_9_ImageSpec_To_v1_10_ImageSpec(in *ImageSpec, out *v1_10.ImageSpec, s conversion.Scope) error {
-	return autoConvert_v1_9_ImageSpec_To_v1_10_ImageSpec(in, out, s)
+// Convert_v1_9_ImageSpec_To_v1_12_ImageSpec is an autogenerated conversion function.
+func Convert_v1_9_ImageSpec_To_v1_12_ImageSpec(in *ImageSpec, out *v1_12.ImageSpec, s conversion.Scope) error {
+	return autoConvert_v1_9_ImageSpec_To_v1_12_ImageSpec(in, out, s)
 }
 
-func autoConvert_v1_10_ImageSpec_To_v1_9_ImageSpec(in *v1_10.ImageSpec, out *ImageSpec, s conversion.Scope) error {
+func autoConvert_v1_12_ImageSpec_To_v1_9_ImageSpec(in *v1_12.ImageSpec, out *ImageSpec, s conversion.Scope) error {
 	out.Image = in.Image
 	return nil
 }
 
-// Convert_v1_10_ImageSpec_To_v1_9_ImageSpec is an autogenerated conversion function.
-func Convert_v1_10_ImageSpec_To_v1_9_ImageSpec(in *v1_10.ImageSpec, out *ImageSpec, s conversion.Scope) error {
-	return autoConvert_v1_10_ImageSpec_To_v1_9_ImageSpec(in, out, s)
+// Convert_v1_12_ImageSpec_To_v1_9_ImageSpec is an autogenerated conversion function.
+func Convert_v1_12_ImageSpec_To_v1_9_ImageSpec(in *v1_12.ImageSpec, out *ImageSpec, s conversion.Scope) error {
+	return autoConvert_v1_12_ImageSpec_To_v1_9_ImageSpec(in, out, s)
 }
 
-func autoConvert_v1_9_ImageStatusRequest_To_v1_10_ImageStatusRequest(in *ImageStatusRequest, out *v1_10.ImageStatusRequest, s conversion.Scope) error {
+func autoConvert_v1_9_ImageStatusRequest_To_v1_12_ImageStatusRequest(in *ImageStatusRequest, out *v1_12.ImageStatusRequest, s conversion.Scope) error {
 	if in.Image != nil {
 		in, out := &in.Image, &out.Image
-		*out = new(v1_10.ImageSpec)
-		if err := Convert_v1_9_ImageSpec_To_v1_10_ImageSpec(*in, *out, s); err != nil {
+		*out = new(v1_12.ImageSpec)
+		if err := Convert_v1_9_ImageSpec_To_v1_12_ImageSpec(*in, *out, s); err != nil {
 			return err
 		}
 	} else {
@@ -1497,16 +1497,16 @@ func autoConvert_v1_9_ImageStatusRequest_To_v1_10_ImageStatusRequest(in *ImageSt
 	return nil
 }
 
-// Convert_v1_9_ImageStatusRequest_To_v1_10_ImageStatusRequest is an autogenerated conversion function.
-func Convert_v1_9_ImageStatusRequest_To_v1_10_ImageStatusRequest(in *ImageStatusRequest, out *v1_10.ImageStatusRequest, s conversion.Scope) error {
-	return autoConvert_v1_9_ImageStatusRequest_To_v1_10_ImageStatusRequest(in, out, s)
+// Convert_v1_9_ImageStatusRequest_To_v1_12_ImageStatusRequest is an autogenerated conversion function.
+func Convert_v1_9_ImageStatusRequest_To_v1_12_ImageStatusRequest(in *ImageStatusRequest, out *v1_12.ImageStatusRequest, s conversion.Scope) error {
+	return autoConvert_v1_9_ImageStatusRequest_To_v1_12_ImageStatusRequest(in, out, s)
 }
 
-func autoConvert_v1_10_ImageStatusRequest_To_v1_9_ImageStatusRequest(in *v1_10.ImageStatusRequest, out *ImageStatusRequest, s conversion.Scope) error {
+func autoConvert_v1_12_ImageStatusRequest_To_v1_9_ImageStatusRequest(in *v1_12.ImageStatusRequest, out *ImageStatusRequest, s conversion.Scope) error {
 	if in.Image != nil {
 		in, out := &in.Image, &out.Image
 		*out = new(ImageSpec)
-		if err := Convert_v1_10_ImageSpec_To_v1_9_ImageSpec(*in, *out, s); err != nil {
+		if err := Convert_v1_12_ImageSpec_To_v1_9_ImageSpec(*in, *out, s); err != nil {
 			return err
 		}
 	} else {
@@ -1516,16 +1516,16 @@ func autoConvert_v1_10_ImageStatusRequest_To_v1_9_ImageStatusRequest(in *v1_10.I
 	return nil
 }
 
-// Convert_v1_10_ImageStatusRequest_To_v1_9_ImageStatusRequest is an autogenerated conversion function.
-func Convert_v1_10_ImageStatusRequest_To_v1_9_ImageStatusRequest(in *v1_10.ImageStatusRequest, out *ImageStatusRequest, s conversion.Scope) error {
-	return autoConvert_v1_10_ImageStatusRequest_To_v1_9_ImageStatusRequest(in, out, s)
+// Convert_v1_12_ImageStatusRequest_To_v1_9_ImageStatusRequest is an autogenerated conversion function.
+func Convert_v1_12_ImageStatusRequest_To_v1_9_ImageStatusRequest(in *v1_12.ImageStatusRequest, out *ImageStatusRequest, s conversion.Scope) error {
+	return autoConvert_v1_12_ImageStatusRequest_To_v1_9_ImageStatusRequest(in, out, s)
 }
 
-func autoConvert_v1_9_ImageStatusResponse_To_v1_10_ImageStatusResponse(in *ImageStatusResponse, out *v1_10.ImageStatusResponse, s conversion.Scope) error {
+func autoConvert_v1_9_ImageStatusResponse_To_v1_12_ImageStatusResponse(in *ImageStatusResponse, out *v1_12.ImageStatusResponse, s conversion.Scope) error {
 	if in.Image != nil {
 		in, out := &in.Image, &out.Image
-		*out = new(v1_10.Image)
-		if err := Convert_v1_9_Image_To_v1_10_Image(*in, *out, s); err != nil {
+		*out = new(v1_12.Image)
+		if err := Convert_v1_9_Image_To_v1_12_Image(*in, *out, s); err != nil {
 			return err
 		}
 	} else {
@@ -1535,16 +1535,16 @@ func autoConvert_v1_9_ImageStatusResponse_To_v1_10_ImageStatusResponse(in *Image
 	return nil
 }
 
-// Convert_v1_9_ImageStatusResponse_To_v1_10_ImageStatusResponse is an autogenerated conversion function.
-func Convert_v1_9_ImageStatusResponse_To_v1_10_ImageStatusResponse(in *ImageStatusResponse, out *v1_10.ImageStatusResponse, s conversion.Scope) error {
-	return autoConvert_v1_9_ImageStatusResponse_To_v1_10_ImageStatusResponse(in, out, s)
+// Convert_v1_9_ImageStatusResponse_To_v1_12_ImageStatusResponse is an autogenerated conversion function.
+func Convert_v1_9_ImageStatusResponse_To_v1_12_ImageStatusResponse(in *ImageStatusResponse, out *v1_12.ImageStatusResponse, s conversion.Scope) error {
+	return autoConvert_v1_9_ImageStatusResponse_To_v1_12_ImageStatusResponse(in, out, s)
 }
 
-func autoConvert_v1_10_ImageStatusResponse_To_v1_9_ImageStatusResponse(in *v1_10.ImageStatusResponse, out *ImageStatusResponse, s conversion.Scope) error {
+func autoConvert_v1_12_ImageStatusResponse_To_v1_9_ImageStatusResponse(in *v1_12.ImageStatusResponse, out *ImageStatusResponse, s conversion.Scope) error {
 	if in.Image != nil {
 		in, out := &in.Image, &out.Image
 		*out = new(Image)
-		if err := Convert_v1_10_Image_To_v1_9_Image(*in, *out, s); err != nil {
+		if err := Convert_v1_12_Image_To_v1_9_Image(*in, *out, s); err != nil {
 			return err
 		}
 	} else {
@@ -1554,58 +1554,58 @@ func autoConvert_v1_10_ImageStatusResponse_To_v1_9_ImageStatusResponse(in *v1_10
 	return nil
 }
 
-// Convert_v1_10_ImageStatusResponse_To_v1_9_ImageStatusResponse is an autogenerated conversion function.
-func Convert_v1_10_ImageStatusResponse_To_v1_9_ImageStatusResponse(in *v1_10.ImageStatusResponse, out *ImageStatusResponse, s conversion.Scope) error {
-	return autoConvert_v1_10_ImageStatusResponse_To_v1_9_ImageStatusResponse(in, out, s)
+// Convert_v1_12_ImageStatusResponse_To_v1_9_ImageStatusResponse is an autogenerated conversion function.
+func Convert_v1_12_ImageStatusResponse_To_v1_9_ImageStatusResponse(in *v1_12.ImageStatusResponse, out *ImageStatusResponse, s conversion.Scope) error {
+	return autoConvert_v1_12_ImageStatusResponse_To_v1_9_ImageStatusResponse(in, out, s)
 }
 
-func autoConvert_v1_9_Int64Value_To_v1_10_Int64Value(in *Int64Value, out *v1_10.Int64Value, s conversion.Scope) error {
+func autoConvert_v1_9_Int64Value_To_v1_12_Int64Value(in *Int64Value, out *v1_12.Int64Value, s conversion.Scope) error {
 	out.Value = in.Value
 	return nil
 }
 
-// Convert_v1_9_Int64Value_To_v1_10_Int64Value is an autogenerated conversion function.
-func Convert_v1_9_Int64Value_To_v1_10_Int64Value(in *Int64Value, out *v1_10.Int64Value, s conversion.Scope) error {
-	return autoConvert_v1_9_Int64Value_To_v1_10_Int64Value(in, out, s)
+// Convert_v1_9_Int64Value_To_v1_12_Int64Value is an autogenerated conversion function.
+func Convert_v1_9_Int64Value_To_v1_12_Int64Value(in *Int64Value, out *v1_12.Int64Value, s conversion.Scope) error {
+	return autoConvert_v1_9_Int64Value_To_v1_12_Int64Value(in, out, s)
 }
 
-func autoConvert_v1_10_Int64Value_To_v1_9_Int64Value(in *v1_10.Int64Value, out *Int64Value, s conversion.Scope) error {
+func autoConvert_v1_12_Int64Value_To_v1_9_Int64Value(in *v1_12.Int64Value, out *Int64Value, s conversion.Scope) error {
 	out.Value = in.Value
 	return nil
 }
 
-// Convert_v1_10_Int64Value_To_v1_9_Int64Value is an autogenerated conversion function.
-func Convert_v1_10_Int64Value_To_v1_9_Int64Value(in *v1_10.Int64Value, out *Int64Value, s conversion.Scope) error {
-	return autoConvert_v1_10_Int64Value_To_v1_9_Int64Value(in, out, s)
+// Convert_v1_12_Int64Value_To_v1_9_Int64Value is an autogenerated conversion function.
+func Convert_v1_12_Int64Value_To_v1_9_Int64Value(in *v1_12.Int64Value, out *Int64Value, s conversion.Scope) error {
+	return autoConvert_v1_12_Int64Value_To_v1_9_Int64Value(in, out, s)
 }
 
-func autoConvert_v1_9_KeyValue_To_v1_10_KeyValue(in *KeyValue, out *v1_10.KeyValue, s conversion.Scope) error {
+func autoConvert_v1_9_KeyValue_To_v1_12_KeyValue(in *KeyValue, out *v1_12.KeyValue, s conversion.Scope) error {
 	out.Key = in.Key
 	out.Value = in.Value
 	return nil
 }
 
-// Convert_v1_9_KeyValue_To_v1_10_KeyValue is an autogenerated conversion function.
-func Convert_v1_9_KeyValue_To_v1_10_KeyValue(in *KeyValue, out *v1_10.KeyValue, s conversion.Scope) error {
-	return autoConvert_v1_9_KeyValue_To_v1_10_KeyValue(in, out, s)
+// Convert_v1_9_KeyValue_To_v1_12_KeyValue is an autogenerated conversion function.
+func Convert_v1_9_KeyValue_To_v1_12_KeyValue(in *KeyValue, out *v1_12.KeyValue, s conversion.Scope) error {
+	return autoConvert_v1_9_KeyValue_To_v1_12_KeyValue(in, out, s)
 }
 
-func autoConvert_v1_10_KeyValue_To_v1_9_KeyValue(in *v1_10.KeyValue, out *KeyValue, s conversion.Scope) error {
+func autoConvert_v1_12_KeyValue_To_v1_9_KeyValue(in *v1_12.KeyValue, out *KeyValue, s conversion.Scope) error {
 	out.Key = in.Key
 	out.Value = in.Value
 	return nil
 }
 
-// Convert_v1_10_KeyValue_To_v1_9_KeyValue is an autogenerated conversion function.
-func Convert_v1_10_KeyValue_To_v1_9_KeyValue(in *v1_10.KeyValue, out *KeyValue, s conversion.Scope) error {
-	return autoConvert_v1_10_KeyValue_To_v1_9_KeyValue(in, out, s)
+// Convert_v1_12_KeyValue_To_v1_9_KeyValue is an autogenerated conversion function.
+func Convert_v1_12_KeyValue_To_v1_9_KeyValue(in *v1_12.KeyValue, out *KeyValue, s conversion.Scope) error {
+	return autoConvert_v1_12_KeyValue_To_v1_9_KeyValue(in, out, s)
 }
 
-func autoConvert_v1_9_LinuxContainerConfig_To_v1_10_LinuxContainerConfig(in *LinuxContainerConfig, out *v1_10.LinuxContainerConfig, s conversion.Scope) error {
+func autoConvert_v1_9_LinuxContainerConfig_To_v1_12_LinuxContainerConfig(in *LinuxContainerConfig, out *v1_12.LinuxContainerConfig, s conversion.Scope) error {
 	if in.Resources != nil {
 		in, out := &in.Resources, &out.Resources
-		*out = new(v1_10.LinuxContainerResources)
-		if err := Convert_v1_9_LinuxContainerResources_To_v1_10_LinuxContainerResources(*in, *out, s); err != nil {
+		*out = new(v1_12.LinuxContainerResources)
+		if err := Convert_v1_9_LinuxContainerResources_To_v1_12_LinuxContainerResources(*in, *out, s); err != nil {
 			return err
 		}
 	} else {
@@ -1613,8 +1613,8 @@ func autoConvert_v1_9_LinuxContainerConfig_To_v1_10_LinuxContainerConfig(in *Lin
 	}
 	if in.SecurityContext != nil {
 		in, out := &in.SecurityContext, &out.SecurityContext
-		*out = new(v1_10.LinuxContainerSecurityContext)
-		if err := Convert_v1_9_LinuxContainerSecurityContext_To_v1_10_LinuxContainerSecurityContext(*in, *out, s); err != nil {
+		*out = new(v1_12.LinuxContainerSecurityContext)
+		if err := Convert_v1_9_LinuxContainerSecurityContext_To_v1_12_LinuxContainerSecurityContext(*in, *out, s); err != nil {
 			return err
 		}
 	} else {
@@ -1623,16 +1623,16 @@ func autoConvert_v1_9_LinuxContainerConfig_To_v1_10_LinuxContainerConfig(in *Lin
 	return nil
 }
 
-// Convert_v1_9_LinuxContainerConfig_To_v1_10_LinuxContainerConfig is an autogenerated conversion function.
-func Convert_v1_9_LinuxContainerConfig_To_v1_10_LinuxContainerConfig(in *LinuxContainerConfig, out *v1_10.LinuxContainerConfig, s conversion.Scope) error {
-	return autoConvert_v1_9_LinuxContainerConfig_To_v1_10_LinuxContainerConfig(in, out, s)
+// Convert_v1_9_LinuxContainerConfig_To_v1_12_LinuxContainerConfig is an autogenerated conversion function.
+func Convert_v1_9_LinuxContainerConfig_To_v1_12_LinuxContainerConfig(in *LinuxContainerConfig, out *v1_12.LinuxContainerConfig, s conversion.Scope) error {
+	return autoConvert_v1_9_LinuxContainerConfig_To_v1_12_LinuxContainerConfig(in, out, s)
 }
 
-func autoConvert_v1_10_LinuxContainerConfig_To_v1_9_LinuxContainerConfig(in *v1_10.LinuxContainerConfig, out *LinuxContainerConfig, s conversion.Scope) error {
+func autoConvert_v1_12_LinuxContainerConfig_To_v1_9_LinuxContainerConfig(in *v1_12.LinuxContainerConfig, out *LinuxContainerConfig, s conversion.Scope) error {
 	if in.Resources != nil {
 		in, out := &in.Resources, &out.Resources
 		*out = new(LinuxContainerResources)
-		if err := Convert_v1_10_LinuxContainerResources_To_v1_9_LinuxContainerResources(*in, *out, s); err != nil {
+		if err := Convert_v1_12_LinuxContainerResources_To_v1_9_LinuxContainerResources(*in, *out, s); err != nil {
 			return err
 		}
 	} else {
@@ -1641,7 +1641,7 @@ func autoConvert_v1_10_LinuxContainerConfig_To_v1_9_LinuxContainerConfig(in *v1_
 	if in.SecurityContext != nil {
 		in, out := &in.SecurityContext, &out.SecurityContext
 		*out = new(LinuxContainerSecurityContext)
-		if err := Convert_v1_10_LinuxContainerSecurityContext_To_v1_9_LinuxContainerSecurityContext(*in, *out, s); err != nil {
+		if err := Convert_v1_12_LinuxContainerSecurityContext_To_v1_9_LinuxContainerSecurityContext(*in, *out, s); err != nil {
 			return err
 		}
 	} else {
@@ -1650,12 +1650,12 @@ func autoConvert_v1_10_LinuxContainerConfig_To_v1_9_LinuxContainerConfig(in *v1_
 	return nil
 }
 
-// Convert_v1_10_LinuxContainerConfig_To_v1_9_LinuxContainerConfig is an autogenerated conversion function.
-func Convert_v1_10_LinuxContainerConfig_To_v1_9_LinuxContainerConfig(in *v1_10.LinuxContainerConfig, out *LinuxContainerConfig, s conversion.Scope) error {
-	return autoConvert_v1_10_LinuxContainerConfig_To_v1_9_LinuxContainerConfig(in, out, s)
+// Convert_v1_12_LinuxContainerConfig_To_v1_9_LinuxContainerConfig is an autogenerated conversion function.
+func Convert_v1_12_LinuxContainerConfig_To_v1_9_LinuxContainerConfig(in *v1_12.LinuxContainerConfig, out *LinuxContainerConfig, s conversion.Scope) error {
+	return autoConvert_v1_12_LinuxContainerConfig_To_v1_9_LinuxContainerConfig(in, out, s)
 }
 
-func autoConvert_v1_9_LinuxContainerResources_To_v1_10_LinuxContainerResources(in *LinuxContainerResources, out *v1_10.LinuxContainerResources, s conversion.Scope) error {
+func autoConvert_v1_9_LinuxContainerResources_To_v1_12_LinuxContainerResources(in *LinuxContainerResources, out *v1_12.LinuxContainerResources, s conversion.Scope) error {
 	out.CpuPeriod = in.CpuPeriod
 	out.CpuQuota = in.CpuQuota
 	out.CpuShares = in.CpuShares
@@ -1666,12 +1666,12 @@ func autoConvert_v1_9_LinuxContainerResources_To_v1_10_LinuxContainerResources(i
 	return nil
 }
 
-// Convert_v1_9_LinuxContainerResources_To_v1_10_LinuxContainerResources is an autogenerated conversion function.
-func Convert_v1_9_LinuxContainerResources_To_v1_10_LinuxContainerResources(in *LinuxContainerResources, out *v1_10.LinuxContainerResources, s conversion.Scope) error {
-	return autoConvert_v1_9_LinuxContainerResources_To_v1_10_LinuxContainerResources(in, out, s)
+// Convert_v1_9_LinuxContainerResources_To_v1_12_LinuxContainerResources is an autogenerated conversion function.
+func Convert_v1_9_LinuxContainerResources_To_v1_12_LinuxContainerResources(in *LinuxContainerResources, out *v1_12.LinuxContainerResources, s conversion.Scope) error {
+	return autoConvert_v1_9_LinuxContainerResources_To_v1_12_LinuxContainerResources(in, out, s)
 }
 
-func autoConvert_v1_10_LinuxContainerResources_To_v1_9_LinuxContainerResources(in *v1_10.LinuxContainerResources, out *LinuxContainerResources, s conversion.Scope) error {
+func autoConvert_v1_12_LinuxContainerResources_To_v1_9_LinuxContainerResources(in *v1_12.LinuxContainerResources, out *LinuxContainerResources, s conversion.Scope) error {
 	out.CpuPeriod = in.CpuPeriod
 	out.CpuQuota = in.CpuQuota
 	out.CpuShares = in.CpuShares
@@ -1682,16 +1682,16 @@ func autoConvert_v1_10_LinuxContainerResources_To_v1_9_LinuxContainerResources(i
 	return nil
 }
 
-// Convert_v1_10_LinuxContainerResources_To_v1_9_LinuxContainerResources is an autogenerated conversion function.
-func Convert_v1_10_LinuxContainerResources_To_v1_9_LinuxContainerResources(in *v1_10.LinuxContainerResources, out *LinuxContainerResources, s conversion.Scope) error {
-	return autoConvert_v1_10_LinuxContainerResources_To_v1_9_LinuxContainerResources(in, out, s)
+// Convert_v1_12_LinuxContainerResources_To_v1_9_LinuxContainerResources is an autogenerated conversion function.
+func Convert_v1_12_LinuxContainerResources_To_v1_9_LinuxContainerResources(in *v1_12.LinuxContainerResources, out *LinuxContainerResources, s conversion.Scope) error {
+	return autoConvert_v1_12_LinuxContainerResources_To_v1_9_LinuxContainerResources(in, out, s)
 }
 
-func autoConvert_v1_9_LinuxContainerSecurityContext_To_v1_10_LinuxContainerSecurityContext(in *LinuxContainerSecurityContext, out *v1_10.LinuxContainerSecurityContext, s conversion.Scope) error {
+func autoConvert_v1_9_LinuxContainerSecurityContext_To_v1_12_LinuxContainerSecurityContext(in *LinuxContainerSecurityContext, out *v1_12.LinuxContainerSecurityContext, s conversion.Scope) error {
 	if in.Capabilities != nil {
 		in, out := &in.Capabilities, &out.Capabilities
-		*out = new(v1_10.Capability)
-		if err := Convert_v1_9_Capability_To_v1_10_Capability(*in, *out, s); err != nil {
+		*out = new(v1_12.Capability)
+		if err := Convert_v1_9_Capability_To_v1_12_Capability(*in, *out, s); err != nil {
 			return err
 		}
 	} else {
@@ -1700,8 +1700,8 @@ func autoConvert_v1_9_LinuxContainerSecurityContext_To_v1_10_LinuxContainerSecur
 	out.Privileged = in.Privileged
 	if in.NamespaceOptions != nil {
 		in, out := &in.NamespaceOptions, &out.NamespaceOptions
-		*out = new(v1_10.NamespaceOption)
-		if err := Convert_v1_9_NamespaceOption_To_v1_10_NamespaceOption(*in, *out, s); err != nil {
+		*out = new(v1_12.NamespaceOption)
+		if err := Convert_v1_9_NamespaceOption_To_v1_12_NamespaceOption(*in, *out, s); err != nil {
 			return err
 		}
 	} else {
@@ -1709,8 +1709,8 @@ func autoConvert_v1_9_LinuxContainerSecurityContext_To_v1_10_LinuxContainerSecur
 	}
 	if in.SelinuxOptions != nil {
 		in, out := &in.SelinuxOptions, &out.SelinuxOptions
-		*out = new(v1_10.SELinuxOption)
-		if err := Convert_v1_9_SELinuxOption_To_v1_10_SELinuxOption(*in, *out, s); err != nil {
+		*out = new(v1_12.SELinuxOption)
+		if err := Convert_v1_9_SELinuxOption_To_v1_12_SELinuxOption(*in, *out, s); err != nil {
 			return err
 		}
 	} else {
@@ -1718,8 +1718,8 @@ func autoConvert_v1_9_LinuxContainerSecurityContext_To_v1_10_LinuxContainerSecur
 	}
 	if in.RunAsUser != nil {
 		in, out := &in.RunAsUser, &out.RunAsUser
-		*out = new(v1_10.Int64Value)
-		if err := Convert_v1_9_Int64Value_To_v1_10_Int64Value(*in, *out, s); err != nil {
+		*out = new(v1_12.Int64Value)
+		if err := Convert_v1_9_Int64Value_To_v1_12_Int64Value(*in, *out, s); err != nil {
 			return err
 		}
 	} else {
@@ -1734,16 +1734,16 @@ func autoConvert_v1_9_LinuxContainerSecurityContext_To_v1_10_LinuxContainerSecur
 	return nil
 }
 
-// Convert_v1_9_LinuxContainerSecurityContext_To_v1_10_LinuxContainerSecurityContext is an autogenerated conversion function.
-func Convert_v1_9_LinuxContainerSecurityContext_To_v1_10_LinuxContainerSecurityContext(in *LinuxContainerSecurityContext, out *v1_10.LinuxContainerSecurityContext, s conversion.Scope) error {
-	return autoConvert_v1_9_LinuxContainerSecurityContext_To_v1_10_LinuxContainerSecurityContext(in, out, s)
+// Convert_v1_9_LinuxContainerSecurityContext_To_v1_12_LinuxContainerSecurityContext is an autogenerated conversion function.
+func Convert_v1_9_LinuxContainerSecurityContext_To_v1_12_LinuxContainerSecurityContext(in *LinuxContainerSecurityContext, out *v1_12.LinuxContainerSecurityContext, s conversion.Scope) error {
+	return autoConvert_v1_9_LinuxContainerSecurityContext_To_v1_12_LinuxContainerSecurityContext(in, out, s)
 }
 
-func autoConvert_v1_10_LinuxContainerSecurityContext_To_v1_9_LinuxContainerSecurityContext(in *v1_10.LinuxContainerSecurityContext, out *LinuxContainerSecurityContext, s conversion.Scope) error {
+func autoConvert_v1_12_LinuxContainerSecurityContext_To_v1_9_LinuxContainerSecurityContext(in *v1_12.LinuxContainerSecurityContext, out *LinuxContainerSecurityContext, s conversion.Scope) error {
 	if in.Capabilities != nil {
 		in, out := &in.Capabilities, &out.Capabilities
 		*out = new(Capability)
-		if err := Convert_v1_10_Capability_To_v1_9_Capability(*in, *out, s); err != nil {
+		if err := Convert_v1_12_Capability_To_v1_9_Capability(*in, *out, s); err != nil {
 			return err
 		}
 	} else {
@@ -1753,7 +1753,7 @@ func autoConvert_v1_10_LinuxContainerSecurityContext_To_v1_9_LinuxContainerSecur
 	if in.NamespaceOptions != nil {
 		in, out := &in.NamespaceOptions, &out.NamespaceOptions
 		*out = new(NamespaceOption)
-		if err := Convert_v1_10_NamespaceOption_To_v1_9_NamespaceOption(*in, *out, s); err != nil {
+		if err := Convert_v1_12_NamespaceOption_To_v1_9_NamespaceOption(*in, *out, s); err != nil {
 			return err
 		}
 	} else {
@@ -1762,7 +1762,7 @@ func autoConvert_v1_10_LinuxContainerSecurityContext_To_v1_9_LinuxContainerSecur
 	if in.SelinuxOptions != nil {
 		in, out := &in.SelinuxOptions, &out.SelinuxOptions
 		*out = new(SELinuxOption)
-		if err := Convert_v1_10_SELinuxOption_To_v1_9_SELinuxOption(*in, *out, s); err != nil {
+		if err := Convert_v1_12_SELinuxOption_To_v1_9_SELinuxOption(*in, *out, s); err != nil {
 			return err
 		}
 	} else {
@@ -1771,7 +1771,7 @@ func autoConvert_v1_10_LinuxContainerSecurityContext_To_v1_9_LinuxContainerSecur
 	if in.RunAsUser != nil {
 		in, out := &in.RunAsUser, &out.RunAsUser
 		*out = new(Int64Value)
-		if err := Convert_v1_10_Int64Value_To_v1_9_Int64Value(*in, *out, s); err != nil {
+		if err := Convert_v1_12_Int64Value_To_v1_9_Int64Value(*in, *out, s); err != nil {
 			return err
 		}
 	} else {
@@ -1784,15 +1784,17 @@ func autoConvert_v1_10_LinuxContainerSecurityContext_To_v1_9_LinuxContainerSecur
 	out.ApparmorProfile = in.ApparmorProfile
 	out.SeccompProfilePath = in.SeccompProfilePath
 	out.NoNewPrivs = in.NoNewPrivs
+	// WARNING: in.MaskedPaths requires manual conversion: does not exist in peer-type
+	// WARNING: in.ReadonlyPaths requires manual conversion: does not exist in peer-type
 	return nil
 }
 
-func autoConvert_v1_9_LinuxPodSandboxConfig_To_v1_10_LinuxPodSandboxConfig(in *LinuxPodSandboxConfig, out *v1_10.LinuxPodSandboxConfig, s conversion.Scope) error {
+func autoConvert_v1_9_LinuxPodSandboxConfig_To_v1_12_LinuxPodSandboxConfig(in *LinuxPodSandboxConfig, out *v1_12.LinuxPodSandboxConfig, s conversion.Scope) error {
 	out.CgroupParent = in.CgroupParent
 	if in.SecurityContext != nil {
 		in, out := &in.SecurityContext, &out.SecurityContext
-		*out = new(v1_10.LinuxSandboxSecurityContext)
-		if err := Convert_v1_9_LinuxSandboxSecurityContext_To_v1_10_LinuxSandboxSecurityContext(*in, *out, s); err != nil {
+		*out = new(v1_12.LinuxSandboxSecurityContext)
+		if err := Convert_v1_9_LinuxSandboxSecurityContext_To_v1_12_LinuxSandboxSecurityContext(*in, *out, s); err != nil {
 			return err
 		}
 	} else {
@@ -1802,17 +1804,17 @@ func autoConvert_v1_9_LinuxPodSandboxConfig_To_v1_10_LinuxPodSandboxConfig(in *L
 	return nil
 }
 
-// Convert_v1_9_LinuxPodSandboxConfig_To_v1_10_LinuxPodSandboxConfig is an autogenerated conversion function.
-func Convert_v1_9_LinuxPodSandboxConfig_To_v1_10_LinuxPodSandboxConfig(in *LinuxPodSandboxConfig, out *v1_10.LinuxPodSandboxConfig, s conversion.Scope) error {
-	return autoConvert_v1_9_LinuxPodSandboxConfig_To_v1_10_LinuxPodSandboxConfig(in, out, s)
+// Convert_v1_9_LinuxPodSandboxConfig_To_v1_12_LinuxPodSandboxConfig is an autogenerated conversion function.
+func Convert_v1_9_LinuxPodSandboxConfig_To_v1_12_LinuxPodSandboxConfig(in *LinuxPodSandboxConfig, out *v1_12.LinuxPodSandboxConfig, s conversion.Scope) error {
+	return autoConvert_v1_9_LinuxPodSandboxConfig_To_v1_12_LinuxPodSandboxConfig(in, out, s)
 }
 
-func autoConvert_v1_10_LinuxPodSandboxConfig_To_v1_9_LinuxPodSandboxConfig(in *v1_10.LinuxPodSandboxConfig, out *LinuxPodSandboxConfig, s conversion.Scope) error {
+func autoConvert_v1_12_LinuxPodSandboxConfig_To_v1_9_LinuxPodSandboxConfig(in *v1_12.LinuxPodSandboxConfig, out *LinuxPodSandboxConfig, s conversion.Scope) error {
 	out.CgroupParent = in.CgroupParent
 	if in.SecurityContext != nil {
 		in, out := &in.SecurityContext, &out.SecurityContext
 		*out = new(LinuxSandboxSecurityContext)
-		if err := Convert_v1_10_LinuxSandboxSecurityContext_To_v1_9_LinuxSandboxSecurityContext(*in, *out, s); err != nil {
+		if err := Convert_v1_12_LinuxSandboxSecurityContext_To_v1_9_LinuxSandboxSecurityContext(*in, *out, s); err != nil {
 			return err
 		}
 	} else {
@@ -1822,16 +1824,16 @@ func autoConvert_v1_10_LinuxPodSandboxConfig_To_v1_9_LinuxPodSandboxConfig(in *v
 	return nil
 }
 
-// Convert_v1_10_LinuxPodSandboxConfig_To_v1_9_LinuxPodSandboxConfig is an autogenerated conversion function.
-func Convert_v1_10_LinuxPodSandboxConfig_To_v1_9_LinuxPodSandboxConfig(in *v1_10.LinuxPodSandboxConfig, out *LinuxPodSandboxConfig, s conversion.Scope) error {
-	return autoConvert_v1_10_LinuxPodSandboxConfig_To_v1_9_LinuxPodSandboxConfig(in, out, s)
+// Convert_v1_12_LinuxPodSandboxConfig_To_v1_9_LinuxPodSandboxConfig is an autogenerated conversion function.
+func Convert_v1_12_LinuxPodSandboxConfig_To_v1_9_LinuxPodSandboxConfig(in *v1_12.LinuxPodSandboxConfig, out *LinuxPodSandboxConfig, s conversion.Scope) error {
+	return autoConvert_v1_12_LinuxPodSandboxConfig_To_v1_9_LinuxPodSandboxConfig(in, out, s)
 }
 
-func autoConvert_v1_9_LinuxPodSandboxStatus_To_v1_10_LinuxPodSandboxStatus(in *LinuxPodSandboxStatus, out *v1_10.LinuxPodSandboxStatus, s conversion.Scope) error {
+func autoConvert_v1_9_LinuxPodSandboxStatus_To_v1_12_LinuxPodSandboxStatus(in *LinuxPodSandboxStatus, out *v1_12.LinuxPodSandboxStatus, s conversion.Scope) error {
 	if in.Namespaces != nil {
 		in, out := &in.Namespaces, &out.Namespaces
-		*out = new(v1_10.Namespace)
-		if err := Convert_v1_9_Namespace_To_v1_10_Namespace(*in, *out, s); err != nil {
+		*out = new(v1_12.Namespace)
+		if err := Convert_v1_9_Namespace_To_v1_12_Namespace(*in, *out, s); err != nil {
 			return err
 		}
 	} else {
@@ -1840,16 +1842,16 @@ func autoConvert_v1_9_LinuxPodSandboxStatus_To_v1_10_LinuxPodSandboxStatus(in *L
 	return nil
 }
 
-// Convert_v1_9_LinuxPodSandboxStatus_To_v1_10_LinuxPodSandboxStatus is an autogenerated conversion function.
-func Convert_v1_9_LinuxPodSandboxStatus_To_v1_10_LinuxPodSandboxStatus(in *LinuxPodSandboxStatus, out *v1_10.LinuxPodSandboxStatus, s conversion.Scope) error {
-	return autoConvert_v1_9_LinuxPodSandboxStatus_To_v1_10_LinuxPodSandboxStatus(in, out, s)
+// Convert_v1_9_LinuxPodSandboxStatus_To_v1_12_LinuxPodSandboxStatus is an autogenerated conversion function.
+func Convert_v1_9_LinuxPodSandboxStatus_To_v1_12_LinuxPodSandboxStatus(in *LinuxPodSandboxStatus, out *v1_12.LinuxPodSandboxStatus, s conversion.Scope) error {
+	return autoConvert_v1_9_LinuxPodSandboxStatus_To_v1_12_LinuxPodSandboxStatus(in, out, s)
 }
 
-func autoConvert_v1_10_LinuxPodSandboxStatus_To_v1_9_LinuxPodSandboxStatus(in *v1_10.LinuxPodSandboxStatus, out *LinuxPodSandboxStatus, s conversion.Scope) error {
+func autoConvert_v1_12_LinuxPodSandboxStatus_To_v1_9_LinuxPodSandboxStatus(in *v1_12.LinuxPodSandboxStatus, out *LinuxPodSandboxStatus, s conversion.Scope) error {
 	if in.Namespaces != nil {
 		in, out := &in.Namespaces, &out.Namespaces
 		*out = new(Namespace)
-		if err := Convert_v1_10_Namespace_To_v1_9_Namespace(*in, *out, s); err != nil {
+		if err := Convert_v1_12_Namespace_To_v1_9_Namespace(*in, *out, s); err != nil {
 			return err
 		}
 	} else {
@@ -1858,16 +1860,16 @@ func autoConvert_v1_10_LinuxPodSandboxStatus_To_v1_9_LinuxPodSandboxStatus(in *v
 	return nil
 }
 
-// Convert_v1_10_LinuxPodSandboxStatus_To_v1_9_LinuxPodSandboxStatus is an autogenerated conversion function.
-func Convert_v1_10_LinuxPodSandboxStatus_To_v1_9_LinuxPodSandboxStatus(in *v1_10.LinuxPodSandboxStatus, out *LinuxPodSandboxStatus, s conversion.Scope) error {
-	return autoConvert_v1_10_LinuxPodSandboxStatus_To_v1_9_LinuxPodSandboxStatus(in, out, s)
+// Convert_v1_12_LinuxPodSandboxStatus_To_v1_9_LinuxPodSandboxStatus is an autogenerated conversion function.
+func Convert_v1_12_LinuxPodSandboxStatus_To_v1_9_LinuxPodSandboxStatus(in *v1_12.LinuxPodSandboxStatus, out *LinuxPodSandboxStatus, s conversion.Scope) error {
+	return autoConvert_v1_12_LinuxPodSandboxStatus_To_v1_9_LinuxPodSandboxStatus(in, out, s)
 }
 
-func autoConvert_v1_9_LinuxSandboxSecurityContext_To_v1_10_LinuxSandboxSecurityContext(in *LinuxSandboxSecurityContext, out *v1_10.LinuxSandboxSecurityContext, s conversion.Scope) error {
+func autoConvert_v1_9_LinuxSandboxSecurityContext_To_v1_12_LinuxSandboxSecurityContext(in *LinuxSandboxSecurityContext, out *v1_12.LinuxSandboxSecurityContext, s conversion.Scope) error {
 	if in.NamespaceOptions != nil {
 		in, out := &in.NamespaceOptions, &out.NamespaceOptions
-		*out = new(v1_10.NamespaceOption)
-		if err := Convert_v1_9_NamespaceOption_To_v1_10_NamespaceOption(*in, *out, s); err != nil {
+		*out = new(v1_12.NamespaceOption)
+		if err := Convert_v1_9_NamespaceOption_To_v1_12_NamespaceOption(*in, *out, s); err != nil {
 			return err
 		}
 	} else {
@@ -1875,8 +1877,8 @@ func autoConvert_v1_9_LinuxSandboxSecurityContext_To_v1_10_LinuxSandboxSecurityC
 	}
 	if in.SelinuxOptions != nil {
 		in, out := &in.SelinuxOptions, &out.SelinuxOptions
-		*out = new(v1_10.SELinuxOption)
-		if err := Convert_v1_9_SELinuxOption_To_v1_10_SELinuxOption(*in, *out, s); err != nil {
+		*out = new(v1_12.SELinuxOption)
+		if err := Convert_v1_9_SELinuxOption_To_v1_12_SELinuxOption(*in, *out, s); err != nil {
 			return err
 		}
 	} else {
@@ -1884,8 +1886,8 @@ func autoConvert_v1_9_LinuxSandboxSecurityContext_To_v1_10_LinuxSandboxSecurityC
 	}
 	if in.RunAsUser != nil {
 		in, out := &in.RunAsUser, &out.RunAsUser
-		*out = new(v1_10.Int64Value)
-		if err := Convert_v1_9_Int64Value_To_v1_10_Int64Value(*in, *out, s); err != nil {
+		*out = new(v1_12.Int64Value)
+		if err := Convert_v1_9_Int64Value_To_v1_12_Int64Value(*in, *out, s); err != nil {
 			return err
 		}
 	} else {
@@ -1898,16 +1900,16 @@ func autoConvert_v1_9_LinuxSandboxSecurityContext_To_v1_10_LinuxSandboxSecurityC
 	return nil
 }
 
-// Convert_v1_9_LinuxSandboxSecurityContext_To_v1_10_LinuxSandboxSecurityContext is an autogenerated conversion function.
-func Convert_v1_9_LinuxSandboxSecurityContext_To_v1_10_LinuxSandboxSecurityContext(in *LinuxSandboxSecurityContext, out *v1_10.LinuxSandboxSecurityContext, s conversion.Scope) error {
-	return autoConvert_v1_9_LinuxSandboxSecurityContext_To_v1_10_LinuxSandboxSecurityContext(in, out, s)
+// Convert_v1_9_LinuxSandboxSecurityContext_To_v1_12_LinuxSandboxSecurityContext is an autogenerated conversion function.
+func Convert_v1_9_LinuxSandboxSecurityContext_To_v1_12_LinuxSandboxSecurityContext(in *LinuxSandboxSecurityContext, out *v1_12.LinuxSandboxSecurityContext, s conversion.Scope) error {
+	return autoConvert_v1_9_LinuxSandboxSecurityContext_To_v1_12_LinuxSandboxSecurityContext(in, out, s)
 }
 
-func autoConvert_v1_10_LinuxSandboxSecurityContext_To_v1_9_LinuxSandboxSecurityContext(in *v1_10.LinuxSandboxSecurityContext, out *LinuxSandboxSecurityContext, s conversion.Scope) error {
+func autoConvert_v1_12_LinuxSandboxSecurityContext_To_v1_9_LinuxSandboxSecurityContext(in *v1_12.LinuxSandboxSecurityContext, out *LinuxSandboxSecurityContext, s conversion.Scope) error {
 	if in.NamespaceOptions != nil {
 		in, out := &in.NamespaceOptions, &out.NamespaceOptions
 		*out = new(NamespaceOption)
-		if err := Convert_v1_10_NamespaceOption_To_v1_9_NamespaceOption(*in, *out, s); err != nil {
+		if err := Convert_v1_12_NamespaceOption_To_v1_9_NamespaceOption(*in, *out, s); err != nil {
 			return err
 		}
 	} else {
@@ -1916,7 +1918,7 @@ func autoConvert_v1_10_LinuxSandboxSecurityContext_To_v1_9_LinuxSandboxSecurityC
 	if in.SelinuxOptions != nil {
 		in, out := &in.SelinuxOptions, &out.SelinuxOptions
 		*out = new(SELinuxOption)
-		if err := Convert_v1_10_SELinuxOption_To_v1_9_SELinuxOption(*in, *out, s); err != nil {
+		if err := Convert_v1_12_SELinuxOption_To_v1_9_SELinuxOption(*in, *out, s); err != nil {
 			return err
 		}
 	} else {
@@ -1925,7 +1927,7 @@ func autoConvert_v1_10_LinuxSandboxSecurityContext_To_v1_9_LinuxSandboxSecurityC
 	if in.RunAsUser != nil {
 		in, out := &in.RunAsUser, &out.RunAsUser
 		*out = new(Int64Value)
-		if err := Convert_v1_10_Int64Value_To_v1_9_Int64Value(*in, *out, s); err != nil {
+		if err := Convert_v1_12_Int64Value_To_v1_9_Int64Value(*in, *out, s); err != nil {
 			return err
 		}
 	} else {
@@ -1939,11 +1941,11 @@ func autoConvert_v1_10_LinuxSandboxSecurityContext_To_v1_9_LinuxSandboxSecurityC
 	return nil
 }
 
-func autoConvert_v1_9_ListContainerStatsRequest_To_v1_10_ListContainerStatsRequest(in *ListContainerStatsRequest, out *v1_10.ListContainerStatsRequest, s conversion.Scope) error {
+func autoConvert_v1_9_ListContainerStatsRequest_To_v1_12_ListContainerStatsRequest(in *ListContainerStatsRequest, out *v1_12.ListContainerStatsRequest, s conversion.Scope) error {
 	if in.Filter != nil {
 		in, out := &in.Filter, &out.Filter
-		*out = new(v1_10.ContainerStatsFilter)
-		if err := Convert_v1_9_ContainerStatsFilter_To_v1_10_ContainerStatsFilter(*in, *out, s); err != nil {
+		*out = new(v1_12.ContainerStatsFilter)
+		if err := Convert_v1_9_ContainerStatsFilter_To_v1_12_ContainerStatsFilter(*in, *out, s); err != nil {
 			return err
 		}
 	} else {
@@ -1952,16 +1954,16 @@ func autoConvert_v1_9_ListContainerStatsRequest_To_v1_10_ListContainerStatsReque
 	return nil
 }
 
-// Convert_v1_9_ListContainerStatsRequest_To_v1_10_ListContainerStatsRequest is an autogenerated conversion function.
-func Convert_v1_9_ListContainerStatsRequest_To_v1_10_ListContainerStatsRequest(in *ListContainerStatsRequest, out *v1_10.ListContainerStatsRequest, s conversion.Scope) error {
-	return autoConvert_v1_9_ListContainerStatsRequest_To_v1_10_ListContainerStatsRequest(in, out, s)
+// Convert_v1_9_ListContainerStatsRequest_To_v1_12_ListContainerStatsRequest is an autogenerated conversion function.
+func Convert_v1_9_ListContainerStatsRequest_To_v1_12_ListContainerStatsRequest(in *ListContainerStatsRequest, out *v1_12.ListContainerStatsRequest, s conversion.Scope) error {
+	return autoConvert_v1_9_ListContainerStatsRequest_To_v1_12_ListContainerStatsRequest(in, out, s)
 }
 
-func autoConvert_v1_10_ListContainerStatsRequest_To_v1_9_ListContainerStatsRequest(in *v1_10.ListContainerStatsRequest, out *ListContainerStatsRequest, s conversion.Scope) error {
+func autoConvert_v1_12_ListContainerStatsRequest_To_v1_9_ListContainerStatsRequest(in *v1_12.ListContainerStatsRequest, out *ListContainerStatsRequest, s conversion.Scope) error {
 	if in.Filter != nil {
 		in, out := &in.Filter, &out.Filter
 		*out = new(ContainerStatsFilter)
-		if err := Convert_v1_10_ContainerStatsFilter_To_v1_9_ContainerStatsFilter(*in, *out, s); err != nil {
+		if err := Convert_v1_12_ContainerStatsFilter_To_v1_9_ContainerStatsFilter(*in, *out, s); err != nil {
 			return err
 		}
 	} else {
@@ -1970,15 +1972,15 @@ func autoConvert_v1_10_ListContainerStatsRequest_To_v1_9_ListContainerStatsReque
 	return nil
 }
 
-// Convert_v1_10_ListContainerStatsRequest_To_v1_9_ListContainerStatsRequest is an autogenerated conversion function.
-func Convert_v1_10_ListContainerStatsRequest_To_v1_9_ListContainerStatsRequest(in *v1_10.ListContainerStatsRequest, out *ListContainerStatsRequest, s conversion.Scope) error {
-	return autoConvert_v1_10_ListContainerStatsRequest_To_v1_9_ListContainerStatsRequest(in, out, s)
+// Convert_v1_12_ListContainerStatsRequest_To_v1_9_ListContainerStatsRequest is an autogenerated conversion function.
+func Convert_v1_12_ListContainerStatsRequest_To_v1_9_ListContainerStatsRequest(in *v1_12.ListContainerStatsRequest, out *ListContainerStatsRequest, s conversion.Scope) error {
+	return autoConvert_v1_12_ListContainerStatsRequest_To_v1_9_ListContainerStatsRequest(in, out, s)
 }
 
-func autoConvert_v1_9_ListContainerStatsResponse_To_v1_10_ListContainerStatsResponse(in *ListContainerStatsResponse, out *v1_10.ListContainerStatsResponse, s conversion.Scope) error {
+func autoConvert_v1_9_ListContainerStatsResponse_To_v1_12_ListContainerStatsResponse(in *ListContainerStatsResponse, out *v1_12.ListContainerStatsResponse, s conversion.Scope) error {
 	if in.Stats != nil {
 		in, out := &in.Stats, &out.Stats
-		*out = make([]*v1_10.ContainerStats, len(*in))
+		*out = make([]*v1_12.ContainerStats, len(*in))
 		for i := range *in {
 			// TODO: Inefficient conversion - can we improve it?
 			if err := s.Convert(&(*in)[i], &(*out)[i], 0); err != nil {
@@ -1991,12 +1993,12 @@ func autoConvert_v1_9_ListContainerStatsResponse_To_v1_10_ListContainerStatsResp
 	return nil
 }
 
-// Convert_v1_9_ListContainerStatsResponse_To_v1_10_ListContainerStatsResponse is an autogenerated conversion function.
-func Convert_v1_9_ListContainerStatsResponse_To_v1_10_ListContainerStatsResponse(in *ListContainerStatsResponse, out *v1_10.ListContainerStatsResponse, s conversion.Scope) error {
-	return autoConvert_v1_9_ListContainerStatsResponse_To_v1_10_ListContainerStatsResponse(in, out, s)
+// Convert_v1_9_ListContainerStatsResponse_To_v1_12_ListContainerStatsResponse is an autogenerated conversion function.
+func Convert_v1_9_ListContainerStatsResponse_To_v1_12_ListContainerStatsResponse(in *ListContainerStatsResponse, out *v1_12.ListContainerStatsResponse, s conversion.Scope) error {
+	return autoConvert_v1_9_ListContainerStatsResponse_To_v1_12_ListContainerStatsResponse(in, out, s)
 }
 
-func autoConvert_v1_10_ListContainerStatsResponse_To_v1_9_ListContainerStatsResponse(in *v1_10.ListContainerStatsResponse, out *ListContainerStatsResponse, s conversion.Scope) error {
+func autoConvert_v1_12_ListContainerStatsResponse_To_v1_9_ListContainerStatsResponse(in *v1_12.ListContainerStatsResponse, out *ListContainerStatsResponse, s conversion.Scope) error {
 	if in.Stats != nil {
 		in, out := &in.Stats, &out.Stats
 		*out = make([]*ContainerStats, len(*in))
@@ -2012,16 +2014,16 @@ func autoConvert_v1_10_ListContainerStatsResponse_To_v1_9_ListContainerStatsResp
 	return nil
 }
 
-// Convert_v1_10_ListContainerStatsResponse_To_v1_9_ListContainerStatsResponse is an autogenerated conversion function.
-func Convert_v1_10_ListContainerStatsResponse_To_v1_9_ListContainerStatsResponse(in *v1_10.ListContainerStatsResponse, out *ListContainerStatsResponse, s conversion.Scope) error {
-	return autoConvert_v1_10_ListContainerStatsResponse_To_v1_9_ListContainerStatsResponse(in, out, s)
+// Convert_v1_12_ListContainerStatsResponse_To_v1_9_ListContainerStatsResponse is an autogenerated conversion function.
+func Convert_v1_12_ListContainerStatsResponse_To_v1_9_ListContainerStatsResponse(in *v1_12.ListContainerStatsResponse, out *ListContainerStatsResponse, s conversion.Scope) error {
+	return autoConvert_v1_12_ListContainerStatsResponse_To_v1_9_ListContainerStatsResponse(in, out, s)
 }
 
-func autoConvert_v1_9_ListContainersRequest_To_v1_10_ListContainersRequest(in *ListContainersRequest, out *v1_10.ListContainersRequest, s conversion.Scope) error {
+func autoConvert_v1_9_ListContainersRequest_To_v1_12_ListContainersRequest(in *ListContainersRequest, out *v1_12.ListContainersRequest, s conversion.Scope) error {
 	if in.Filter != nil {
 		in, out := &in.Filter, &out.Filter
-		*out = new(v1_10.ContainerFilter)
-		if err := Convert_v1_9_ContainerFilter_To_v1_10_ContainerFilter(*in, *out, s); err != nil {
+		*out = new(v1_12.ContainerFilter)
+		if err := Convert_v1_9_ContainerFilter_To_v1_12_ContainerFilter(*in, *out, s); err != nil {
 			return err
 		}
 	} else {
@@ -2030,16 +2032,16 @@ func autoConvert_v1_9_ListContainersRequest_To_v1_10_ListContainersRequest(in *L
 	return nil
 }
 
-// Convert_v1_9_ListContainersRequest_To_v1_10_ListContainersRequest is an autogenerated conversion function.
-func Convert_v1_9_ListContainersRequest_To_v1_10_ListContainersRequest(in *ListContainersRequest, out *v1_10.ListContainersRequest, s conversion.Scope) error {
-	return autoConvert_v1_9_ListContainersRequest_To_v1_10_ListContainersRequest(in, out, s)
+// Convert_v1_9_ListContainersRequest_To_v1_12_ListContainersRequest is an autogenerated conversion function.
+func Convert_v1_9_ListContainersRequest_To_v1_12_ListContainersRequest(in *ListContainersRequest, out *v1_12.ListContainersRequest, s conversion.Scope) error {
+	return autoConvert_v1_9_ListContainersRequest_To_v1_12_ListContainersRequest(in, out, s)
 }
 
-func autoConvert_v1_10_ListContainersRequest_To_v1_9_ListContainersRequest(in *v1_10.ListContainersRequest, out *ListContainersRequest, s conversion.Scope) error {
+func autoConvert_v1_12_ListContainersRequest_To_v1_9_ListContainersRequest(in *v1_12.ListContainersRequest, out *ListContainersRequest, s conversion.Scope) error {
 	if in.Filter != nil {
 		in, out := &in.Filter, &out.Filter
 		*out = new(ContainerFilter)
-		if err := Convert_v1_10_ContainerFilter_To_v1_9_ContainerFilter(*in, *out, s); err != nil {
+		if err := Convert_v1_12_ContainerFilter_To_v1_9_ContainerFilter(*in, *out, s); err != nil {
 			return err
 		}
 	} else {
@@ -2048,15 +2050,15 @@ func autoConvert_v1_10_ListContainersRequest_To_v1_9_ListContainersRequest(in *v
 	return nil
 }
 
-// Convert_v1_10_ListContainersRequest_To_v1_9_ListContainersRequest is an autogenerated conversion function.
-func Convert_v1_10_ListContainersRequest_To_v1_9_ListContainersRequest(in *v1_10.ListContainersRequest, out *ListContainersRequest, s conversion.Scope) error {
-	return autoConvert_v1_10_ListContainersRequest_To_v1_9_ListContainersRequest(in, out, s)
+// Convert_v1_12_ListContainersRequest_To_v1_9_ListContainersRequest is an autogenerated conversion function.
+func Convert_v1_12_ListContainersRequest_To_v1_9_ListContainersRequest(in *v1_12.ListContainersRequest, out *ListContainersRequest, s conversion.Scope) error {
+	return autoConvert_v1_12_ListContainersRequest_To_v1_9_ListContainersRequest(in, out, s)
 }
 
-func autoConvert_v1_9_ListContainersResponse_To_v1_10_ListContainersResponse(in *ListContainersResponse, out *v1_10.ListContainersResponse, s conversion.Scope) error {
+func autoConvert_v1_9_ListContainersResponse_To_v1_12_ListContainersResponse(in *ListContainersResponse, out *v1_12.ListContainersResponse, s conversion.Scope) error {
 	if in.Containers != nil {
 		in, out := &in.Containers, &out.Containers
-		*out = make([]*v1_10.Container, len(*in))
+		*out = make([]*v1_12.Container, len(*in))
 		for i := range *in {
 			// TODO: Inefficient conversion - can we improve it?
 			if err := s.Convert(&(*in)[i], &(*out)[i], 0); err != nil {
@@ -2069,12 +2071,12 @@ func autoConvert_v1_9_ListContainersResponse_To_v1_10_ListContainersResponse(in 
 	return nil
 }
 
-// Convert_v1_9_ListContainersResponse_To_v1_10_ListContainersResponse is an autogenerated conversion function.
-func Convert_v1_9_ListContainersResponse_To_v1_10_ListContainersResponse(in *ListContainersResponse, out *v1_10.ListContainersResponse, s conversion.Scope) error {
-	return autoConvert_v1_9_ListContainersResponse_To_v1_10_ListContainersResponse(in, out, s)
+// Convert_v1_9_ListContainersResponse_To_v1_12_ListContainersResponse is an autogenerated conversion function.
+func Convert_v1_9_ListContainersResponse_To_v1_12_ListContainersResponse(in *ListContainersResponse, out *v1_12.ListContainersResponse, s conversion.Scope) error {
+	return autoConvert_v1_9_ListContainersResponse_To_v1_12_ListContainersResponse(in, out, s)
 }
 
-func autoConvert_v1_10_ListContainersResponse_To_v1_9_ListContainersResponse(in *v1_10.ListContainersResponse, out *ListContainersResponse, s conversion.Scope) error {
+func autoConvert_v1_12_ListContainersResponse_To_v1_9_ListContainersResponse(in *v1_12.ListContainersResponse, out *ListContainersResponse, s conversion.Scope) error {
 	if in.Containers != nil {
 		in, out := &in.Containers, &out.Containers
 		*out = make([]*Container, len(*in))
@@ -2090,16 +2092,16 @@ func autoConvert_v1_10_ListContainersResponse_To_v1_9_ListContainersResponse(in 
 	return nil
 }
 
-// Convert_v1_10_ListContainersResponse_To_v1_9_ListContainersResponse is an autogenerated conversion function.
-func Convert_v1_10_ListContainersResponse_To_v1_9_ListContainersResponse(in *v1_10.ListContainersResponse, out *ListContainersResponse, s conversion.Scope) error {
-	return autoConvert_v1_10_ListContainersResponse_To_v1_9_ListContainersResponse(in, out, s)
+// Convert_v1_12_ListContainersResponse_To_v1_9_ListContainersResponse is an autogenerated conversion function.
+func Convert_v1_12_ListContainersResponse_To_v1_9_ListContainersResponse(in *v1_12.ListContainersResponse, out *ListContainersResponse, s conversion.Scope) error {
+	return autoConvert_v1_12_ListContainersResponse_To_v1_9_ListContainersResponse(in, out, s)
 }
 
-func autoConvert_v1_9_ListImagesRequest_To_v1_10_ListImagesRequest(in *ListImagesRequest, out *v1_10.ListImagesRequest, s conversion.Scope) error {
+func autoConvert_v1_9_ListImagesRequest_To_v1_12_ListImagesRequest(in *ListImagesRequest, out *v1_12.ListImagesRequest, s conversion.Scope) error {
 	if in.Filter != nil {
 		in, out := &in.Filter, &out.Filter
-		*out = new(v1_10.ImageFilter)
-		if err := Convert_v1_9_ImageFilter_To_v1_10_ImageFilter(*in, *out, s); err != nil {
+		*out = new(v1_12.ImageFilter)
+		if err := Convert_v1_9_ImageFilter_To_v1_12_ImageFilter(*in, *out, s); err != nil {
 			return err
 		}
 	} else {
@@ -2108,16 +2110,16 @@ func autoConvert_v1_9_ListImagesRequest_To_v1_10_ListImagesRequest(in *ListImage
 	return nil
 }
 
-// Convert_v1_9_ListImagesRequest_To_v1_10_ListImagesRequest is an autogenerated conversion function.
-func Convert_v1_9_ListImagesRequest_To_v1_10_ListImagesRequest(in *ListImagesRequest, out *v1_10.ListImagesRequest, s conversion.Scope) error {
-	return autoConvert_v1_9_ListImagesRequest_To_v1_10_ListImagesRequest(in, out, s)
+// Convert_v1_9_ListImagesRequest_To_v1_12_ListImagesRequest is an autogenerated conversion function.
+func Convert_v1_9_ListImagesRequest_To_v1_12_ListImagesRequest(in *ListImagesRequest, out *v1_12.ListImagesRequest, s conversion.Scope) error {
+	return autoConvert_v1_9_ListImagesRequest_To_v1_12_ListImagesRequest(in, out, s)
 }
 
-func autoConvert_v1_10_ListImagesRequest_To_v1_9_ListImagesRequest(in *v1_10.ListImagesRequest, out *ListImagesRequest, s conversion.Scope) error {
+func autoConvert_v1_12_ListImagesRequest_To_v1_9_ListImagesRequest(in *v1_12.ListImagesRequest, out *ListImagesRequest, s conversion.Scope) error {
 	if in.Filter != nil {
 		in, out := &in.Filter, &out.Filter
 		*out = new(ImageFilter)
-		if err := Convert_v1_10_ImageFilter_To_v1_9_ImageFilter(*in, *out, s); err != nil {
+		if err := Convert_v1_12_ImageFilter_To_v1_9_ImageFilter(*in, *out, s); err != nil {
 			return err
 		}
 	} else {
@@ -2126,15 +2128,15 @@ func autoConvert_v1_10_ListImagesRequest_To_v1_9_ListImagesRequest(in *v1_10.Lis
 	return nil
 }
 
-// Convert_v1_10_ListImagesRequest_To_v1_9_ListImagesRequest is an autogenerated conversion function.
-func Convert_v1_10_ListImagesRequest_To_v1_9_ListImagesRequest(in *v1_10.ListImagesRequest, out *ListImagesRequest, s conversion.Scope) error {
-	return autoConvert_v1_10_ListImagesRequest_To_v1_9_ListImagesRequest(in, out, s)
+// Convert_v1_12_ListImagesRequest_To_v1_9_ListImagesRequest is an autogenerated conversion function.
+func Convert_v1_12_ListImagesRequest_To_v1_9_ListImagesRequest(in *v1_12.ListImagesRequest, out *ListImagesRequest, s conversion.Scope) error {
+	return autoConvert_v1_12_ListImagesRequest_To_v1_9_ListImagesRequest(in, out, s)
 }
 
-func autoConvert_v1_9_ListImagesResponse_To_v1_10_ListImagesResponse(in *ListImagesResponse, out *v1_10.ListImagesResponse, s conversion.Scope) error {
+func autoConvert_v1_9_ListImagesResponse_To_v1_12_ListImagesResponse(in *ListImagesResponse, out *v1_12.ListImagesResponse, s conversion.Scope) error {
 	if in.Images != nil {
 		in, out := &in.Images, &out.Images
-		*out = make([]*v1_10.Image, len(*in))
+		*out = make([]*v1_12.Image, len(*in))
 		for i := range *in {
 			// TODO: Inefficient conversion - can we improve it?
 			if err := s.Convert(&(*in)[i], &(*out)[i], 0); err != nil {
@@ -2147,12 +2149,12 @@ func autoConvert_v1_9_ListImagesResponse_To_v1_10_ListImagesResponse(in *ListIma
 	return nil
 }
 
-// Convert_v1_9_ListImagesResponse_To_v1_10_ListImagesResponse is an autogenerated conversion function.
-func Convert_v1_9_ListImagesResponse_To_v1_10_ListImagesResponse(in *ListImagesResponse, out *v1_10.ListImagesResponse, s conversion.Scope) error {
-	return autoConvert_v1_9_ListImagesResponse_To_v1_10_ListImagesResponse(in, out, s)
+// Convert_v1_9_ListImagesResponse_To_v1_12_ListImagesResponse is an autogenerated conversion function.
+func Convert_v1_9_ListImagesResponse_To_v1_12_ListImagesResponse(in *ListImagesResponse, out *v1_12.ListImagesResponse, s conversion.Scope) error {
+	return autoConvert_v1_9_ListImagesResponse_To_v1_12_ListImagesResponse(in, out, s)
 }
 
-func autoConvert_v1_10_ListImagesResponse_To_v1_9_ListImagesResponse(in *v1_10.ListImagesResponse, out *ListImagesResponse, s conversion.Scope) error {
+func autoConvert_v1_12_ListImagesResponse_To_v1_9_ListImagesResponse(in *v1_12.ListImagesResponse, out *ListImagesResponse, s conversion.Scope) error {
 	if in.Images != nil {
 		in, out := &in.Images, &out.Images
 		*out = make([]*Image, len(*in))
@@ -2168,16 +2170,16 @@ func autoConvert_v1_10_ListImagesResponse_To_v1_9_ListImagesResponse(in *v1_10.L
 	return nil
 }
 
-// Convert_v1_10_ListImagesResponse_To_v1_9_ListImagesResponse is an autogenerated conversion function.
-func Convert_v1_10_ListImagesResponse_To_v1_9_ListImagesResponse(in *v1_10.ListImagesResponse, out *ListImagesResponse, s conversion.Scope) error {
-	return autoConvert_v1_10_ListImagesResponse_To_v1_9_ListImagesResponse(in, out, s)
+// Convert_v1_12_ListImagesResponse_To_v1_9_ListImagesResponse is an autogenerated conversion function.
+func Convert_v1_12_ListImagesResponse_To_v1_9_ListImagesResponse(in *v1_12.ListImagesResponse, out *ListImagesResponse, s conversion.Scope) error {
+	return autoConvert_v1_12_ListImagesResponse_To_v1_9_ListImagesResponse(in, out, s)
 }
 
-func autoConvert_v1_9_ListPodSandboxRequest_To_v1_10_ListPodSandboxRequest(in *ListPodSandboxRequest, out *v1_10.ListPodSandboxRequest, s conversion.Scope) error {
+func autoConvert_v1_9_ListPodSandboxRequest_To_v1_12_ListPodSandboxRequest(in *ListPodSandboxRequest, out *v1_12.ListPodSandboxRequest, s conversion.Scope) error {
 	if in.Filter != nil {
 		in, out := &in.Filter, &out.Filter
-		*out = new(v1_10.PodSandboxFilter)
-		if err := Convert_v1_9_PodSandboxFilter_To_v1_10_PodSandboxFilter(*in, *out, s); err != nil {
+		*out = new(v1_12.PodSandboxFilter)
+		if err := Convert_v1_9_PodSandboxFilter_To_v1_12_PodSandboxFilter(*in, *out, s); err != nil {
 			return err
 		}
 	} else {
@@ -2186,16 +2188,16 @@ func autoConvert_v1_9_ListPodSandboxRequest_To_v1_10_ListPodSandboxRequest(in *L
 	return nil
 }
 
-// Convert_v1_9_ListPodSandboxRequest_To_v1_10_ListPodSandboxRequest is an autogenerated conversion function.
-func Convert_v1_9_ListPodSandboxRequest_To_v1_10_ListPodSandboxRequest(in *ListPodSandboxRequest, out *v1_10.ListPodSandboxRequest, s conversion.Scope) error {
-	return autoConvert_v1_9_ListPodSandboxRequest_To_v1_10_ListPodSandboxRequest(in, out, s)
+// Convert_v1_9_ListPodSandboxRequest_To_v1_12_ListPodSandboxRequest is an autogenerated conversion function.
+func Convert_v1_9_ListPodSandboxRequest_To_v1_12_ListPodSandboxRequest(in *ListPodSandboxRequest, out *v1_12.ListPodSandboxRequest, s conversion.Scope) error {
+	return autoConvert_v1_9_ListPodSandboxRequest_To_v1_12_ListPodSandboxRequest(in, out, s)
 }
 
-func autoConvert_v1_10_ListPodSandboxRequest_To_v1_9_ListPodSandboxRequest(in *v1_10.ListPodSandboxRequest, out *ListPodSandboxRequest, s conversion.Scope) error {
+func autoConvert_v1_12_ListPodSandboxRequest_To_v1_9_ListPodSandboxRequest(in *v1_12.ListPodSandboxRequest, out *ListPodSandboxRequest, s conversion.Scope) error {
 	if in.Filter != nil {
 		in, out := &in.Filter, &out.Filter
 		*out = new(PodSandboxFilter)
-		if err := Convert_v1_10_PodSandboxFilter_To_v1_9_PodSandboxFilter(*in, *out, s); err != nil {
+		if err := Convert_v1_12_PodSandboxFilter_To_v1_9_PodSandboxFilter(*in, *out, s); err != nil {
 			return err
 		}
 	} else {
@@ -2204,15 +2206,15 @@ func autoConvert_v1_10_ListPodSandboxRequest_To_v1_9_ListPodSandboxRequest(in *v
 	return nil
 }
 
-// Convert_v1_10_ListPodSandboxRequest_To_v1_9_ListPodSandboxRequest is an autogenerated conversion function.
-func Convert_v1_10_ListPodSandboxRequest_To_v1_9_ListPodSandboxRequest(in *v1_10.ListPodSandboxRequest, out *ListPodSandboxRequest, s conversion.Scope) error {
-	return autoConvert_v1_10_ListPodSandboxRequest_To_v1_9_ListPodSandboxRequest(in, out, s)
+// Convert_v1_12_ListPodSandboxRequest_To_v1_9_ListPodSandboxRequest is an autogenerated conversion function.
+func Convert_v1_12_ListPodSandboxRequest_To_v1_9_ListPodSandboxRequest(in *v1_12.ListPodSandboxRequest, out *ListPodSandboxRequest, s conversion.Scope) error {
+	return autoConvert_v1_12_ListPodSandboxRequest_To_v1_9_ListPodSandboxRequest(in, out, s)
 }
 
-func autoConvert_v1_9_ListPodSandboxResponse_To_v1_10_ListPodSandboxResponse(in *ListPodSandboxResponse, out *v1_10.ListPodSandboxResponse, s conversion.Scope) error {
+func autoConvert_v1_9_ListPodSandboxResponse_To_v1_12_ListPodSandboxResponse(in *ListPodSandboxResponse, out *v1_12.ListPodSandboxResponse, s conversion.Scope) error {
 	if in.Items != nil {
 		in, out := &in.Items, &out.Items
-		*out = make([]*v1_10.PodSandbox, len(*in))
+		*out = make([]*v1_12.PodSandbox, len(*in))
 		for i := range *in {
 			// TODO: Inefficient conversion - can we improve it?
 			if err := s.Convert(&(*in)[i], &(*out)[i], 0); err != nil {
@@ -2225,12 +2227,12 @@ func autoConvert_v1_9_ListPodSandboxResponse_To_v1_10_ListPodSandboxResponse(in 
 	return nil
 }
 
-// Convert_v1_9_ListPodSandboxResponse_To_v1_10_ListPodSandboxResponse is an autogenerated conversion function.
-func Convert_v1_9_ListPodSandboxResponse_To_v1_10_ListPodSandboxResponse(in *ListPodSandboxResponse, out *v1_10.ListPodSandboxResponse, s conversion.Scope) error {
-	return autoConvert_v1_9_ListPodSandboxResponse_To_v1_10_ListPodSandboxResponse(in, out, s)
+// Convert_v1_9_ListPodSandboxResponse_To_v1_12_ListPodSandboxResponse is an autogenerated conversion function.
+func Convert_v1_9_ListPodSandboxResponse_To_v1_12_ListPodSandboxResponse(in *ListPodSandboxResponse, out *v1_12.ListPodSandboxResponse, s conversion.Scope) error {
+	return autoConvert_v1_9_ListPodSandboxResponse_To_v1_12_ListPodSandboxResponse(in, out, s)
 }
 
-func autoConvert_v1_10_ListPodSandboxResponse_To_v1_9_ListPodSandboxResponse(in *v1_10.ListPodSandboxResponse, out *ListPodSandboxResponse, s conversion.Scope) error {
+func autoConvert_v1_12_ListPodSandboxResponse_To_v1_9_ListPodSandboxResponse(in *v1_12.ListPodSandboxResponse, out *ListPodSandboxResponse, s conversion.Scope) error {
 	if in.Items != nil {
 		in, out := &in.Items, &out.Items
 		*out = make([]*PodSandbox, len(*in))
@@ -2246,17 +2248,17 @@ func autoConvert_v1_10_ListPodSandboxResponse_To_v1_9_ListPodSandboxResponse(in 
 	return nil
 }
 
-// Convert_v1_10_ListPodSandboxResponse_To_v1_9_ListPodSandboxResponse is an autogenerated conversion function.
-func Convert_v1_10_ListPodSandboxResponse_To_v1_9_ListPodSandboxResponse(in *v1_10.ListPodSandboxResponse, out *ListPodSandboxResponse, s conversion.Scope) error {
-	return autoConvert_v1_10_ListPodSandboxResponse_To_v1_9_ListPodSandboxResponse(in, out, s)
+// Convert_v1_12_ListPodSandboxResponse_To_v1_9_ListPodSandboxResponse is an autogenerated conversion function.
+func Convert_v1_12_ListPodSandboxResponse_To_v1_9_ListPodSandboxResponse(in *v1_12.ListPodSandboxResponse, out *ListPodSandboxResponse, s conversion.Scope) error {
+	return autoConvert_v1_12_ListPodSandboxResponse_To_v1_9_ListPodSandboxResponse(in, out, s)
 }
 
-func autoConvert_v1_9_MemoryUsage_To_v1_10_MemoryUsage(in *MemoryUsage, out *v1_10.MemoryUsage, s conversion.Scope) error {
+func autoConvert_v1_9_MemoryUsage_To_v1_12_MemoryUsage(in *MemoryUsage, out *v1_12.MemoryUsage, s conversion.Scope) error {
 	out.Timestamp = in.Timestamp
 	if in.WorkingSetBytes != nil {
 		in, out := &in.WorkingSetBytes, &out.WorkingSetBytes
-		*out = new(v1_10.UInt64Value)
-		if err := Convert_v1_9_UInt64Value_To_v1_10_UInt64Value(*in, *out, s); err != nil {
+		*out = new(v1_12.UInt64Value)
+		if err := Convert_v1_9_UInt64Value_To_v1_12_UInt64Value(*in, *out, s); err != nil {
 			return err
 		}
 	} else {
@@ -2265,17 +2267,17 @@ func autoConvert_v1_9_MemoryUsage_To_v1_10_MemoryUsage(in *MemoryUsage, out *v1_
 	return nil
 }
 
-// Convert_v1_9_MemoryUsage_To_v1_10_MemoryUsage is an autogenerated conversion function.
-func Convert_v1_9_MemoryUsage_To_v1_10_MemoryUsage(in *MemoryUsage, out *v1_10.MemoryUsage, s conversion.Scope) error {
-	return autoConvert_v1_9_MemoryUsage_To_v1_10_MemoryUsage(in, out, s)
+// Convert_v1_9_MemoryUsage_To_v1_12_MemoryUsage is an autogenerated conversion function.
+func Convert_v1_9_MemoryUsage_To_v1_12_MemoryUsage(in *MemoryUsage, out *v1_12.MemoryUsage, s conversion.Scope) error {
+	return autoConvert_v1_9_MemoryUsage_To_v1_12_MemoryUsage(in, out, s)
 }
 
-func autoConvert_v1_10_MemoryUsage_To_v1_9_MemoryUsage(in *v1_10.MemoryUsage, out *MemoryUsage, s conversion.Scope) error {
+func autoConvert_v1_12_MemoryUsage_To_v1_9_MemoryUsage(in *v1_12.MemoryUsage, out *MemoryUsage, s conversion.Scope) error {
 	out.Timestamp = in.Timestamp
 	if in.WorkingSetBytes != nil {
 		in, out := &in.WorkingSetBytes, &out.WorkingSetBytes
 		*out = new(UInt64Value)
-		if err := Convert_v1_10_UInt64Value_To_v1_9_UInt64Value(*in, *out, s); err != nil {
+		if err := Convert_v1_12_UInt64Value_To_v1_9_UInt64Value(*in, *out, s); err != nil {
 			return err
 		}
 	} else {
@@ -2284,26 +2286,26 @@ func autoConvert_v1_10_MemoryUsage_To_v1_9_MemoryUsage(in *v1_10.MemoryUsage, ou
 	return nil
 }
 
-// Convert_v1_10_MemoryUsage_To_v1_9_MemoryUsage is an autogenerated conversion function.
-func Convert_v1_10_MemoryUsage_To_v1_9_MemoryUsage(in *v1_10.MemoryUsage, out *MemoryUsage, s conversion.Scope) error {
-	return autoConvert_v1_10_MemoryUsage_To_v1_9_MemoryUsage(in, out, s)
+// Convert_v1_12_MemoryUsage_To_v1_9_MemoryUsage is an autogenerated conversion function.
+func Convert_v1_12_MemoryUsage_To_v1_9_MemoryUsage(in *v1_12.MemoryUsage, out *MemoryUsage, s conversion.Scope) error {
+	return autoConvert_v1_12_MemoryUsage_To_v1_9_MemoryUsage(in, out, s)
 }
 
-func autoConvert_v1_9_Mount_To_v1_10_Mount(in *Mount, out *v1_10.Mount, s conversion.Scope) error {
+func autoConvert_v1_9_Mount_To_v1_12_Mount(in *Mount, out *v1_12.Mount, s conversion.Scope) error {
 	out.ContainerPath = in.ContainerPath
 	out.HostPath = in.HostPath
 	out.Readonly = in.Readonly
 	out.SelinuxRelabel = in.SelinuxRelabel
-	out.Propagation = v1_10.MountPropagation(in.Propagation)
+	out.Propagation = v1_12.MountPropagation(in.Propagation)
 	return nil
 }
 
-// Convert_v1_9_Mount_To_v1_10_Mount is an autogenerated conversion function.
-func Convert_v1_9_Mount_To_v1_10_Mount(in *Mount, out *v1_10.Mount, s conversion.Scope) error {
-	return autoConvert_v1_9_Mount_To_v1_10_Mount(in, out, s)
+// Convert_v1_9_Mount_To_v1_12_Mount is an autogenerated conversion function.
+func Convert_v1_9_Mount_To_v1_12_Mount(in *Mount, out *v1_12.Mount, s conversion.Scope) error {
+	return autoConvert_v1_9_Mount_To_v1_12_Mount(in, out, s)
 }
 
-func autoConvert_v1_10_Mount_To_v1_9_Mount(in *v1_10.Mount, out *Mount, s conversion.Scope) error {
+func autoConvert_v1_12_Mount_To_v1_9_Mount(in *v1_12.Mount, out *Mount, s conversion.Scope) error {
 	out.ContainerPath = in.ContainerPath
 	out.HostPath = in.HostPath
 	out.Readonly = in.Readonly
@@ -2312,16 +2314,16 @@ func autoConvert_v1_10_Mount_To_v1_9_Mount(in *v1_10.Mount, out *Mount, s conver
 	return nil
 }
 
-// Convert_v1_10_Mount_To_v1_9_Mount is an autogenerated conversion function.
-func Convert_v1_10_Mount_To_v1_9_Mount(in *v1_10.Mount, out *Mount, s conversion.Scope) error {
-	return autoConvert_v1_10_Mount_To_v1_9_Mount(in, out, s)
+// Convert_v1_12_Mount_To_v1_9_Mount is an autogenerated conversion function.
+func Convert_v1_12_Mount_To_v1_9_Mount(in *v1_12.Mount, out *Mount, s conversion.Scope) error {
+	return autoConvert_v1_12_Mount_To_v1_9_Mount(in, out, s)
 }
 
-func autoConvert_v1_9_Namespace_To_v1_10_Namespace(in *Namespace, out *v1_10.Namespace, s conversion.Scope) error {
+func autoConvert_v1_9_Namespace_To_v1_12_Namespace(in *Namespace, out *v1_12.Namespace, s conversion.Scope) error {
 	if in.Options != nil {
 		in, out := &in.Options, &out.Options
-		*out = new(v1_10.NamespaceOption)
-		if err := Convert_v1_9_NamespaceOption_To_v1_10_NamespaceOption(*in, *out, s); err != nil {
+		*out = new(v1_12.NamespaceOption)
+		if err := Convert_v1_9_NamespaceOption_To_v1_12_NamespaceOption(*in, *out, s); err != nil {
 			return err
 		}
 	} else {
@@ -2330,16 +2332,16 @@ func autoConvert_v1_9_Namespace_To_v1_10_Namespace(in *Namespace, out *v1_10.Nam
 	return nil
 }
 
-// Convert_v1_9_Namespace_To_v1_10_Namespace is an autogenerated conversion function.
-func Convert_v1_9_Namespace_To_v1_10_Namespace(in *Namespace, out *v1_10.Namespace, s conversion.Scope) error {
-	return autoConvert_v1_9_Namespace_To_v1_10_Namespace(in, out, s)
+// Convert_v1_9_Namespace_To_v1_12_Namespace is an autogenerated conversion function.
+func Convert_v1_9_Namespace_To_v1_12_Namespace(in *Namespace, out *v1_12.Namespace, s conversion.Scope) error {
+	return autoConvert_v1_9_Namespace_To_v1_12_Namespace(in, out, s)
 }
 
-func autoConvert_v1_10_Namespace_To_v1_9_Namespace(in *v1_10.Namespace, out *Namespace, s conversion.Scope) error {
+func autoConvert_v1_12_Namespace_To_v1_9_Namespace(in *v1_12.Namespace, out *Namespace, s conversion.Scope) error {
 	if in.Options != nil {
 		in, out := &in.Options, &out.Options
 		*out = new(NamespaceOption)
-		if err := Convert_v1_10_NamespaceOption_To_v1_9_NamespaceOption(*in, *out, s); err != nil {
+		if err := Convert_v1_12_NamespaceOption_To_v1_9_NamespaceOption(*in, *out, s); err != nil {
 			return err
 		}
 	} else {
@@ -2348,74 +2350,74 @@ func autoConvert_v1_10_Namespace_To_v1_9_Namespace(in *v1_10.Namespace, out *Nam
 	return nil
 }
 
-// Convert_v1_10_Namespace_To_v1_9_Namespace is an autogenerated conversion function.
-func Convert_v1_10_Namespace_To_v1_9_Namespace(in *v1_10.Namespace, out *Namespace, s conversion.Scope) error {
-	return autoConvert_v1_10_Namespace_To_v1_9_Namespace(in, out, s)
+// Convert_v1_12_Namespace_To_v1_9_Namespace is an autogenerated conversion function.
+func Convert_v1_12_Namespace_To_v1_9_Namespace(in *v1_12.Namespace, out *Namespace, s conversion.Scope) error {
+	return autoConvert_v1_12_Namespace_To_v1_9_Namespace(in, out, s)
 }
 
-func autoConvert_v1_9_NamespaceOption_To_v1_10_NamespaceOption(in *NamespaceOption, out *v1_10.NamespaceOption, s conversion.Scope) error {
+func autoConvert_v1_9_NamespaceOption_To_v1_12_NamespaceOption(in *NamespaceOption, out *v1_12.NamespaceOption, s conversion.Scope) error {
 	// WARNING: in.HostNetwork requires manual conversion: does not exist in peer-type
 	// WARNING: in.HostPid requires manual conversion: does not exist in peer-type
 	// WARNING: in.HostIpc requires manual conversion: does not exist in peer-type
 	return nil
 }
 
-func autoConvert_v1_10_NamespaceOption_To_v1_9_NamespaceOption(in *v1_10.NamespaceOption, out *NamespaceOption, s conversion.Scope) error {
+func autoConvert_v1_12_NamespaceOption_To_v1_9_NamespaceOption(in *v1_12.NamespaceOption, out *NamespaceOption, s conversion.Scope) error {
 	// WARNING: in.Network requires manual conversion: does not exist in peer-type
 	// WARNING: in.Pid requires manual conversion: does not exist in peer-type
 	// WARNING: in.Ipc requires manual conversion: does not exist in peer-type
 	return nil
 }
 
-func autoConvert_v1_9_NetworkConfig_To_v1_10_NetworkConfig(in *NetworkConfig, out *v1_10.NetworkConfig, s conversion.Scope) error {
+func autoConvert_v1_9_NetworkConfig_To_v1_12_NetworkConfig(in *NetworkConfig, out *v1_12.NetworkConfig, s conversion.Scope) error {
 	out.PodCidr = in.PodCidr
 	return nil
 }
 
-// Convert_v1_9_NetworkConfig_To_v1_10_NetworkConfig is an autogenerated conversion function.
-func Convert_v1_9_NetworkConfig_To_v1_10_NetworkConfig(in *NetworkConfig, out *v1_10.NetworkConfig, s conversion.Scope) error {
-	return autoConvert_v1_9_NetworkConfig_To_v1_10_NetworkConfig(in, out, s)
+// Convert_v1_9_NetworkConfig_To_v1_12_NetworkConfig is an autogenerated conversion function.
+func Convert_v1_9_NetworkConfig_To_v1_12_NetworkConfig(in *NetworkConfig, out *v1_12.NetworkConfig, s conversion.Scope) error {
+	return autoConvert_v1_9_NetworkConfig_To_v1_12_NetworkConfig(in, out, s)
 }
 
-func autoConvert_v1_10_NetworkConfig_To_v1_9_NetworkConfig(in *v1_10.NetworkConfig, out *NetworkConfig, s conversion.Scope) error {
+func autoConvert_v1_12_NetworkConfig_To_v1_9_NetworkConfig(in *v1_12.NetworkConfig, out *NetworkConfig, s conversion.Scope) error {
 	out.PodCidr = in.PodCidr
 	return nil
 }
 
-// Convert_v1_10_NetworkConfig_To_v1_9_NetworkConfig is an autogenerated conversion function.
-func Convert_v1_10_NetworkConfig_To_v1_9_NetworkConfig(in *v1_10.NetworkConfig, out *NetworkConfig, s conversion.Scope) error {
-	return autoConvert_v1_10_NetworkConfig_To_v1_9_NetworkConfig(in, out, s)
+// Convert_v1_12_NetworkConfig_To_v1_9_NetworkConfig is an autogenerated conversion function.
+func Convert_v1_12_NetworkConfig_To_v1_9_NetworkConfig(in *v1_12.NetworkConfig, out *NetworkConfig, s conversion.Scope) error {
+	return autoConvert_v1_12_NetworkConfig_To_v1_9_NetworkConfig(in, out, s)
 }
 
-func autoConvert_v1_9_PodSandbox_To_v1_10_PodSandbox(in *PodSandbox, out *v1_10.PodSandbox, s conversion.Scope) error {
+func autoConvert_v1_9_PodSandbox_To_v1_12_PodSandbox(in *PodSandbox, out *v1_12.PodSandbox, s conversion.Scope) error {
 	out.Id = in.Id
 	if in.Metadata != nil {
 		in, out := &in.Metadata, &out.Metadata
-		*out = new(v1_10.PodSandboxMetadata)
-		if err := Convert_v1_9_PodSandboxMetadata_To_v1_10_PodSandboxMetadata(*in, *out, s); err != nil {
+		*out = new(v1_12.PodSandboxMetadata)
+		if err := Convert_v1_9_PodSandboxMetadata_To_v1_12_PodSandboxMetadata(*in, *out, s); err != nil {
 			return err
 		}
 	} else {
 		out.Metadata = nil
 	}
-	out.State = v1_10.PodSandboxState(in.State)
+	out.State = v1_12.PodSandboxState(in.State)
 	out.CreatedAt = in.CreatedAt
 	out.Labels = in.Labels
 	out.Annotations = in.Annotations
 	return nil
 }
 
-// Convert_v1_9_PodSandbox_To_v1_10_PodSandbox is an autogenerated conversion function.
-func Convert_v1_9_PodSandbox_To_v1_10_PodSandbox(in *PodSandbox, out *v1_10.PodSandbox, s conversion.Scope) error {
-	return autoConvert_v1_9_PodSandbox_To_v1_10_PodSandbox(in, out, s)
+// Convert_v1_9_PodSandbox_To_v1_12_PodSandbox is an autogenerated conversion function.
+func Convert_v1_9_PodSandbox_To_v1_12_PodSandbox(in *PodSandbox, out *v1_12.PodSandbox, s conversion.Scope) error {
+	return autoConvert_v1_9_PodSandbox_To_v1_12_PodSandbox(in, out, s)
 }
 
-func autoConvert_v1_10_PodSandbox_To_v1_9_PodSandbox(in *v1_10.PodSandbox, out *PodSandbox, s conversion.Scope) error {
+func autoConvert_v1_12_PodSandbox_To_v1_9_PodSandbox(in *v1_12.PodSandbox, out *PodSandbox, s conversion.Scope) error {
 	out.Id = in.Id
 	if in.Metadata != nil {
 		in, out := &in.Metadata, &out.Metadata
 		*out = new(PodSandboxMetadata)
-		if err := Convert_v1_10_PodSandboxMetadata_To_v1_9_PodSandboxMetadata(*in, *out, s); err != nil {
+		if err := Convert_v1_12_PodSandboxMetadata_To_v1_9_PodSandboxMetadata(*in, *out, s); err != nil {
 			return err
 		}
 	} else {
@@ -2428,16 +2430,16 @@ func autoConvert_v1_10_PodSandbox_To_v1_9_PodSandbox(in *v1_10.PodSandbox, out *
 	return nil
 }
 
-// Convert_v1_10_PodSandbox_To_v1_9_PodSandbox is an autogenerated conversion function.
-func Convert_v1_10_PodSandbox_To_v1_9_PodSandbox(in *v1_10.PodSandbox, out *PodSandbox, s conversion.Scope) error {
-	return autoConvert_v1_10_PodSandbox_To_v1_9_PodSandbox(in, out, s)
+// Convert_v1_12_PodSandbox_To_v1_9_PodSandbox is an autogenerated conversion function.
+func Convert_v1_12_PodSandbox_To_v1_9_PodSandbox(in *v1_12.PodSandbox, out *PodSandbox, s conversion.Scope) error {
+	return autoConvert_v1_12_PodSandbox_To_v1_9_PodSandbox(in, out, s)
 }
 
-func autoConvert_v1_9_PodSandboxConfig_To_v1_10_PodSandboxConfig(in *PodSandboxConfig, out *v1_10.PodSandboxConfig, s conversion.Scope) error {
+func autoConvert_v1_9_PodSandboxConfig_To_v1_12_PodSandboxConfig(in *PodSandboxConfig, out *v1_12.PodSandboxConfig, s conversion.Scope) error {
 	if in.Metadata != nil {
 		in, out := &in.Metadata, &out.Metadata
-		*out = new(v1_10.PodSandboxMetadata)
-		if err := Convert_v1_9_PodSandboxMetadata_To_v1_10_PodSandboxMetadata(*in, *out, s); err != nil {
+		*out = new(v1_12.PodSandboxMetadata)
+		if err := Convert_v1_9_PodSandboxMetadata_To_v1_12_PodSandboxMetadata(*in, *out, s); err != nil {
 			return err
 		}
 	} else {
@@ -2447,8 +2449,8 @@ func autoConvert_v1_9_PodSandboxConfig_To_v1_10_PodSandboxConfig(in *PodSandboxC
 	out.LogDirectory = in.LogDirectory
 	if in.DnsConfig != nil {
 		in, out := &in.DnsConfig, &out.DnsConfig
-		*out = new(v1_10.DNSConfig)
-		if err := Convert_v1_9_DNSConfig_To_v1_10_DNSConfig(*in, *out, s); err != nil {
+		*out = new(v1_12.DNSConfig)
+		if err := Convert_v1_9_DNSConfig_To_v1_12_DNSConfig(*in, *out, s); err != nil {
 			return err
 		}
 	} else {
@@ -2456,7 +2458,7 @@ func autoConvert_v1_9_PodSandboxConfig_To_v1_10_PodSandboxConfig(in *PodSandboxC
 	}
 	if in.PortMappings != nil {
 		in, out := &in.PortMappings, &out.PortMappings
-		*out = make([]*v1_10.PortMapping, len(*in))
+		*out = make([]*v1_12.PortMapping, len(*in))
 		for i := range *in {
 			// TODO: Inefficient conversion - can we improve it?
 			if err := s.Convert(&(*in)[i], &(*out)[i], 0); err != nil {
@@ -2470,8 +2472,8 @@ func autoConvert_v1_9_PodSandboxConfig_To_v1_10_PodSandboxConfig(in *PodSandboxC
 	out.Annotations = in.Annotations
 	if in.Linux != nil {
 		in, out := &in.Linux, &out.Linux
-		*out = new(v1_10.LinuxPodSandboxConfig)
-		if err := Convert_v1_9_LinuxPodSandboxConfig_To_v1_10_LinuxPodSandboxConfig(*in, *out, s); err != nil {
+		*out = new(v1_12.LinuxPodSandboxConfig)
+		if err := Convert_v1_9_LinuxPodSandboxConfig_To_v1_12_LinuxPodSandboxConfig(*in, *out, s); err != nil {
 			return err
 		}
 	} else {
@@ -2480,16 +2482,16 @@ func autoConvert_v1_9_PodSandboxConfig_To_v1_10_PodSandboxConfig(in *PodSandboxC
 	return nil
 }
 
-// Convert_v1_9_PodSandboxConfig_To_v1_10_PodSandboxConfig is an autogenerated conversion function.
-func Convert_v1_9_PodSandboxConfig_To_v1_10_PodSandboxConfig(in *PodSandboxConfig, out *v1_10.PodSandboxConfig, s conversion.Scope) error {
-	return autoConvert_v1_9_PodSandboxConfig_To_v1_10_PodSandboxConfig(in, out, s)
+// Convert_v1_9_PodSandboxConfig_To_v1_12_PodSandboxConfig is an autogenerated conversion function.
+func Convert_v1_9_PodSandboxConfig_To_v1_12_PodSandboxConfig(in *PodSandboxConfig, out *v1_12.PodSandboxConfig, s conversion.Scope) error {
+	return autoConvert_v1_9_PodSandboxConfig_To_v1_12_PodSandboxConfig(in, out, s)
 }
 
-func autoConvert_v1_10_PodSandboxConfig_To_v1_9_PodSandboxConfig(in *v1_10.PodSandboxConfig, out *PodSandboxConfig, s conversion.Scope) error {
+func autoConvert_v1_12_PodSandboxConfig_To_v1_9_PodSandboxConfig(in *v1_12.PodSandboxConfig, out *PodSandboxConfig, s conversion.Scope) error {
 	if in.Metadata != nil {
 		in, out := &in.Metadata, &out.Metadata
 		*out = new(PodSandboxMetadata)
-		if err := Convert_v1_10_PodSandboxMetadata_To_v1_9_PodSandboxMetadata(*in, *out, s); err != nil {
+		if err := Convert_v1_12_PodSandboxMetadata_To_v1_9_PodSandboxMetadata(*in, *out, s); err != nil {
 			return err
 		}
 	} else {
@@ -2500,7 +2502,7 @@ func autoConvert_v1_10_PodSandboxConfig_To_v1_9_PodSandboxConfig(in *v1_10.PodSa
 	if in.DnsConfig != nil {
 		in, out := &in.DnsConfig, &out.DnsConfig
 		*out = new(DNSConfig)
-		if err := Convert_v1_10_DNSConfig_To_v1_9_DNSConfig(*in, *out, s); err != nil {
+		if err := Convert_v1_12_DNSConfig_To_v1_9_DNSConfig(*in, *out, s); err != nil {
 			return err
 		}
 	} else {
@@ -2523,7 +2525,7 @@ func autoConvert_v1_10_PodSandboxConfig_To_v1_9_PodSandboxConfig(in *v1_10.PodSa
 	if in.Linux != nil {
 		in, out := &in.Linux, &out.Linux
 		*out = new(LinuxPodSandboxConfig)
-		if err := Convert_v1_10_LinuxPodSandboxConfig_To_v1_9_LinuxPodSandboxConfig(*in, *out, s); err != nil {
+		if err := Convert_v1_12_LinuxPodSandboxConfig_To_v1_9_LinuxPodSandboxConfig(*in, *out, s); err != nil {
 			return err
 		}
 	} else {
@@ -2532,17 +2534,17 @@ func autoConvert_v1_10_PodSandboxConfig_To_v1_9_PodSandboxConfig(in *v1_10.PodSa
 	return nil
 }
 
-// Convert_v1_10_PodSandboxConfig_To_v1_9_PodSandboxConfig is an autogenerated conversion function.
-func Convert_v1_10_PodSandboxConfig_To_v1_9_PodSandboxConfig(in *v1_10.PodSandboxConfig, out *PodSandboxConfig, s conversion.Scope) error {
-	return autoConvert_v1_10_PodSandboxConfig_To_v1_9_PodSandboxConfig(in, out, s)
+// Convert_v1_12_PodSandboxConfig_To_v1_9_PodSandboxConfig is an autogenerated conversion function.
+func Convert_v1_12_PodSandboxConfig_To_v1_9_PodSandboxConfig(in *v1_12.PodSandboxConfig, out *PodSandboxConfig, s conversion.Scope) error {
+	return autoConvert_v1_12_PodSandboxConfig_To_v1_9_PodSandboxConfig(in, out, s)
 }
 
-func autoConvert_v1_9_PodSandboxFilter_To_v1_10_PodSandboxFilter(in *PodSandboxFilter, out *v1_10.PodSandboxFilter, s conversion.Scope) error {
+func autoConvert_v1_9_PodSandboxFilter_To_v1_12_PodSandboxFilter(in *PodSandboxFilter, out *v1_12.PodSandboxFilter, s conversion.Scope) error {
 	out.Id = in.Id
 	if in.State != nil {
 		in, out := &in.State, &out.State
-		*out = new(v1_10.PodSandboxStateValue)
-		if err := Convert_v1_9_PodSandboxStateValue_To_v1_10_PodSandboxStateValue(*in, *out, s); err != nil {
+		*out = new(v1_12.PodSandboxStateValue)
+		if err := Convert_v1_9_PodSandboxStateValue_To_v1_12_PodSandboxStateValue(*in, *out, s); err != nil {
 			return err
 		}
 	} else {
@@ -2552,17 +2554,17 @@ func autoConvert_v1_9_PodSandboxFilter_To_v1_10_PodSandboxFilter(in *PodSandboxF
 	return nil
 }
 
-// Convert_v1_9_PodSandboxFilter_To_v1_10_PodSandboxFilter is an autogenerated conversion function.
-func Convert_v1_9_PodSandboxFilter_To_v1_10_PodSandboxFilter(in *PodSandboxFilter, out *v1_10.PodSandboxFilter, s conversion.Scope) error {
-	return autoConvert_v1_9_PodSandboxFilter_To_v1_10_PodSandboxFilter(in, out, s)
+// Convert_v1_9_PodSandboxFilter_To_v1_12_PodSandboxFilter is an autogenerated conversion function.
+func Convert_v1_9_PodSandboxFilter_To_v1_12_PodSandboxFilter(in *PodSandboxFilter, out *v1_12.PodSandboxFilter, s conversion.Scope) error {
+	return autoConvert_v1_9_PodSandboxFilter_To_v1_12_PodSandboxFilter(in, out, s)
 }
 
-func autoConvert_v1_10_PodSandboxFilter_To_v1_9_PodSandboxFilter(in *v1_10.PodSandboxFilter, out *PodSandboxFilter, s conversion.Scope) error {
+func autoConvert_v1_12_PodSandboxFilter_To_v1_9_PodSandboxFilter(in *v1_12.PodSandboxFilter, out *PodSandboxFilter, s conversion.Scope) error {
 	out.Id = in.Id
 	if in.State != nil {
 		in, out := &in.State, &out.State
 		*out = new(PodSandboxStateValue)
-		if err := Convert_v1_10_PodSandboxStateValue_To_v1_9_PodSandboxStateValue(*in, *out, s); err != nil {
+		if err := Convert_v1_12_PodSandboxStateValue_To_v1_9_PodSandboxStateValue(*in, *out, s); err != nil {
 			return err
 		}
 	} else {
@@ -2572,12 +2574,12 @@ func autoConvert_v1_10_PodSandboxFilter_To_v1_9_PodSandboxFilter(in *v1_10.PodSa
 	return nil
 }
 
-// Convert_v1_10_PodSandboxFilter_To_v1_9_PodSandboxFilter is an autogenerated conversion function.
-func Convert_v1_10_PodSandboxFilter_To_v1_9_PodSandboxFilter(in *v1_10.PodSandboxFilter, out *PodSandboxFilter, s conversion.Scope) error {
-	return autoConvert_v1_10_PodSandboxFilter_To_v1_9_PodSandboxFilter(in, out, s)
+// Convert_v1_12_PodSandboxFilter_To_v1_9_PodSandboxFilter is an autogenerated conversion function.
+func Convert_v1_12_PodSandboxFilter_To_v1_9_PodSandboxFilter(in *v1_12.PodSandboxFilter, out *PodSandboxFilter, s conversion.Scope) error {
+	return autoConvert_v1_12_PodSandboxFilter_To_v1_9_PodSandboxFilter(in, out, s)
 }
 
-func autoConvert_v1_9_PodSandboxMetadata_To_v1_10_PodSandboxMetadata(in *PodSandboxMetadata, out *v1_10.PodSandboxMetadata, s conversion.Scope) error {
+func autoConvert_v1_9_PodSandboxMetadata_To_v1_12_PodSandboxMetadata(in *PodSandboxMetadata, out *v1_12.PodSandboxMetadata, s conversion.Scope) error {
 	out.Name = in.Name
 	out.Uid = in.Uid
 	out.Namespace = in.Namespace
@@ -2585,12 +2587,12 @@ func autoConvert_v1_9_PodSandboxMetadata_To_v1_10_PodSandboxMetadata(in *PodSand
 	return nil
 }
 
-// Convert_v1_9_PodSandboxMetadata_To_v1_10_PodSandboxMetadata is an autogenerated conversion function.
-func Convert_v1_9_PodSandboxMetadata_To_v1_10_PodSandboxMetadata(in *PodSandboxMetadata, out *v1_10.PodSandboxMetadata, s conversion.Scope) error {
-	return autoConvert_v1_9_PodSandboxMetadata_To_v1_10_PodSandboxMetadata(in, out, s)
+// Convert_v1_9_PodSandboxMetadata_To_v1_12_PodSandboxMetadata is an autogenerated conversion function.
+func Convert_v1_9_PodSandboxMetadata_To_v1_12_PodSandboxMetadata(in *PodSandboxMetadata, out *v1_12.PodSandboxMetadata, s conversion.Scope) error {
+	return autoConvert_v1_9_PodSandboxMetadata_To_v1_12_PodSandboxMetadata(in, out, s)
 }
 
-func autoConvert_v1_10_PodSandboxMetadata_To_v1_9_PodSandboxMetadata(in *v1_10.PodSandboxMetadata, out *PodSandboxMetadata, s conversion.Scope) error {
+func autoConvert_v1_12_PodSandboxMetadata_To_v1_9_PodSandboxMetadata(in *v1_12.PodSandboxMetadata, out *PodSandboxMetadata, s conversion.Scope) error {
 	out.Name = in.Name
 	out.Uid = in.Uid
 	out.Namespace = in.Namespace
@@ -2598,68 +2600,68 @@ func autoConvert_v1_10_PodSandboxMetadata_To_v1_9_PodSandboxMetadata(in *v1_10.P
 	return nil
 }
 
-// Convert_v1_10_PodSandboxMetadata_To_v1_9_PodSandboxMetadata is an autogenerated conversion function.
-func Convert_v1_10_PodSandboxMetadata_To_v1_9_PodSandboxMetadata(in *v1_10.PodSandboxMetadata, out *PodSandboxMetadata, s conversion.Scope) error {
-	return autoConvert_v1_10_PodSandboxMetadata_To_v1_9_PodSandboxMetadata(in, out, s)
+// Convert_v1_12_PodSandboxMetadata_To_v1_9_PodSandboxMetadata is an autogenerated conversion function.
+func Convert_v1_12_PodSandboxMetadata_To_v1_9_PodSandboxMetadata(in *v1_12.PodSandboxMetadata, out *PodSandboxMetadata, s conversion.Scope) error {
+	return autoConvert_v1_12_PodSandboxMetadata_To_v1_9_PodSandboxMetadata(in, out, s)
 }
 
-func autoConvert_v1_9_PodSandboxNetworkStatus_To_v1_10_PodSandboxNetworkStatus(in *PodSandboxNetworkStatus, out *v1_10.PodSandboxNetworkStatus, s conversion.Scope) error {
+func autoConvert_v1_9_PodSandboxNetworkStatus_To_v1_12_PodSandboxNetworkStatus(in *PodSandboxNetworkStatus, out *v1_12.PodSandboxNetworkStatus, s conversion.Scope) error {
 	out.Ip = in.Ip
 	return nil
 }
 
-// Convert_v1_9_PodSandboxNetworkStatus_To_v1_10_PodSandboxNetworkStatus is an autogenerated conversion function.
-func Convert_v1_9_PodSandboxNetworkStatus_To_v1_10_PodSandboxNetworkStatus(in *PodSandboxNetworkStatus, out *v1_10.PodSandboxNetworkStatus, s conversion.Scope) error {
-	return autoConvert_v1_9_PodSandboxNetworkStatus_To_v1_10_PodSandboxNetworkStatus(in, out, s)
+// Convert_v1_9_PodSandboxNetworkStatus_To_v1_12_PodSandboxNetworkStatus is an autogenerated conversion function.
+func Convert_v1_9_PodSandboxNetworkStatus_To_v1_12_PodSandboxNetworkStatus(in *PodSandboxNetworkStatus, out *v1_12.PodSandboxNetworkStatus, s conversion.Scope) error {
+	return autoConvert_v1_9_PodSandboxNetworkStatus_To_v1_12_PodSandboxNetworkStatus(in, out, s)
 }
 
-func autoConvert_v1_10_PodSandboxNetworkStatus_To_v1_9_PodSandboxNetworkStatus(in *v1_10.PodSandboxNetworkStatus, out *PodSandboxNetworkStatus, s conversion.Scope) error {
+func autoConvert_v1_12_PodSandboxNetworkStatus_To_v1_9_PodSandboxNetworkStatus(in *v1_12.PodSandboxNetworkStatus, out *PodSandboxNetworkStatus, s conversion.Scope) error {
 	out.Ip = in.Ip
 	return nil
 }
 
-// Convert_v1_10_PodSandboxNetworkStatus_To_v1_9_PodSandboxNetworkStatus is an autogenerated conversion function.
-func Convert_v1_10_PodSandboxNetworkStatus_To_v1_9_PodSandboxNetworkStatus(in *v1_10.PodSandboxNetworkStatus, out *PodSandboxNetworkStatus, s conversion.Scope) error {
-	return autoConvert_v1_10_PodSandboxNetworkStatus_To_v1_9_PodSandboxNetworkStatus(in, out, s)
+// Convert_v1_12_PodSandboxNetworkStatus_To_v1_9_PodSandboxNetworkStatus is an autogenerated conversion function.
+func Convert_v1_12_PodSandboxNetworkStatus_To_v1_9_PodSandboxNetworkStatus(in *v1_12.PodSandboxNetworkStatus, out *PodSandboxNetworkStatus, s conversion.Scope) error {
+	return autoConvert_v1_12_PodSandboxNetworkStatus_To_v1_9_PodSandboxNetworkStatus(in, out, s)
 }
 
-func autoConvert_v1_9_PodSandboxStateValue_To_v1_10_PodSandboxStateValue(in *PodSandboxStateValue, out *v1_10.PodSandboxStateValue, s conversion.Scope) error {
-	out.State = v1_10.PodSandboxState(in.State)
+func autoConvert_v1_9_PodSandboxStateValue_To_v1_12_PodSandboxStateValue(in *PodSandboxStateValue, out *v1_12.PodSandboxStateValue, s conversion.Scope) error {
+	out.State = v1_12.PodSandboxState(in.State)
 	return nil
 }
 
-// Convert_v1_9_PodSandboxStateValue_To_v1_10_PodSandboxStateValue is an autogenerated conversion function.
-func Convert_v1_9_PodSandboxStateValue_To_v1_10_PodSandboxStateValue(in *PodSandboxStateValue, out *v1_10.PodSandboxStateValue, s conversion.Scope) error {
-	return autoConvert_v1_9_PodSandboxStateValue_To_v1_10_PodSandboxStateValue(in, out, s)
+// Convert_v1_9_PodSandboxStateValue_To_v1_12_PodSandboxStateValue is an autogenerated conversion function.
+func Convert_v1_9_PodSandboxStateValue_To_v1_12_PodSandboxStateValue(in *PodSandboxStateValue, out *v1_12.PodSandboxStateValue, s conversion.Scope) error {
+	return autoConvert_v1_9_PodSandboxStateValue_To_v1_12_PodSandboxStateValue(in, out, s)
 }
 
-func autoConvert_v1_10_PodSandboxStateValue_To_v1_9_PodSandboxStateValue(in *v1_10.PodSandboxStateValue, out *PodSandboxStateValue, s conversion.Scope) error {
+func autoConvert_v1_12_PodSandboxStateValue_To_v1_9_PodSandboxStateValue(in *v1_12.PodSandboxStateValue, out *PodSandboxStateValue, s conversion.Scope) error {
 	out.State = PodSandboxState(in.State)
 	return nil
 }
 
-// Convert_v1_10_PodSandboxStateValue_To_v1_9_PodSandboxStateValue is an autogenerated conversion function.
-func Convert_v1_10_PodSandboxStateValue_To_v1_9_PodSandboxStateValue(in *v1_10.PodSandboxStateValue, out *PodSandboxStateValue, s conversion.Scope) error {
-	return autoConvert_v1_10_PodSandboxStateValue_To_v1_9_PodSandboxStateValue(in, out, s)
+// Convert_v1_12_PodSandboxStateValue_To_v1_9_PodSandboxStateValue is an autogenerated conversion function.
+func Convert_v1_12_PodSandboxStateValue_To_v1_9_PodSandboxStateValue(in *v1_12.PodSandboxStateValue, out *PodSandboxStateValue, s conversion.Scope) error {
+	return autoConvert_v1_12_PodSandboxStateValue_To_v1_9_PodSandboxStateValue(in, out, s)
 }
 
-func autoConvert_v1_9_PodSandboxStatus_To_v1_10_PodSandboxStatus(in *PodSandboxStatus, out *v1_10.PodSandboxStatus, s conversion.Scope) error {
+func autoConvert_v1_9_PodSandboxStatus_To_v1_12_PodSandboxStatus(in *PodSandboxStatus, out *v1_12.PodSandboxStatus, s conversion.Scope) error {
 	out.Id = in.Id
 	if in.Metadata != nil {
 		in, out := &in.Metadata, &out.Metadata
-		*out = new(v1_10.PodSandboxMetadata)
-		if err := Convert_v1_9_PodSandboxMetadata_To_v1_10_PodSandboxMetadata(*in, *out, s); err != nil {
+		*out = new(v1_12.PodSandboxMetadata)
+		if err := Convert_v1_9_PodSandboxMetadata_To_v1_12_PodSandboxMetadata(*in, *out, s); err != nil {
 			return err
 		}
 	} else {
 		out.Metadata = nil
 	}
-	out.State = v1_10.PodSandboxState(in.State)
+	out.State = v1_12.PodSandboxState(in.State)
 	out.CreatedAt = in.CreatedAt
 	if in.Network != nil {
 		in, out := &in.Network, &out.Network
-		*out = new(v1_10.PodSandboxNetworkStatus)
-		if err := Convert_v1_9_PodSandboxNetworkStatus_To_v1_10_PodSandboxNetworkStatus(*in, *out, s); err != nil {
+		*out = new(v1_12.PodSandboxNetworkStatus)
+		if err := Convert_v1_9_PodSandboxNetworkStatus_To_v1_12_PodSandboxNetworkStatus(*in, *out, s); err != nil {
 			return err
 		}
 	} else {
@@ -2667,8 +2669,8 @@ func autoConvert_v1_9_PodSandboxStatus_To_v1_10_PodSandboxStatus(in *PodSandboxS
 	}
 	if in.Linux != nil {
 		in, out := &in.Linux, &out.Linux
-		*out = new(v1_10.LinuxPodSandboxStatus)
-		if err := Convert_v1_9_LinuxPodSandboxStatus_To_v1_10_LinuxPodSandboxStatus(*in, *out, s); err != nil {
+		*out = new(v1_12.LinuxPodSandboxStatus)
+		if err := Convert_v1_9_LinuxPodSandboxStatus_To_v1_12_LinuxPodSandboxStatus(*in, *out, s); err != nil {
 			return err
 		}
 	} else {
@@ -2679,17 +2681,17 @@ func autoConvert_v1_9_PodSandboxStatus_To_v1_10_PodSandboxStatus(in *PodSandboxS
 	return nil
 }
 
-// Convert_v1_9_PodSandboxStatus_To_v1_10_PodSandboxStatus is an autogenerated conversion function.
-func Convert_v1_9_PodSandboxStatus_To_v1_10_PodSandboxStatus(in *PodSandboxStatus, out *v1_10.PodSandboxStatus, s conversion.Scope) error {
-	return autoConvert_v1_9_PodSandboxStatus_To_v1_10_PodSandboxStatus(in, out, s)
+// Convert_v1_9_PodSandboxStatus_To_v1_12_PodSandboxStatus is an autogenerated conversion function.
+func Convert_v1_9_PodSandboxStatus_To_v1_12_PodSandboxStatus(in *PodSandboxStatus, out *v1_12.PodSandboxStatus, s conversion.Scope) error {
+	return autoConvert_v1_9_PodSandboxStatus_To_v1_12_PodSandboxStatus(in, out, s)
 }
 
-func autoConvert_v1_10_PodSandboxStatus_To_v1_9_PodSandboxStatus(in *v1_10.PodSandboxStatus, out *PodSandboxStatus, s conversion.Scope) error {
+func autoConvert_v1_12_PodSandboxStatus_To_v1_9_PodSandboxStatus(in *v1_12.PodSandboxStatus, out *PodSandboxStatus, s conversion.Scope) error {
 	out.Id = in.Id
 	if in.Metadata != nil {
 		in, out := &in.Metadata, &out.Metadata
 		*out = new(PodSandboxMetadata)
-		if err := Convert_v1_10_PodSandboxMetadata_To_v1_9_PodSandboxMetadata(*in, *out, s); err != nil {
+		if err := Convert_v1_12_PodSandboxMetadata_To_v1_9_PodSandboxMetadata(*in, *out, s); err != nil {
 			return err
 		}
 	} else {
@@ -2700,7 +2702,7 @@ func autoConvert_v1_10_PodSandboxStatus_To_v1_9_PodSandboxStatus(in *v1_10.PodSa
 	if in.Network != nil {
 		in, out := &in.Network, &out.Network
 		*out = new(PodSandboxNetworkStatus)
-		if err := Convert_v1_10_PodSandboxNetworkStatus_To_v1_9_PodSandboxNetworkStatus(*in, *out, s); err != nil {
+		if err := Convert_v1_12_PodSandboxNetworkStatus_To_v1_9_PodSandboxNetworkStatus(*in, *out, s); err != nil {
 			return err
 		}
 	} else {
@@ -2709,7 +2711,7 @@ func autoConvert_v1_10_PodSandboxStatus_To_v1_9_PodSandboxStatus(in *v1_10.PodSa
 	if in.Linux != nil {
 		in, out := &in.Linux, &out.Linux
 		*out = new(LinuxPodSandboxStatus)
-		if err := Convert_v1_10_LinuxPodSandboxStatus_To_v1_9_LinuxPodSandboxStatus(*in, *out, s); err != nil {
+		if err := Convert_v1_12_LinuxPodSandboxStatus_To_v1_9_LinuxPodSandboxStatus(*in, *out, s); err != nil {
 			return err
 		}
 	} else {
@@ -2720,38 +2722,38 @@ func autoConvert_v1_10_PodSandboxStatus_To_v1_9_PodSandboxStatus(in *v1_10.PodSa
 	return nil
 }
 
-// Convert_v1_10_PodSandboxStatus_To_v1_9_PodSandboxStatus is an autogenerated conversion function.
-func Convert_v1_10_PodSandboxStatus_To_v1_9_PodSandboxStatus(in *v1_10.PodSandboxStatus, out *PodSandboxStatus, s conversion.Scope) error {
-	return autoConvert_v1_10_PodSandboxStatus_To_v1_9_PodSandboxStatus(in, out, s)
+// Convert_v1_12_PodSandboxStatus_To_v1_9_PodSandboxStatus is an autogenerated conversion function.
+func Convert_v1_12_PodSandboxStatus_To_v1_9_PodSandboxStatus(in *v1_12.PodSandboxStatus, out *PodSandboxStatus, s conversion.Scope) error {
+	return autoConvert_v1_12_PodSandboxStatus_To_v1_9_PodSandboxStatus(in, out, s)
 }
 
-func autoConvert_v1_9_PodSandboxStatusRequest_To_v1_10_PodSandboxStatusRequest(in *PodSandboxStatusRequest, out *v1_10.PodSandboxStatusRequest, s conversion.Scope) error {
+func autoConvert_v1_9_PodSandboxStatusRequest_To_v1_12_PodSandboxStatusRequest(in *PodSandboxStatusRequest, out *v1_12.PodSandboxStatusRequest, s conversion.Scope) error {
 	out.PodSandboxId = in.PodSandboxId
 	out.Verbose = in.Verbose
 	return nil
 }
 
-// Convert_v1_9_PodSandboxStatusRequest_To_v1_10_PodSandboxStatusRequest is an autogenerated conversion function.
-func Convert_v1_9_PodSandboxStatusRequest_To_v1_10_PodSandboxStatusRequest(in *PodSandboxStatusRequest, out *v1_10.PodSandboxStatusRequest, s conversion.Scope) error {
-	return autoConvert_v1_9_PodSandboxStatusRequest_To_v1_10_PodSandboxStatusRequest(in, out, s)
+// Convert_v1_9_PodSandboxStatusRequest_To_v1_12_PodSandboxStatusRequest is an autogenerated conversion function.
+func Convert_v1_9_PodSandboxStatusRequest_To_v1_12_PodSandboxStatusRequest(in *PodSandboxStatusRequest, out *v1_12.PodSandboxStatusRequest, s conversion.Scope) error {
+	return autoConvert_v1_9_PodSandboxStatusRequest_To_v1_12_PodSandboxStatusRequest(in, out, s)
 }
 
-func autoConvert_v1_10_PodSandboxStatusRequest_To_v1_9_PodSandboxStatusRequest(in *v1_10.PodSandboxStatusRequest, out *PodSandboxStatusRequest, s conversion.Scope) error {
+func autoConvert_v1_12_PodSandboxStatusRequest_To_v1_9_PodSandboxStatusRequest(in *v1_12.PodSandboxStatusRequest, out *PodSandboxStatusRequest, s conversion.Scope) error {
 	out.PodSandboxId = in.PodSandboxId
 	out.Verbose = in.Verbose
 	return nil
 }
 
-// Convert_v1_10_PodSandboxStatusRequest_To_v1_9_PodSandboxStatusRequest is an autogenerated conversion function.
-func Convert_v1_10_PodSandboxStatusRequest_To_v1_9_PodSandboxStatusRequest(in *v1_10.PodSandboxStatusRequest, out *PodSandboxStatusRequest, s conversion.Scope) error {
-	return autoConvert_v1_10_PodSandboxStatusRequest_To_v1_9_PodSandboxStatusRequest(in, out, s)
+// Convert_v1_12_PodSandboxStatusRequest_To_v1_9_PodSandboxStatusRequest is an autogenerated conversion function.
+func Convert_v1_12_PodSandboxStatusRequest_To_v1_9_PodSandboxStatusRequest(in *v1_12.PodSandboxStatusRequest, out *PodSandboxStatusRequest, s conversion.Scope) error {
+	return autoConvert_v1_12_PodSandboxStatusRequest_To_v1_9_PodSandboxStatusRequest(in, out, s)
 }
 
-func autoConvert_v1_9_PodSandboxStatusResponse_To_v1_10_PodSandboxStatusResponse(in *PodSandboxStatusResponse, out *v1_10.PodSandboxStatusResponse, s conversion.Scope) error {
+func autoConvert_v1_9_PodSandboxStatusResponse_To_v1_12_PodSandboxStatusResponse(in *PodSandboxStatusResponse, out *v1_12.PodSandboxStatusResponse, s conversion.Scope) error {
 	if in.Status != nil {
 		in, out := &in.Status, &out.Status
-		*out = new(v1_10.PodSandboxStatus)
-		if err := Convert_v1_9_PodSandboxStatus_To_v1_10_PodSandboxStatus(*in, *out, s); err != nil {
+		*out = new(v1_12.PodSandboxStatus)
+		if err := Convert_v1_9_PodSandboxStatus_To_v1_12_PodSandboxStatus(*in, *out, s); err != nil {
 			return err
 		}
 	} else {
@@ -2761,16 +2763,16 @@ func autoConvert_v1_9_PodSandboxStatusResponse_To_v1_10_PodSandboxStatusResponse
 	return nil
 }
 
-// Convert_v1_9_PodSandboxStatusResponse_To_v1_10_PodSandboxStatusResponse is an autogenerated conversion function.
-func Convert_v1_9_PodSandboxStatusResponse_To_v1_10_PodSandboxStatusResponse(in *PodSandboxStatusResponse, out *v1_10.PodSandboxStatusResponse, s conversion.Scope) error {
-	return autoConvert_v1_9_PodSandboxStatusResponse_To_v1_10_PodSandboxStatusResponse(in, out, s)
+// Convert_v1_9_PodSandboxStatusResponse_To_v1_12_PodSandboxStatusResponse is an autogenerated conversion function.
+func Convert_v1_9_PodSandboxStatusResponse_To_v1_12_PodSandboxStatusResponse(in *PodSandboxStatusResponse, out *v1_12.PodSandboxStatusResponse, s conversion.Scope) error {
+	return autoConvert_v1_9_PodSandboxStatusResponse_To_v1_12_PodSandboxStatusResponse(in, out, s)
 }
 
-func autoConvert_v1_10_PodSandboxStatusResponse_To_v1_9_PodSandboxStatusResponse(in *v1_10.PodSandboxStatusResponse, out *PodSandboxStatusResponse, s conversion.Scope) error {
+func autoConvert_v1_12_PodSandboxStatusResponse_To_v1_9_PodSandboxStatusResponse(in *v1_12.PodSandboxStatusResponse, out *PodSandboxStatusResponse, s conversion.Scope) error {
 	if in.Status != nil {
 		in, out := &in.Status, &out.Status
 		*out = new(PodSandboxStatus)
-		if err := Convert_v1_10_PodSandboxStatus_To_v1_9_PodSandboxStatus(*in, *out, s); err != nil {
+		if err := Convert_v1_12_PodSandboxStatus_To_v1_9_PodSandboxStatus(*in, *out, s); err != nil {
 			return err
 		}
 	} else {
@@ -2780,67 +2782,67 @@ func autoConvert_v1_10_PodSandboxStatusResponse_To_v1_9_PodSandboxStatusResponse
 	return nil
 }
 
-// Convert_v1_10_PodSandboxStatusResponse_To_v1_9_PodSandboxStatusResponse is an autogenerated conversion function.
-func Convert_v1_10_PodSandboxStatusResponse_To_v1_9_PodSandboxStatusResponse(in *v1_10.PodSandboxStatusResponse, out *PodSandboxStatusResponse, s conversion.Scope) error {
-	return autoConvert_v1_10_PodSandboxStatusResponse_To_v1_9_PodSandboxStatusResponse(in, out, s)
+// Convert_v1_12_PodSandboxStatusResponse_To_v1_9_PodSandboxStatusResponse is an autogenerated conversion function.
+func Convert_v1_12_PodSandboxStatusResponse_To_v1_9_PodSandboxStatusResponse(in *v1_12.PodSandboxStatusResponse, out *PodSandboxStatusResponse, s conversion.Scope) error {
+	return autoConvert_v1_12_PodSandboxStatusResponse_To_v1_9_PodSandboxStatusResponse(in, out, s)
 }
 
-func autoConvert_v1_9_PortForwardRequest_To_v1_10_PortForwardRequest(in *PortForwardRequest, out *v1_10.PortForwardRequest, s conversion.Scope) error {
+func autoConvert_v1_9_PortForwardRequest_To_v1_12_PortForwardRequest(in *PortForwardRequest, out *v1_12.PortForwardRequest, s conversion.Scope) error {
 	out.PodSandboxId = in.PodSandboxId
 	out.Port = in.Port
 	return nil
 }
 
-// Convert_v1_9_PortForwardRequest_To_v1_10_PortForwardRequest is an autogenerated conversion function.
-func Convert_v1_9_PortForwardRequest_To_v1_10_PortForwardRequest(in *PortForwardRequest, out *v1_10.PortForwardRequest, s conversion.Scope) error {
-	return autoConvert_v1_9_PortForwardRequest_To_v1_10_PortForwardRequest(in, out, s)
+// Convert_v1_9_PortForwardRequest_To_v1_12_PortForwardRequest is an autogenerated conversion function.
+func Convert_v1_9_PortForwardRequest_To_v1_12_PortForwardRequest(in *PortForwardRequest, out *v1_12.PortForwardRequest, s conversion.Scope) error {
+	return autoConvert_v1_9_PortForwardRequest_To_v1_12_PortForwardRequest(in, out, s)
 }
 
-func autoConvert_v1_10_PortForwardRequest_To_v1_9_PortForwardRequest(in *v1_10.PortForwardRequest, out *PortForwardRequest, s conversion.Scope) error {
+func autoConvert_v1_12_PortForwardRequest_To_v1_9_PortForwardRequest(in *v1_12.PortForwardRequest, out *PortForwardRequest, s conversion.Scope) error {
 	out.PodSandboxId = in.PodSandboxId
 	out.Port = in.Port
 	return nil
 }
 
-// Convert_v1_10_PortForwardRequest_To_v1_9_PortForwardRequest is an autogenerated conversion function.
-func Convert_v1_10_PortForwardRequest_To_v1_9_PortForwardRequest(in *v1_10.PortForwardRequest, out *PortForwardRequest, s conversion.Scope) error {
-	return autoConvert_v1_10_PortForwardRequest_To_v1_9_PortForwardRequest(in, out, s)
+// Convert_v1_12_PortForwardRequest_To_v1_9_PortForwardRequest is an autogenerated conversion function.
+func Convert_v1_12_PortForwardRequest_To_v1_9_PortForwardRequest(in *v1_12.PortForwardRequest, out *PortForwardRequest, s conversion.Scope) error {
+	return autoConvert_v1_12_PortForwardRequest_To_v1_9_PortForwardRequest(in, out, s)
 }
 
-func autoConvert_v1_9_PortForwardResponse_To_v1_10_PortForwardResponse(in *PortForwardResponse, out *v1_10.PortForwardResponse, s conversion.Scope) error {
+func autoConvert_v1_9_PortForwardResponse_To_v1_12_PortForwardResponse(in *PortForwardResponse, out *v1_12.PortForwardResponse, s conversion.Scope) error {
 	out.Url = in.Url
 	return nil
 }
 
-// Convert_v1_9_PortForwardResponse_To_v1_10_PortForwardResponse is an autogenerated conversion function.
-func Convert_v1_9_PortForwardResponse_To_v1_10_PortForwardResponse(in *PortForwardResponse, out *v1_10.PortForwardResponse, s conversion.Scope) error {
-	return autoConvert_v1_9_PortForwardResponse_To_v1_10_PortForwardResponse(in, out, s)
+// Convert_v1_9_PortForwardResponse_To_v1_12_PortForwardResponse is an autogenerated conversion function.
+func Convert_v1_9_PortForwardResponse_To_v1_12_PortForwardResponse(in *PortForwardResponse, out *v1_12.PortForwardResponse, s conversion.Scope) error {
+	return autoConvert_v1_9_PortForwardResponse_To_v1_12_PortForwardResponse(in, out, s)
 }
 
-func autoConvert_v1_10_PortForwardResponse_To_v1_9_PortForwardResponse(in *v1_10.PortForwardResponse, out *PortForwardResponse, s conversion.Scope) error {
+func autoConvert_v1_12_PortForwardResponse_To_v1_9_PortForwardResponse(in *v1_12.PortForwardResponse, out *PortForwardResponse, s conversion.Scope) error {
 	out.Url = in.Url
 	return nil
 }
 
-// Convert_v1_10_PortForwardResponse_To_v1_9_PortForwardResponse is an autogenerated conversion function.
-func Convert_v1_10_PortForwardResponse_To_v1_9_PortForwardResponse(in *v1_10.PortForwardResponse, out *PortForwardResponse, s conversion.Scope) error {
-	return autoConvert_v1_10_PortForwardResponse_To_v1_9_PortForwardResponse(in, out, s)
+// Convert_v1_12_PortForwardResponse_To_v1_9_PortForwardResponse is an autogenerated conversion function.
+func Convert_v1_12_PortForwardResponse_To_v1_9_PortForwardResponse(in *v1_12.PortForwardResponse, out *PortForwardResponse, s conversion.Scope) error {
+	return autoConvert_v1_12_PortForwardResponse_To_v1_9_PortForwardResponse(in, out, s)
 }
 
-func autoConvert_v1_9_PortMapping_To_v1_10_PortMapping(in *PortMapping, out *v1_10.PortMapping, s conversion.Scope) error {
-	out.Protocol = v1_10.Protocol(in.Protocol)
+func autoConvert_v1_9_PortMapping_To_v1_12_PortMapping(in *PortMapping, out *v1_12.PortMapping, s conversion.Scope) error {
+	out.Protocol = v1_12.Protocol(in.Protocol)
 	out.ContainerPort = in.ContainerPort
 	out.HostPort = in.HostPort
 	out.HostIp = in.HostIp
 	return nil
 }
 
-// Convert_v1_9_PortMapping_To_v1_10_PortMapping is an autogenerated conversion function.
-func Convert_v1_9_PortMapping_To_v1_10_PortMapping(in *PortMapping, out *v1_10.PortMapping, s conversion.Scope) error {
-	return autoConvert_v1_9_PortMapping_To_v1_10_PortMapping(in, out, s)
+// Convert_v1_9_PortMapping_To_v1_12_PortMapping is an autogenerated conversion function.
+func Convert_v1_9_PortMapping_To_v1_12_PortMapping(in *PortMapping, out *v1_12.PortMapping, s conversion.Scope) error {
+	return autoConvert_v1_9_PortMapping_To_v1_12_PortMapping(in, out, s)
 }
 
-func autoConvert_v1_10_PortMapping_To_v1_9_PortMapping(in *v1_10.PortMapping, out *PortMapping, s conversion.Scope) error {
+func autoConvert_v1_12_PortMapping_To_v1_9_PortMapping(in *v1_12.PortMapping, out *PortMapping, s conversion.Scope) error {
 	out.Protocol = Protocol(in.Protocol)
 	out.ContainerPort = in.ContainerPort
 	out.HostPort = in.HostPort
@@ -2848,16 +2850,16 @@ func autoConvert_v1_10_PortMapping_To_v1_9_PortMapping(in *v1_10.PortMapping, ou
 	return nil
 }
 
-// Convert_v1_10_PortMapping_To_v1_9_PortMapping is an autogenerated conversion function.
-func Convert_v1_10_PortMapping_To_v1_9_PortMapping(in *v1_10.PortMapping, out *PortMapping, s conversion.Scope) error {
-	return autoConvert_v1_10_PortMapping_To_v1_9_PortMapping(in, out, s)
+// Convert_v1_12_PortMapping_To_v1_9_PortMapping is an autogenerated conversion function.
+func Convert_v1_12_PortMapping_To_v1_9_PortMapping(in *v1_12.PortMapping, out *PortMapping, s conversion.Scope) error {
+	return autoConvert_v1_12_PortMapping_To_v1_9_PortMapping(in, out, s)
 }
 
-func autoConvert_v1_9_PullImageRequest_To_v1_10_PullImageRequest(in *PullImageRequest, out *v1_10.PullImageRequest, s conversion.Scope) error {
+func autoConvert_v1_9_PullImageRequest_To_v1_12_PullImageRequest(in *PullImageRequest, out *v1_12.PullImageRequest, s conversion.Scope) error {
 	if in.Image != nil {
 		in, out := &in.Image, &out.Image
-		*out = new(v1_10.ImageSpec)
-		if err := Convert_v1_9_ImageSpec_To_v1_10_ImageSpec(*in, *out, s); err != nil {
+		*out = new(v1_12.ImageSpec)
+		if err := Convert_v1_9_ImageSpec_To_v1_12_ImageSpec(*in, *out, s); err != nil {
 			return err
 		}
 	} else {
@@ -2865,8 +2867,8 @@ func autoConvert_v1_9_PullImageRequest_To_v1_10_PullImageRequest(in *PullImageRe
 	}
 	if in.Auth != nil {
 		in, out := &in.Auth, &out.Auth
-		*out = new(v1_10.AuthConfig)
-		if err := Convert_v1_9_AuthConfig_To_v1_10_AuthConfig(*in, *out, s); err != nil {
+		*out = new(v1_12.AuthConfig)
+		if err := Convert_v1_9_AuthConfig_To_v1_12_AuthConfig(*in, *out, s); err != nil {
 			return err
 		}
 	} else {
@@ -2874,8 +2876,8 @@ func autoConvert_v1_9_PullImageRequest_To_v1_10_PullImageRequest(in *PullImageRe
 	}
 	if in.SandboxConfig != nil {
 		in, out := &in.SandboxConfig, &out.SandboxConfig
-		*out = new(v1_10.PodSandboxConfig)
-		if err := Convert_v1_9_PodSandboxConfig_To_v1_10_PodSandboxConfig(*in, *out, s); err != nil {
+		*out = new(v1_12.PodSandboxConfig)
+		if err := Convert_v1_9_PodSandboxConfig_To_v1_12_PodSandboxConfig(*in, *out, s); err != nil {
 			return err
 		}
 	} else {
@@ -2884,16 +2886,16 @@ func autoConvert_v1_9_PullImageRequest_To_v1_10_PullImageRequest(in *PullImageRe
 	return nil
 }
 
-// Convert_v1_9_PullImageRequest_To_v1_10_PullImageRequest is an autogenerated conversion function.
-func Convert_v1_9_PullImageRequest_To_v1_10_PullImageRequest(in *PullImageRequest, out *v1_10.PullImageRequest, s conversion.Scope) error {
-	return autoConvert_v1_9_PullImageRequest_To_v1_10_PullImageRequest(in, out, s)
+// Convert_v1_9_PullImageRequest_To_v1_12_PullImageRequest is an autogenerated conversion function.
+func Convert_v1_9_PullImageRequest_To_v1_12_PullImageRequest(in *PullImageRequest, out *v1_12.PullImageRequest, s conversion.Scope) error {
+	return autoConvert_v1_9_PullImageRequest_To_v1_12_PullImageRequest(in, out, s)
 }
 
-func autoConvert_v1_10_PullImageRequest_To_v1_9_PullImageRequest(in *v1_10.PullImageRequest, out *PullImageRequest, s conversion.Scope) error {
+func autoConvert_v1_12_PullImageRequest_To_v1_9_PullImageRequest(in *v1_12.PullImageRequest, out *PullImageRequest, s conversion.Scope) error {
 	if in.Image != nil {
 		in, out := &in.Image, &out.Image
 		*out = new(ImageSpec)
-		if err := Convert_v1_10_ImageSpec_To_v1_9_ImageSpec(*in, *out, s); err != nil {
+		if err := Convert_v1_12_ImageSpec_To_v1_9_ImageSpec(*in, *out, s); err != nil {
 			return err
 		}
 	} else {
@@ -2902,7 +2904,7 @@ func autoConvert_v1_10_PullImageRequest_To_v1_9_PullImageRequest(in *v1_10.PullI
 	if in.Auth != nil {
 		in, out := &in.Auth, &out.Auth
 		*out = new(AuthConfig)
-		if err := Convert_v1_10_AuthConfig_To_v1_9_AuthConfig(*in, *out, s); err != nil {
+		if err := Convert_v1_12_AuthConfig_To_v1_9_AuthConfig(*in, *out, s); err != nil {
 			return err
 		}
 	} else {
@@ -2911,7 +2913,7 @@ func autoConvert_v1_10_PullImageRequest_To_v1_9_PullImageRequest(in *v1_10.PullI
 	if in.SandboxConfig != nil {
 		in, out := &in.SandboxConfig, &out.SandboxConfig
 		*out = new(PodSandboxConfig)
-		if err := Convert_v1_10_PodSandboxConfig_To_v1_9_PodSandboxConfig(*in, *out, s); err != nil {
+		if err := Convert_v1_12_PodSandboxConfig_To_v1_9_PodSandboxConfig(*in, *out, s); err != nil {
 			return err
 		}
 	} else {
@@ -2920,74 +2922,74 @@ func autoConvert_v1_10_PullImageRequest_To_v1_9_PullImageRequest(in *v1_10.PullI
 	return nil
 }
 
-// Convert_v1_10_PullImageRequest_To_v1_9_PullImageRequest is an autogenerated conversion function.
-func Convert_v1_10_PullImageRequest_To_v1_9_PullImageRequest(in *v1_10.PullImageRequest, out *PullImageRequest, s conversion.Scope) error {
-	return autoConvert_v1_10_PullImageRequest_To_v1_9_PullImageRequest(in, out, s)
+// Convert_v1_12_PullImageRequest_To_v1_9_PullImageRequest is an autogenerated conversion function.
+func Convert_v1_12_PullImageRequest_To_v1_9_PullImageRequest(in *v1_12.PullImageRequest, out *PullImageRequest, s conversion.Scope) error {
+	return autoConvert_v1_12_PullImageRequest_To_v1_9_PullImageRequest(in, out, s)
 }
 
-func autoConvert_v1_9_PullImageResponse_To_v1_10_PullImageResponse(in *PullImageResponse, out *v1_10.PullImageResponse, s conversion.Scope) error {
+func autoConvert_v1_9_PullImageResponse_To_v1_12_PullImageResponse(in *PullImageResponse, out *v1_12.PullImageResponse, s conversion.Scope) error {
 	out.ImageRef = in.ImageRef
 	return nil
 }
 
-// Convert_v1_9_PullImageResponse_To_v1_10_PullImageResponse is an autogenerated conversion function.
-func Convert_v1_9_PullImageResponse_To_v1_10_PullImageResponse(in *PullImageResponse, out *v1_10.PullImageResponse, s conversion.Scope) error {
-	return autoConvert_v1_9_PullImageResponse_To_v1_10_PullImageResponse(in, out, s)
+// Convert_v1_9_PullImageResponse_To_v1_12_PullImageResponse is an autogenerated conversion function.
+func Convert_v1_9_PullImageResponse_To_v1_12_PullImageResponse(in *PullImageResponse, out *v1_12.PullImageResponse, s conversion.Scope) error {
+	return autoConvert_v1_9_PullImageResponse_To_v1_12_PullImageResponse(in, out, s)
 }
 
-func autoConvert_v1_10_PullImageResponse_To_v1_9_PullImageResponse(in *v1_10.PullImageResponse, out *PullImageResponse, s conversion.Scope) error {
+func autoConvert_v1_12_PullImageResponse_To_v1_9_PullImageResponse(in *v1_12.PullImageResponse, out *PullImageResponse, s conversion.Scope) error {
 	out.ImageRef = in.ImageRef
 	return nil
 }
 
-// Convert_v1_10_PullImageResponse_To_v1_9_PullImageResponse is an autogenerated conversion function.
-func Convert_v1_10_PullImageResponse_To_v1_9_PullImageResponse(in *v1_10.PullImageResponse, out *PullImageResponse, s conversion.Scope) error {
-	return autoConvert_v1_10_PullImageResponse_To_v1_9_PullImageResponse(in, out, s)
+// Convert_v1_12_PullImageResponse_To_v1_9_PullImageResponse is an autogenerated conversion function.
+func Convert_v1_12_PullImageResponse_To_v1_9_PullImageResponse(in *v1_12.PullImageResponse, out *PullImageResponse, s conversion.Scope) error {
+	return autoConvert_v1_12_PullImageResponse_To_v1_9_PullImageResponse(in, out, s)
 }
 
-func autoConvert_v1_9_RemoveContainerRequest_To_v1_10_RemoveContainerRequest(in *RemoveContainerRequest, out *v1_10.RemoveContainerRequest, s conversion.Scope) error {
+func autoConvert_v1_9_RemoveContainerRequest_To_v1_12_RemoveContainerRequest(in *RemoveContainerRequest, out *v1_12.RemoveContainerRequest, s conversion.Scope) error {
 	out.ContainerId = in.ContainerId
 	return nil
 }
 
-// Convert_v1_9_RemoveContainerRequest_To_v1_10_RemoveContainerRequest is an autogenerated conversion function.
-func Convert_v1_9_RemoveContainerRequest_To_v1_10_RemoveContainerRequest(in *RemoveContainerRequest, out *v1_10.RemoveContainerRequest, s conversion.Scope) error {
-	return autoConvert_v1_9_RemoveContainerRequest_To_v1_10_RemoveContainerRequest(in, out, s)
+// Convert_v1_9_RemoveContainerRequest_To_v1_12_RemoveContainerRequest is an autogenerated conversion function.
+func Convert_v1_9_RemoveContainerRequest_To_v1_12_RemoveContainerRequest(in *RemoveContainerRequest, out *v1_12.RemoveContainerRequest, s conversion.Scope) error {
+	return autoConvert_v1_9_RemoveContainerRequest_To_v1_12_RemoveContainerRequest(in, out, s)
 }
 
-func autoConvert_v1_10_RemoveContainerRequest_To_v1_9_RemoveContainerRequest(in *v1_10.RemoveContainerRequest, out *RemoveContainerRequest, s conversion.Scope) error {
+func autoConvert_v1_12_RemoveContainerRequest_To_v1_9_RemoveContainerRequest(in *v1_12.RemoveContainerRequest, out *RemoveContainerRequest, s conversion.Scope) error {
 	out.ContainerId = in.ContainerId
 	return nil
 }
 
-// Convert_v1_10_RemoveContainerRequest_To_v1_9_RemoveContainerRequest is an autogenerated conversion function.
-func Convert_v1_10_RemoveContainerRequest_To_v1_9_RemoveContainerRequest(in *v1_10.RemoveContainerRequest, out *RemoveContainerRequest, s conversion.Scope) error {
-	return autoConvert_v1_10_RemoveContainerRequest_To_v1_9_RemoveContainerRequest(in, out, s)
+// Convert_v1_12_RemoveContainerRequest_To_v1_9_RemoveContainerRequest is an autogenerated conversion function.
+func Convert_v1_12_RemoveContainerRequest_To_v1_9_RemoveContainerRequest(in *v1_12.RemoveContainerRequest, out *RemoveContainerRequest, s conversion.Scope) error {
+	return autoConvert_v1_12_RemoveContainerRequest_To_v1_9_RemoveContainerRequest(in, out, s)
 }
 
-func autoConvert_v1_9_RemoveContainerResponse_To_v1_10_RemoveContainerResponse(in *RemoveContainerResponse, out *v1_10.RemoveContainerResponse, s conversion.Scope) error {
+func autoConvert_v1_9_RemoveContainerResponse_To_v1_12_RemoveContainerResponse(in *RemoveContainerResponse, out *v1_12.RemoveContainerResponse, s conversion.Scope) error {
 	return nil
 }
 
-// Convert_v1_9_RemoveContainerResponse_To_v1_10_RemoveContainerResponse is an autogenerated conversion function.
-func Convert_v1_9_RemoveContainerResponse_To_v1_10_RemoveContainerResponse(in *RemoveContainerResponse, out *v1_10.RemoveContainerResponse, s conversion.Scope) error {
-	return autoConvert_v1_9_RemoveContainerResponse_To_v1_10_RemoveContainerResponse(in, out, s)
+// Convert_v1_9_RemoveContainerResponse_To_v1_12_RemoveContainerResponse is an autogenerated conversion function.
+func Convert_v1_9_RemoveContainerResponse_To_v1_12_RemoveContainerResponse(in *RemoveContainerResponse, out *v1_12.RemoveContainerResponse, s conversion.Scope) error {
+	return autoConvert_v1_9_RemoveContainerResponse_To_v1_12_RemoveContainerResponse(in, out, s)
 }
 
-func autoConvert_v1_10_RemoveContainerResponse_To_v1_9_RemoveContainerResponse(in *v1_10.RemoveContainerResponse, out *RemoveContainerResponse, s conversion.Scope) error {
+func autoConvert_v1_12_RemoveContainerResponse_To_v1_9_RemoveContainerResponse(in *v1_12.RemoveContainerResponse, out *RemoveContainerResponse, s conversion.Scope) error {
 	return nil
 }
 
-// Convert_v1_10_RemoveContainerResponse_To_v1_9_RemoveContainerResponse is an autogenerated conversion function.
-func Convert_v1_10_RemoveContainerResponse_To_v1_9_RemoveContainerResponse(in *v1_10.RemoveContainerResponse, out *RemoveContainerResponse, s conversion.Scope) error {
-	return autoConvert_v1_10_RemoveContainerResponse_To_v1_9_RemoveContainerResponse(in, out, s)
+// Convert_v1_12_RemoveContainerResponse_To_v1_9_RemoveContainerResponse is an autogenerated conversion function.
+func Convert_v1_12_RemoveContainerResponse_To_v1_9_RemoveContainerResponse(in *v1_12.RemoveContainerResponse, out *RemoveContainerResponse, s conversion.Scope) error {
+	return autoConvert_v1_12_RemoveContainerResponse_To_v1_9_RemoveContainerResponse(in, out, s)
 }
 
-func autoConvert_v1_9_RemoveImageRequest_To_v1_10_RemoveImageRequest(in *RemoveImageRequest, out *v1_10.RemoveImageRequest, s conversion.Scope) error {
+func autoConvert_v1_9_RemoveImageRequest_To_v1_12_RemoveImageRequest(in *RemoveImageRequest, out *v1_12.RemoveImageRequest, s conversion.Scope) error {
 	if in.Image != nil {
 		in, out := &in.Image, &out.Image
-		*out = new(v1_10.ImageSpec)
-		if err := Convert_v1_9_ImageSpec_To_v1_10_ImageSpec(*in, *out, s); err != nil {
+		*out = new(v1_12.ImageSpec)
+		if err := Convert_v1_9_ImageSpec_To_v1_12_ImageSpec(*in, *out, s); err != nil {
 			return err
 		}
 	} else {
@@ -2996,16 +2998,16 @@ func autoConvert_v1_9_RemoveImageRequest_To_v1_10_RemoveImageRequest(in *RemoveI
 	return nil
 }
 
-// Convert_v1_9_RemoveImageRequest_To_v1_10_RemoveImageRequest is an autogenerated conversion function.
-func Convert_v1_9_RemoveImageRequest_To_v1_10_RemoveImageRequest(in *RemoveImageRequest, out *v1_10.RemoveImageRequest, s conversion.Scope) error {
-	return autoConvert_v1_9_RemoveImageRequest_To_v1_10_RemoveImageRequest(in, out, s)
+// Convert_v1_9_RemoveImageRequest_To_v1_12_RemoveImageRequest is an autogenerated conversion function.
+func Convert_v1_9_RemoveImageRequest_To_v1_12_RemoveImageRequest(in *RemoveImageRequest, out *v1_12.RemoveImageRequest, s conversion.Scope) error {
+	return autoConvert_v1_9_RemoveImageRequest_To_v1_12_RemoveImageRequest(in, out, s)
 }
 
-func autoConvert_v1_10_RemoveImageRequest_To_v1_9_RemoveImageRequest(in *v1_10.RemoveImageRequest, out *RemoveImageRequest, s conversion.Scope) error {
+func autoConvert_v1_12_RemoveImageRequest_To_v1_9_RemoveImageRequest(in *v1_12.RemoveImageRequest, out *RemoveImageRequest, s conversion.Scope) error {
 	if in.Image != nil {
 		in, out := &in.Image, &out.Image
 		*out = new(ImageSpec)
-		if err := Convert_v1_10_ImageSpec_To_v1_9_ImageSpec(*in, *out, s); err != nil {
+		if err := Convert_v1_12_ImageSpec_To_v1_9_ImageSpec(*in, *out, s); err != nil {
 			return err
 		}
 	} else {
@@ -3014,72 +3016,72 @@ func autoConvert_v1_10_RemoveImageRequest_To_v1_9_RemoveImageRequest(in *v1_10.R
 	return nil
 }
 
-// Convert_v1_10_RemoveImageRequest_To_v1_9_RemoveImageRequest is an autogenerated conversion function.
-func Convert_v1_10_RemoveImageRequest_To_v1_9_RemoveImageRequest(in *v1_10.RemoveImageRequest, out *RemoveImageRequest, s conversion.Scope) error {
-	return autoConvert_v1_10_RemoveImageRequest_To_v1_9_RemoveImageRequest(in, out, s)
+// Convert_v1_12_RemoveImageRequest_To_v1_9_RemoveImageRequest is an autogenerated conversion function.
+func Convert_v1_12_RemoveImageRequest_To_v1_9_RemoveImageRequest(in *v1_12.RemoveImageRequest, out *RemoveImageRequest, s conversion.Scope) error {
+	return autoConvert_v1_12_RemoveImageRequest_To_v1_9_RemoveImageRequest(in, out, s)
 }
 
-func autoConvert_v1_9_RemoveImageResponse_To_v1_10_RemoveImageResponse(in *RemoveImageResponse, out *v1_10.RemoveImageResponse, s conversion.Scope) error {
+func autoConvert_v1_9_RemoveImageResponse_To_v1_12_RemoveImageResponse(in *RemoveImageResponse, out *v1_12.RemoveImageResponse, s conversion.Scope) error {
 	return nil
 }
 
-// Convert_v1_9_RemoveImageResponse_To_v1_10_RemoveImageResponse is an autogenerated conversion function.
-func Convert_v1_9_RemoveImageResponse_To_v1_10_RemoveImageResponse(in *RemoveImageResponse, out *v1_10.RemoveImageResponse, s conversion.Scope) error {
-	return autoConvert_v1_9_RemoveImageResponse_To_v1_10_RemoveImageResponse(in, out, s)
+// Convert_v1_9_RemoveImageResponse_To_v1_12_RemoveImageResponse is an autogenerated conversion function.
+func Convert_v1_9_RemoveImageResponse_To_v1_12_RemoveImageResponse(in *RemoveImageResponse, out *v1_12.RemoveImageResponse, s conversion.Scope) error {
+	return autoConvert_v1_9_RemoveImageResponse_To_v1_12_RemoveImageResponse(in, out, s)
 }
 
-func autoConvert_v1_10_RemoveImageResponse_To_v1_9_RemoveImageResponse(in *v1_10.RemoveImageResponse, out *RemoveImageResponse, s conversion.Scope) error {
+func autoConvert_v1_12_RemoveImageResponse_To_v1_9_RemoveImageResponse(in *v1_12.RemoveImageResponse, out *RemoveImageResponse, s conversion.Scope) error {
 	return nil
 }
 
-// Convert_v1_10_RemoveImageResponse_To_v1_9_RemoveImageResponse is an autogenerated conversion function.
-func Convert_v1_10_RemoveImageResponse_To_v1_9_RemoveImageResponse(in *v1_10.RemoveImageResponse, out *RemoveImageResponse, s conversion.Scope) error {
-	return autoConvert_v1_10_RemoveImageResponse_To_v1_9_RemoveImageResponse(in, out, s)
+// Convert_v1_12_RemoveImageResponse_To_v1_9_RemoveImageResponse is an autogenerated conversion function.
+func Convert_v1_12_RemoveImageResponse_To_v1_9_RemoveImageResponse(in *v1_12.RemoveImageResponse, out *RemoveImageResponse, s conversion.Scope) error {
+	return autoConvert_v1_12_RemoveImageResponse_To_v1_9_RemoveImageResponse(in, out, s)
 }
 
-func autoConvert_v1_9_RemovePodSandboxRequest_To_v1_10_RemovePodSandboxRequest(in *RemovePodSandboxRequest, out *v1_10.RemovePodSandboxRequest, s conversion.Scope) error {
+func autoConvert_v1_9_RemovePodSandboxRequest_To_v1_12_RemovePodSandboxRequest(in *RemovePodSandboxRequest, out *v1_12.RemovePodSandboxRequest, s conversion.Scope) error {
 	out.PodSandboxId = in.PodSandboxId
 	return nil
 }
 
-// Convert_v1_9_RemovePodSandboxRequest_To_v1_10_RemovePodSandboxRequest is an autogenerated conversion function.
-func Convert_v1_9_RemovePodSandboxRequest_To_v1_10_RemovePodSandboxRequest(in *RemovePodSandboxRequest, out *v1_10.RemovePodSandboxRequest, s conversion.Scope) error {
-	return autoConvert_v1_9_RemovePodSandboxRequest_To_v1_10_RemovePodSandboxRequest(in, out, s)
+// Convert_v1_9_RemovePodSandboxRequest_To_v1_12_RemovePodSandboxRequest is an autogenerated conversion function.
+func Convert_v1_9_RemovePodSandboxRequest_To_v1_12_RemovePodSandboxRequest(in *RemovePodSandboxRequest, out *v1_12.RemovePodSandboxRequest, s conversion.Scope) error {
+	return autoConvert_v1_9_RemovePodSandboxRequest_To_v1_12_RemovePodSandboxRequest(in, out, s)
 }
 
-func autoConvert_v1_10_RemovePodSandboxRequest_To_v1_9_RemovePodSandboxRequest(in *v1_10.RemovePodSandboxRequest, out *RemovePodSandboxRequest, s conversion.Scope) error {
+func autoConvert_v1_12_RemovePodSandboxRequest_To_v1_9_RemovePodSandboxRequest(in *v1_12.RemovePodSandboxRequest, out *RemovePodSandboxRequest, s conversion.Scope) error {
 	out.PodSandboxId = in.PodSandboxId
 	return nil
 }
 
-// Convert_v1_10_RemovePodSandboxRequest_To_v1_9_RemovePodSandboxRequest is an autogenerated conversion function.
-func Convert_v1_10_RemovePodSandboxRequest_To_v1_9_RemovePodSandboxRequest(in *v1_10.RemovePodSandboxRequest, out *RemovePodSandboxRequest, s conversion.Scope) error {
-	return autoConvert_v1_10_RemovePodSandboxRequest_To_v1_9_RemovePodSandboxRequest(in, out, s)
+// Convert_v1_12_RemovePodSandboxRequest_To_v1_9_RemovePodSandboxRequest is an autogenerated conversion function.
+func Convert_v1_12_RemovePodSandboxRequest_To_v1_9_RemovePodSandboxRequest(in *v1_12.RemovePodSandboxRequest, out *RemovePodSandboxRequest, s conversion.Scope) error {
+	return autoConvert_v1_12_RemovePodSandboxRequest_To_v1_9_RemovePodSandboxRequest(in, out, s)
 }
 
-func autoConvert_v1_9_RemovePodSandboxResponse_To_v1_10_RemovePodSandboxResponse(in *RemovePodSandboxResponse, out *v1_10.RemovePodSandboxResponse, s conversion.Scope) error {
+func autoConvert_v1_9_RemovePodSandboxResponse_To_v1_12_RemovePodSandboxResponse(in *RemovePodSandboxResponse, out *v1_12.RemovePodSandboxResponse, s conversion.Scope) error {
 	return nil
 }
 
-// Convert_v1_9_RemovePodSandboxResponse_To_v1_10_RemovePodSandboxResponse is an autogenerated conversion function.
-func Convert_v1_9_RemovePodSandboxResponse_To_v1_10_RemovePodSandboxResponse(in *RemovePodSandboxResponse, out *v1_10.RemovePodSandboxResponse, s conversion.Scope) error {
-	return autoConvert_v1_9_RemovePodSandboxResponse_To_v1_10_RemovePodSandboxResponse(in, out, s)
+// Convert_v1_9_RemovePodSandboxResponse_To_v1_12_RemovePodSandboxResponse is an autogenerated conversion function.
+func Convert_v1_9_RemovePodSandboxResponse_To_v1_12_RemovePodSandboxResponse(in *RemovePodSandboxResponse, out *v1_12.RemovePodSandboxResponse, s conversion.Scope) error {
+	return autoConvert_v1_9_RemovePodSandboxResponse_To_v1_12_RemovePodSandboxResponse(in, out, s)
 }
 
-func autoConvert_v1_10_RemovePodSandboxResponse_To_v1_9_RemovePodSandboxResponse(in *v1_10.RemovePodSandboxResponse, out *RemovePodSandboxResponse, s conversion.Scope) error {
+func autoConvert_v1_12_RemovePodSandboxResponse_To_v1_9_RemovePodSandboxResponse(in *v1_12.RemovePodSandboxResponse, out *RemovePodSandboxResponse, s conversion.Scope) error {
 	return nil
 }
 
-// Convert_v1_10_RemovePodSandboxResponse_To_v1_9_RemovePodSandboxResponse is an autogenerated conversion function.
-func Convert_v1_10_RemovePodSandboxResponse_To_v1_9_RemovePodSandboxResponse(in *v1_10.RemovePodSandboxResponse, out *RemovePodSandboxResponse, s conversion.Scope) error {
-	return autoConvert_v1_10_RemovePodSandboxResponse_To_v1_9_RemovePodSandboxResponse(in, out, s)
+// Convert_v1_12_RemovePodSandboxResponse_To_v1_9_RemovePodSandboxResponse is an autogenerated conversion function.
+func Convert_v1_12_RemovePodSandboxResponse_To_v1_9_RemovePodSandboxResponse(in *v1_12.RemovePodSandboxResponse, out *RemovePodSandboxResponse, s conversion.Scope) error {
+	return autoConvert_v1_12_RemovePodSandboxResponse_To_v1_9_RemovePodSandboxResponse(in, out, s)
 }
 
-func autoConvert_v1_9_RunPodSandboxRequest_To_v1_10_RunPodSandboxRequest(in *RunPodSandboxRequest, out *v1_10.RunPodSandboxRequest, s conversion.Scope) error {
+func autoConvert_v1_9_RunPodSandboxRequest_To_v1_12_RunPodSandboxRequest(in *RunPodSandboxRequest, out *v1_12.RunPodSandboxRequest, s conversion.Scope) error {
 	if in.Config != nil {
 		in, out := &in.Config, &out.Config
-		*out = new(v1_10.PodSandboxConfig)
-		if err := Convert_v1_9_PodSandboxConfig_To_v1_10_PodSandboxConfig(*in, *out, s); err != nil {
+		*out = new(v1_12.PodSandboxConfig)
+		if err := Convert_v1_9_PodSandboxConfig_To_v1_12_PodSandboxConfig(*in, *out, s); err != nil {
 			return err
 		}
 	} else {
@@ -3088,50 +3090,46 @@ func autoConvert_v1_9_RunPodSandboxRequest_To_v1_10_RunPodSandboxRequest(in *Run
 	return nil
 }
 
-// Convert_v1_9_RunPodSandboxRequest_To_v1_10_RunPodSandboxRequest is an autogenerated conversion function.
-func Convert_v1_9_RunPodSandboxRequest_To_v1_10_RunPodSandboxRequest(in *RunPodSandboxRequest, out *v1_10.RunPodSandboxRequest, s conversion.Scope) error {
-	return autoConvert_v1_9_RunPodSandboxRequest_To_v1_10_RunPodSandboxRequest(in, out, s)
+// Convert_v1_9_RunPodSandboxRequest_To_v1_12_RunPodSandboxRequest is an autogenerated conversion function.
+func Convert_v1_9_RunPodSandboxRequest_To_v1_12_RunPodSandboxRequest(in *RunPodSandboxRequest, out *v1_12.RunPodSandboxRequest, s conversion.Scope) error {
+	return autoConvert_v1_9_RunPodSandboxRequest_To_v1_12_RunPodSandboxRequest(in, out, s)
 }
 
-func autoConvert_v1_10_RunPodSandboxRequest_To_v1_9_RunPodSandboxRequest(in *v1_10.RunPodSandboxRequest, out *RunPodSandboxRequest, s conversion.Scope) error {
+func autoConvert_v1_12_RunPodSandboxRequest_To_v1_9_RunPodSandboxRequest(in *v1_12.RunPodSandboxRequest, out *RunPodSandboxRequest, s conversion.Scope) error {
 	if in.Config != nil {
 		in, out := &in.Config, &out.Config
 		*out = new(PodSandboxConfig)
-		if err := Convert_v1_10_PodSandboxConfig_To_v1_9_PodSandboxConfig(*in, *out, s); err != nil {
+		if err := Convert_v1_12_PodSandboxConfig_To_v1_9_PodSandboxConfig(*in, *out, s); err != nil {
 			return err
 		}
 	} else {
 		out.Config = nil
 	}
+	// WARNING: in.RuntimeHandler requires manual conversion: does not exist in peer-type
 	return nil
 }
 
-// Convert_v1_10_RunPodSandboxRequest_To_v1_9_RunPodSandboxRequest is an autogenerated conversion function.
-func Convert_v1_10_RunPodSandboxRequest_To_v1_9_RunPodSandboxRequest(in *v1_10.RunPodSandboxRequest, out *RunPodSandboxRequest, s conversion.Scope) error {
-	return autoConvert_v1_10_RunPodSandboxRequest_To_v1_9_RunPodSandboxRequest(in, out, s)
-}
-
-func autoConvert_v1_9_RunPodSandboxResponse_To_v1_10_RunPodSandboxResponse(in *RunPodSandboxResponse, out *v1_10.RunPodSandboxResponse, s conversion.Scope) error {
+func autoConvert_v1_9_RunPodSandboxResponse_To_v1_12_RunPodSandboxResponse(in *RunPodSandboxResponse, out *v1_12.RunPodSandboxResponse, s conversion.Scope) error {
 	out.PodSandboxId = in.PodSandboxId
 	return nil
 }
 
-// Convert_v1_9_RunPodSandboxResponse_To_v1_10_RunPodSandboxResponse is an autogenerated conversion function.
-func Convert_v1_9_RunPodSandboxResponse_To_v1_10_RunPodSandboxResponse(in *RunPodSandboxResponse, out *v1_10.RunPodSandboxResponse, s conversion.Scope) error {
-	return autoConvert_v1_9_RunPodSandboxResponse_To_v1_10_RunPodSandboxResponse(in, out, s)
+// Convert_v1_9_RunPodSandboxResponse_To_v1_12_RunPodSandboxResponse is an autogenerated conversion function.
+func Convert_v1_9_RunPodSandboxResponse_To_v1_12_RunPodSandboxResponse(in *RunPodSandboxResponse, out *v1_12.RunPodSandboxResponse, s conversion.Scope) error {
+	return autoConvert_v1_9_RunPodSandboxResponse_To_v1_12_RunPodSandboxResponse(in, out, s)
 }
 
-func autoConvert_v1_10_RunPodSandboxResponse_To_v1_9_RunPodSandboxResponse(in *v1_10.RunPodSandboxResponse, out *RunPodSandboxResponse, s conversion.Scope) error {
+func autoConvert_v1_12_RunPodSandboxResponse_To_v1_9_RunPodSandboxResponse(in *v1_12.RunPodSandboxResponse, out *RunPodSandboxResponse, s conversion.Scope) error {
 	out.PodSandboxId = in.PodSandboxId
 	return nil
 }
 
-// Convert_v1_10_RunPodSandboxResponse_To_v1_9_RunPodSandboxResponse is an autogenerated conversion function.
-func Convert_v1_10_RunPodSandboxResponse_To_v1_9_RunPodSandboxResponse(in *v1_10.RunPodSandboxResponse, out *RunPodSandboxResponse, s conversion.Scope) error {
-	return autoConvert_v1_10_RunPodSandboxResponse_To_v1_9_RunPodSandboxResponse(in, out, s)
+// Convert_v1_12_RunPodSandboxResponse_To_v1_9_RunPodSandboxResponse is an autogenerated conversion function.
+func Convert_v1_12_RunPodSandboxResponse_To_v1_9_RunPodSandboxResponse(in *v1_12.RunPodSandboxResponse, out *RunPodSandboxResponse, s conversion.Scope) error {
+	return autoConvert_v1_12_RunPodSandboxResponse_To_v1_9_RunPodSandboxResponse(in, out, s)
 }
 
-func autoConvert_v1_9_RuntimeCondition_To_v1_10_RuntimeCondition(in *RuntimeCondition, out *v1_10.RuntimeCondition, s conversion.Scope) error {
+func autoConvert_v1_9_RuntimeCondition_To_v1_12_RuntimeCondition(in *RuntimeCondition, out *v1_12.RuntimeCondition, s conversion.Scope) error {
 	out.Type = in.Type
 	out.Status = in.Status
 	out.Reason = in.Reason
@@ -3139,12 +3137,12 @@ func autoConvert_v1_9_RuntimeCondition_To_v1_10_RuntimeCondition(in *RuntimeCond
 	return nil
 }
 
-// Convert_v1_9_RuntimeCondition_To_v1_10_RuntimeCondition is an autogenerated conversion function.
-func Convert_v1_9_RuntimeCondition_To_v1_10_RuntimeCondition(in *RuntimeCondition, out *v1_10.RuntimeCondition, s conversion.Scope) error {
-	return autoConvert_v1_9_RuntimeCondition_To_v1_10_RuntimeCondition(in, out, s)
+// Convert_v1_9_RuntimeCondition_To_v1_12_RuntimeCondition is an autogenerated conversion function.
+func Convert_v1_9_RuntimeCondition_To_v1_12_RuntimeCondition(in *RuntimeCondition, out *v1_12.RuntimeCondition, s conversion.Scope) error {
+	return autoConvert_v1_9_RuntimeCondition_To_v1_12_RuntimeCondition(in, out, s)
 }
 
-func autoConvert_v1_10_RuntimeCondition_To_v1_9_RuntimeCondition(in *v1_10.RuntimeCondition, out *RuntimeCondition, s conversion.Scope) error {
+func autoConvert_v1_12_RuntimeCondition_To_v1_9_RuntimeCondition(in *v1_12.RuntimeCondition, out *RuntimeCondition, s conversion.Scope) error {
 	out.Type = in.Type
 	out.Status = in.Status
 	out.Reason = in.Reason
@@ -3152,16 +3150,16 @@ func autoConvert_v1_10_RuntimeCondition_To_v1_9_RuntimeCondition(in *v1_10.Runti
 	return nil
 }
 
-// Convert_v1_10_RuntimeCondition_To_v1_9_RuntimeCondition is an autogenerated conversion function.
-func Convert_v1_10_RuntimeCondition_To_v1_9_RuntimeCondition(in *v1_10.RuntimeCondition, out *RuntimeCondition, s conversion.Scope) error {
-	return autoConvert_v1_10_RuntimeCondition_To_v1_9_RuntimeCondition(in, out, s)
+// Convert_v1_12_RuntimeCondition_To_v1_9_RuntimeCondition is an autogenerated conversion function.
+func Convert_v1_12_RuntimeCondition_To_v1_9_RuntimeCondition(in *v1_12.RuntimeCondition, out *RuntimeCondition, s conversion.Scope) error {
+	return autoConvert_v1_12_RuntimeCondition_To_v1_9_RuntimeCondition(in, out, s)
 }
 
-func autoConvert_v1_9_RuntimeConfig_To_v1_10_RuntimeConfig(in *RuntimeConfig, out *v1_10.RuntimeConfig, s conversion.Scope) error {
+func autoConvert_v1_9_RuntimeConfig_To_v1_12_RuntimeConfig(in *RuntimeConfig, out *v1_12.RuntimeConfig, s conversion.Scope) error {
 	if in.NetworkConfig != nil {
 		in, out := &in.NetworkConfig, &out.NetworkConfig
-		*out = new(v1_10.NetworkConfig)
-		if err := Convert_v1_9_NetworkConfig_To_v1_10_NetworkConfig(*in, *out, s); err != nil {
+		*out = new(v1_12.NetworkConfig)
+		if err := Convert_v1_9_NetworkConfig_To_v1_12_NetworkConfig(*in, *out, s); err != nil {
 			return err
 		}
 	} else {
@@ -3170,16 +3168,16 @@ func autoConvert_v1_9_RuntimeConfig_To_v1_10_RuntimeConfig(in *RuntimeConfig, ou
 	return nil
 }
 
-// Convert_v1_9_RuntimeConfig_To_v1_10_RuntimeConfig is an autogenerated conversion function.
-func Convert_v1_9_RuntimeConfig_To_v1_10_RuntimeConfig(in *RuntimeConfig, out *v1_10.RuntimeConfig, s conversion.Scope) error {
-	return autoConvert_v1_9_RuntimeConfig_To_v1_10_RuntimeConfig(in, out, s)
+// Convert_v1_9_RuntimeConfig_To_v1_12_RuntimeConfig is an autogenerated conversion function.
+func Convert_v1_9_RuntimeConfig_To_v1_12_RuntimeConfig(in *RuntimeConfig, out *v1_12.RuntimeConfig, s conversion.Scope) error {
+	return autoConvert_v1_9_RuntimeConfig_To_v1_12_RuntimeConfig(in, out, s)
 }
 
-func autoConvert_v1_10_RuntimeConfig_To_v1_9_RuntimeConfig(in *v1_10.RuntimeConfig, out *RuntimeConfig, s conversion.Scope) error {
+func autoConvert_v1_12_RuntimeConfig_To_v1_9_RuntimeConfig(in *v1_12.RuntimeConfig, out *RuntimeConfig, s conversion.Scope) error {
 	if in.NetworkConfig != nil {
 		in, out := &in.NetworkConfig, &out.NetworkConfig
 		*out = new(NetworkConfig)
-		if err := Convert_v1_10_NetworkConfig_To_v1_9_NetworkConfig(*in, *out, s); err != nil {
+		if err := Convert_v1_12_NetworkConfig_To_v1_9_NetworkConfig(*in, *out, s); err != nil {
 			return err
 		}
 	} else {
@@ -3188,15 +3186,15 @@ func autoConvert_v1_10_RuntimeConfig_To_v1_9_RuntimeConfig(in *v1_10.RuntimeConf
 	return nil
 }
 
-// Convert_v1_10_RuntimeConfig_To_v1_9_RuntimeConfig is an autogenerated conversion function.
-func Convert_v1_10_RuntimeConfig_To_v1_9_RuntimeConfig(in *v1_10.RuntimeConfig, out *RuntimeConfig, s conversion.Scope) error {
-	return autoConvert_v1_10_RuntimeConfig_To_v1_9_RuntimeConfig(in, out, s)
+// Convert_v1_12_RuntimeConfig_To_v1_9_RuntimeConfig is an autogenerated conversion function.
+func Convert_v1_12_RuntimeConfig_To_v1_9_RuntimeConfig(in *v1_12.RuntimeConfig, out *RuntimeConfig, s conversion.Scope) error {
+	return autoConvert_v1_12_RuntimeConfig_To_v1_9_RuntimeConfig(in, out, s)
 }
 
-func autoConvert_v1_9_RuntimeStatus_To_v1_10_RuntimeStatus(in *RuntimeStatus, out *v1_10.RuntimeStatus, s conversion.Scope) error {
+func autoConvert_v1_9_RuntimeStatus_To_v1_12_RuntimeStatus(in *RuntimeStatus, out *v1_12.RuntimeStatus, s conversion.Scope) error {
 	if in.Conditions != nil {
 		in, out := &in.Conditions, &out.Conditions
-		*out = make([]*v1_10.RuntimeCondition, len(*in))
+		*out = make([]*v1_12.RuntimeCondition, len(*in))
 		for i := range *in {
 			// TODO: Inefficient conversion - can we improve it?
 			if err := s.Convert(&(*in)[i], &(*out)[i], 0); err != nil {
@@ -3209,12 +3207,12 @@ func autoConvert_v1_9_RuntimeStatus_To_v1_10_RuntimeStatus(in *RuntimeStatus, ou
 	return nil
 }
 
-// Convert_v1_9_RuntimeStatus_To_v1_10_RuntimeStatus is an autogenerated conversion function.
-func Convert_v1_9_RuntimeStatus_To_v1_10_RuntimeStatus(in *RuntimeStatus, out *v1_10.RuntimeStatus, s conversion.Scope) error {
-	return autoConvert_v1_9_RuntimeStatus_To_v1_10_RuntimeStatus(in, out, s)
+// Convert_v1_9_RuntimeStatus_To_v1_12_RuntimeStatus is an autogenerated conversion function.
+func Convert_v1_9_RuntimeStatus_To_v1_12_RuntimeStatus(in *RuntimeStatus, out *v1_12.RuntimeStatus, s conversion.Scope) error {
+	return autoConvert_v1_9_RuntimeStatus_To_v1_12_RuntimeStatus(in, out, s)
 }
 
-func autoConvert_v1_10_RuntimeStatus_To_v1_9_RuntimeStatus(in *v1_10.RuntimeStatus, out *RuntimeStatus, s conversion.Scope) error {
+func autoConvert_v1_12_RuntimeStatus_To_v1_9_RuntimeStatus(in *v1_12.RuntimeStatus, out *RuntimeStatus, s conversion.Scope) error {
 	if in.Conditions != nil {
 		in, out := &in.Conditions, &out.Conditions
 		*out = make([]*RuntimeCondition, len(*in))
@@ -3230,12 +3228,12 @@ func autoConvert_v1_10_RuntimeStatus_To_v1_9_RuntimeStatus(in *v1_10.RuntimeStat
 	return nil
 }
 
-// Convert_v1_10_RuntimeStatus_To_v1_9_RuntimeStatus is an autogenerated conversion function.
-func Convert_v1_10_RuntimeStatus_To_v1_9_RuntimeStatus(in *v1_10.RuntimeStatus, out *RuntimeStatus, s conversion.Scope) error {
-	return autoConvert_v1_10_RuntimeStatus_To_v1_9_RuntimeStatus(in, out, s)
+// Convert_v1_12_RuntimeStatus_To_v1_9_RuntimeStatus is an autogenerated conversion function.
+func Convert_v1_12_RuntimeStatus_To_v1_9_RuntimeStatus(in *v1_12.RuntimeStatus, out *RuntimeStatus, s conversion.Scope) error {
+	return autoConvert_v1_12_RuntimeStatus_To_v1_9_RuntimeStatus(in, out, s)
 }
 
-func autoConvert_v1_9_SELinuxOption_To_v1_10_SELinuxOption(in *SELinuxOption, out *v1_10.SELinuxOption, s conversion.Scope) error {
+func autoConvert_v1_9_SELinuxOption_To_v1_12_SELinuxOption(in *SELinuxOption, out *v1_12.SELinuxOption, s conversion.Scope) error {
 	out.User = in.User
 	out.Role = in.Role
 	out.Type = in.Type
@@ -3243,12 +3241,12 @@ func autoConvert_v1_9_SELinuxOption_To_v1_10_SELinuxOption(in *SELinuxOption, ou
 	return nil
 }
 
-// Convert_v1_9_SELinuxOption_To_v1_10_SELinuxOption is an autogenerated conversion function.
-func Convert_v1_9_SELinuxOption_To_v1_10_SELinuxOption(in *SELinuxOption, out *v1_10.SELinuxOption, s conversion.Scope) error {
-	return autoConvert_v1_9_SELinuxOption_To_v1_10_SELinuxOption(in, out, s)
+// Convert_v1_9_SELinuxOption_To_v1_12_SELinuxOption is an autogenerated conversion function.
+func Convert_v1_9_SELinuxOption_To_v1_12_SELinuxOption(in *SELinuxOption, out *v1_12.SELinuxOption, s conversion.Scope) error {
+	return autoConvert_v1_9_SELinuxOption_To_v1_12_SELinuxOption(in, out, s)
 }
 
-func autoConvert_v1_10_SELinuxOption_To_v1_9_SELinuxOption(in *v1_10.SELinuxOption, out *SELinuxOption, s conversion.Scope) error {
+func autoConvert_v1_12_SELinuxOption_To_v1_9_SELinuxOption(in *v1_12.SELinuxOption, out *SELinuxOption, s conversion.Scope) error {
 	out.User = in.User
 	out.Role = in.Role
 	out.Type = in.Type
@@ -3256,74 +3254,74 @@ func autoConvert_v1_10_SELinuxOption_To_v1_9_SELinuxOption(in *v1_10.SELinuxOpti
 	return nil
 }
 
-// Convert_v1_10_SELinuxOption_To_v1_9_SELinuxOption is an autogenerated conversion function.
-func Convert_v1_10_SELinuxOption_To_v1_9_SELinuxOption(in *v1_10.SELinuxOption, out *SELinuxOption, s conversion.Scope) error {
-	return autoConvert_v1_10_SELinuxOption_To_v1_9_SELinuxOption(in, out, s)
+// Convert_v1_12_SELinuxOption_To_v1_9_SELinuxOption is an autogenerated conversion function.
+func Convert_v1_12_SELinuxOption_To_v1_9_SELinuxOption(in *v1_12.SELinuxOption, out *SELinuxOption, s conversion.Scope) error {
+	return autoConvert_v1_12_SELinuxOption_To_v1_9_SELinuxOption(in, out, s)
 }
 
-func autoConvert_v1_9_StartContainerRequest_To_v1_10_StartContainerRequest(in *StartContainerRequest, out *v1_10.StartContainerRequest, s conversion.Scope) error {
+func autoConvert_v1_9_StartContainerRequest_To_v1_12_StartContainerRequest(in *StartContainerRequest, out *v1_12.StartContainerRequest, s conversion.Scope) error {
 	out.ContainerId = in.ContainerId
 	return nil
 }
 
-// Convert_v1_9_StartContainerRequest_To_v1_10_StartContainerRequest is an autogenerated conversion function.
-func Convert_v1_9_StartContainerRequest_To_v1_10_StartContainerRequest(in *StartContainerRequest, out *v1_10.StartContainerRequest, s conversion.Scope) error {
-	return autoConvert_v1_9_StartContainerRequest_To_v1_10_StartContainerRequest(in, out, s)
+// Convert_v1_9_StartContainerRequest_To_v1_12_StartContainerRequest is an autogenerated conversion function.
+func Convert_v1_9_StartContainerRequest_To_v1_12_StartContainerRequest(in *StartContainerRequest, out *v1_12.StartContainerRequest, s conversion.Scope) error {
+	return autoConvert_v1_9_StartContainerRequest_To_v1_12_StartContainerRequest(in, out, s)
 }
 
-func autoConvert_v1_10_StartContainerRequest_To_v1_9_StartContainerRequest(in *v1_10.StartContainerRequest, out *StartContainerRequest, s conversion.Scope) error {
+func autoConvert_v1_12_StartContainerRequest_To_v1_9_StartContainerRequest(in *v1_12.StartContainerRequest, out *StartContainerRequest, s conversion.Scope) error {
 	out.ContainerId = in.ContainerId
 	return nil
 }
 
-// Convert_v1_10_StartContainerRequest_To_v1_9_StartContainerRequest is an autogenerated conversion function.
-func Convert_v1_10_StartContainerRequest_To_v1_9_StartContainerRequest(in *v1_10.StartContainerRequest, out *StartContainerRequest, s conversion.Scope) error {
-	return autoConvert_v1_10_StartContainerRequest_To_v1_9_StartContainerRequest(in, out, s)
+// Convert_v1_12_StartContainerRequest_To_v1_9_StartContainerRequest is an autogenerated conversion function.
+func Convert_v1_12_StartContainerRequest_To_v1_9_StartContainerRequest(in *v1_12.StartContainerRequest, out *StartContainerRequest, s conversion.Scope) error {
+	return autoConvert_v1_12_StartContainerRequest_To_v1_9_StartContainerRequest(in, out, s)
 }
 
-func autoConvert_v1_9_StartContainerResponse_To_v1_10_StartContainerResponse(in *StartContainerResponse, out *v1_10.StartContainerResponse, s conversion.Scope) error {
+func autoConvert_v1_9_StartContainerResponse_To_v1_12_StartContainerResponse(in *StartContainerResponse, out *v1_12.StartContainerResponse, s conversion.Scope) error {
 	return nil
 }
 
-// Convert_v1_9_StartContainerResponse_To_v1_10_StartContainerResponse is an autogenerated conversion function.
-func Convert_v1_9_StartContainerResponse_To_v1_10_StartContainerResponse(in *StartContainerResponse, out *v1_10.StartContainerResponse, s conversion.Scope) error {
-	return autoConvert_v1_9_StartContainerResponse_To_v1_10_StartContainerResponse(in, out, s)
+// Convert_v1_9_StartContainerResponse_To_v1_12_StartContainerResponse is an autogenerated conversion function.
+func Convert_v1_9_StartContainerResponse_To_v1_12_StartContainerResponse(in *StartContainerResponse, out *v1_12.StartContainerResponse, s conversion.Scope) error {
+	return autoConvert_v1_9_StartContainerResponse_To_v1_12_StartContainerResponse(in, out, s)
 }
 
-func autoConvert_v1_10_StartContainerResponse_To_v1_9_StartContainerResponse(in *v1_10.StartContainerResponse, out *StartContainerResponse, s conversion.Scope) error {
+func autoConvert_v1_12_StartContainerResponse_To_v1_9_StartContainerResponse(in *v1_12.StartContainerResponse, out *StartContainerResponse, s conversion.Scope) error {
 	return nil
 }
 
-// Convert_v1_10_StartContainerResponse_To_v1_9_StartContainerResponse is an autogenerated conversion function.
-func Convert_v1_10_StartContainerResponse_To_v1_9_StartContainerResponse(in *v1_10.StartContainerResponse, out *StartContainerResponse, s conversion.Scope) error {
-	return autoConvert_v1_10_StartContainerResponse_To_v1_9_StartContainerResponse(in, out, s)
+// Convert_v1_12_StartContainerResponse_To_v1_9_StartContainerResponse is an autogenerated conversion function.
+func Convert_v1_12_StartContainerResponse_To_v1_9_StartContainerResponse(in *v1_12.StartContainerResponse, out *StartContainerResponse, s conversion.Scope) error {
+	return autoConvert_v1_12_StartContainerResponse_To_v1_9_StartContainerResponse(in, out, s)
 }
 
-func autoConvert_v1_9_StatusRequest_To_v1_10_StatusRequest(in *StatusRequest, out *v1_10.StatusRequest, s conversion.Scope) error {
+func autoConvert_v1_9_StatusRequest_To_v1_12_StatusRequest(in *StatusRequest, out *v1_12.StatusRequest, s conversion.Scope) error {
 	out.Verbose = in.Verbose
 	return nil
 }
 
-// Convert_v1_9_StatusRequest_To_v1_10_StatusRequest is an autogenerated conversion function.
-func Convert_v1_9_StatusRequest_To_v1_10_StatusRequest(in *StatusRequest, out *v1_10.StatusRequest, s conversion.Scope) error {
-	return autoConvert_v1_9_StatusRequest_To_v1_10_StatusRequest(in, out, s)
+// Convert_v1_9_StatusRequest_To_v1_12_StatusRequest is an autogenerated conversion function.
+func Convert_v1_9_StatusRequest_To_v1_12_StatusRequest(in *StatusRequest, out *v1_12.StatusRequest, s conversion.Scope) error {
+	return autoConvert_v1_9_StatusRequest_To_v1_12_StatusRequest(in, out, s)
 }
 
-func autoConvert_v1_10_StatusRequest_To_v1_9_StatusRequest(in *v1_10.StatusRequest, out *StatusRequest, s conversion.Scope) error {
+func autoConvert_v1_12_StatusRequest_To_v1_9_StatusRequest(in *v1_12.StatusRequest, out *StatusRequest, s conversion.Scope) error {
 	out.Verbose = in.Verbose
 	return nil
 }
 
-// Convert_v1_10_StatusRequest_To_v1_9_StatusRequest is an autogenerated conversion function.
-func Convert_v1_10_StatusRequest_To_v1_9_StatusRequest(in *v1_10.StatusRequest, out *StatusRequest, s conversion.Scope) error {
-	return autoConvert_v1_10_StatusRequest_To_v1_9_StatusRequest(in, out, s)
+// Convert_v1_12_StatusRequest_To_v1_9_StatusRequest is an autogenerated conversion function.
+func Convert_v1_12_StatusRequest_To_v1_9_StatusRequest(in *v1_12.StatusRequest, out *StatusRequest, s conversion.Scope) error {
+	return autoConvert_v1_12_StatusRequest_To_v1_9_StatusRequest(in, out, s)
 }
 
-func autoConvert_v1_9_StatusResponse_To_v1_10_StatusResponse(in *StatusResponse, out *v1_10.StatusResponse, s conversion.Scope) error {
+func autoConvert_v1_9_StatusResponse_To_v1_12_StatusResponse(in *StatusResponse, out *v1_12.StatusResponse, s conversion.Scope) error {
 	if in.Status != nil {
 		in, out := &in.Status, &out.Status
-		*out = new(v1_10.RuntimeStatus)
-		if err := Convert_v1_9_RuntimeStatus_To_v1_10_RuntimeStatus(*in, *out, s); err != nil {
+		*out = new(v1_12.RuntimeStatus)
+		if err := Convert_v1_9_RuntimeStatus_To_v1_12_RuntimeStatus(*in, *out, s); err != nil {
 			return err
 		}
 	} else {
@@ -3333,16 +3331,16 @@ func autoConvert_v1_9_StatusResponse_To_v1_10_StatusResponse(in *StatusResponse,
 	return nil
 }
 
-// Convert_v1_9_StatusResponse_To_v1_10_StatusResponse is an autogenerated conversion function.
-func Convert_v1_9_StatusResponse_To_v1_10_StatusResponse(in *StatusResponse, out *v1_10.StatusResponse, s conversion.Scope) error {
-	return autoConvert_v1_9_StatusResponse_To_v1_10_StatusResponse(in, out, s)
+// Convert_v1_9_StatusResponse_To_v1_12_StatusResponse is an autogenerated conversion function.
+func Convert_v1_9_StatusResponse_To_v1_12_StatusResponse(in *StatusResponse, out *v1_12.StatusResponse, s conversion.Scope) error {
+	return autoConvert_v1_9_StatusResponse_To_v1_12_StatusResponse(in, out, s)
 }
 
-func autoConvert_v1_10_StatusResponse_To_v1_9_StatusResponse(in *v1_10.StatusResponse, out *StatusResponse, s conversion.Scope) error {
+func autoConvert_v1_12_StatusResponse_To_v1_9_StatusResponse(in *v1_12.StatusResponse, out *StatusResponse, s conversion.Scope) error {
 	if in.Status != nil {
 		in, out := &in.Status, &out.Status
 		*out = new(RuntimeStatus)
-		if err := Convert_v1_10_RuntimeStatus_To_v1_9_RuntimeStatus(*in, *out, s); err != nil {
+		if err := Convert_v1_12_RuntimeStatus_To_v1_9_RuntimeStatus(*in, *out, s); err != nil {
 			return err
 		}
 	} else {
@@ -3352,115 +3350,115 @@ func autoConvert_v1_10_StatusResponse_To_v1_9_StatusResponse(in *v1_10.StatusRes
 	return nil
 }
 
-// Convert_v1_10_StatusResponse_To_v1_9_StatusResponse is an autogenerated conversion function.
-func Convert_v1_10_StatusResponse_To_v1_9_StatusResponse(in *v1_10.StatusResponse, out *StatusResponse, s conversion.Scope) error {
-	return autoConvert_v1_10_StatusResponse_To_v1_9_StatusResponse(in, out, s)
+// Convert_v1_12_StatusResponse_To_v1_9_StatusResponse is an autogenerated conversion function.
+func Convert_v1_12_StatusResponse_To_v1_9_StatusResponse(in *v1_12.StatusResponse, out *StatusResponse, s conversion.Scope) error {
+	return autoConvert_v1_12_StatusResponse_To_v1_9_StatusResponse(in, out, s)
 }
 
-func autoConvert_v1_9_StopContainerRequest_To_v1_10_StopContainerRequest(in *StopContainerRequest, out *v1_10.StopContainerRequest, s conversion.Scope) error {
+func autoConvert_v1_9_StopContainerRequest_To_v1_12_StopContainerRequest(in *StopContainerRequest, out *v1_12.StopContainerRequest, s conversion.Scope) error {
 	out.ContainerId = in.ContainerId
 	out.Timeout = in.Timeout
 	return nil
 }
 
-// Convert_v1_9_StopContainerRequest_To_v1_10_StopContainerRequest is an autogenerated conversion function.
-func Convert_v1_9_StopContainerRequest_To_v1_10_StopContainerRequest(in *StopContainerRequest, out *v1_10.StopContainerRequest, s conversion.Scope) error {
-	return autoConvert_v1_9_StopContainerRequest_To_v1_10_StopContainerRequest(in, out, s)
+// Convert_v1_9_StopContainerRequest_To_v1_12_StopContainerRequest is an autogenerated conversion function.
+func Convert_v1_9_StopContainerRequest_To_v1_12_StopContainerRequest(in *StopContainerRequest, out *v1_12.StopContainerRequest, s conversion.Scope) error {
+	return autoConvert_v1_9_StopContainerRequest_To_v1_12_StopContainerRequest(in, out, s)
 }
 
-func autoConvert_v1_10_StopContainerRequest_To_v1_9_StopContainerRequest(in *v1_10.StopContainerRequest, out *StopContainerRequest, s conversion.Scope) error {
+func autoConvert_v1_12_StopContainerRequest_To_v1_9_StopContainerRequest(in *v1_12.StopContainerRequest, out *StopContainerRequest, s conversion.Scope) error {
 	out.ContainerId = in.ContainerId
 	out.Timeout = in.Timeout
 	return nil
 }
 
-// Convert_v1_10_StopContainerRequest_To_v1_9_StopContainerRequest is an autogenerated conversion function.
-func Convert_v1_10_StopContainerRequest_To_v1_9_StopContainerRequest(in *v1_10.StopContainerRequest, out *StopContainerRequest, s conversion.Scope) error {
-	return autoConvert_v1_10_StopContainerRequest_To_v1_9_StopContainerRequest(in, out, s)
+// Convert_v1_12_StopContainerRequest_To_v1_9_StopContainerRequest is an autogenerated conversion function.
+func Convert_v1_12_StopContainerRequest_To_v1_9_StopContainerRequest(in *v1_12.StopContainerRequest, out *StopContainerRequest, s conversion.Scope) error {
+	return autoConvert_v1_12_StopContainerRequest_To_v1_9_StopContainerRequest(in, out, s)
 }
 
-func autoConvert_v1_9_StopContainerResponse_To_v1_10_StopContainerResponse(in *StopContainerResponse, out *v1_10.StopContainerResponse, s conversion.Scope) error {
+func autoConvert_v1_9_StopContainerResponse_To_v1_12_StopContainerResponse(in *StopContainerResponse, out *v1_12.StopContainerResponse, s conversion.Scope) error {
 	return nil
 }
 
-// Convert_v1_9_StopContainerResponse_To_v1_10_StopContainerResponse is an autogenerated conversion function.
-func Convert_v1_9_StopContainerResponse_To_v1_10_StopContainerResponse(in *StopContainerResponse, out *v1_10.StopContainerResponse, s conversion.Scope) error {
-	return autoConvert_v1_9_StopContainerResponse_To_v1_10_StopContainerResponse(in, out, s)
+// Convert_v1_9_StopContainerResponse_To_v1_12_StopContainerResponse is an autogenerated conversion function.
+func Convert_v1_9_StopContainerResponse_To_v1_12_StopContainerResponse(in *StopContainerResponse, out *v1_12.StopContainerResponse, s conversion.Scope) error {
+	return autoConvert_v1_9_StopContainerResponse_To_v1_12_StopContainerResponse(in, out, s)
 }
 
-func autoConvert_v1_10_StopContainerResponse_To_v1_9_StopContainerResponse(in *v1_10.StopContainerResponse, out *StopContainerResponse, s conversion.Scope) error {
+func autoConvert_v1_12_StopContainerResponse_To_v1_9_StopContainerResponse(in *v1_12.StopContainerResponse, out *StopContainerResponse, s conversion.Scope) error {
 	return nil
 }
 
-// Convert_v1_10_StopContainerResponse_To_v1_9_StopContainerResponse is an autogenerated conversion function.
-func Convert_v1_10_StopContainerResponse_To_v1_9_StopContainerResponse(in *v1_10.StopContainerResponse, out *StopContainerResponse, s conversion.Scope) error {
-	return autoConvert_v1_10_StopContainerResponse_To_v1_9_StopContainerResponse(in, out, s)
+// Convert_v1_12_StopContainerResponse_To_v1_9_StopContainerResponse is an autogenerated conversion function.
+func Convert_v1_12_StopContainerResponse_To_v1_9_StopContainerResponse(in *v1_12.StopContainerResponse, out *StopContainerResponse, s conversion.Scope) error {
+	return autoConvert_v1_12_StopContainerResponse_To_v1_9_StopContainerResponse(in, out, s)
 }
 
-func autoConvert_v1_9_StopPodSandboxRequest_To_v1_10_StopPodSandboxRequest(in *StopPodSandboxRequest, out *v1_10.StopPodSandboxRequest, s conversion.Scope) error {
+func autoConvert_v1_9_StopPodSandboxRequest_To_v1_12_StopPodSandboxRequest(in *StopPodSandboxRequest, out *v1_12.StopPodSandboxRequest, s conversion.Scope) error {
 	out.PodSandboxId = in.PodSandboxId
 	return nil
 }
 
-// Convert_v1_9_StopPodSandboxRequest_To_v1_10_StopPodSandboxRequest is an autogenerated conversion function.
-func Convert_v1_9_StopPodSandboxRequest_To_v1_10_StopPodSandboxRequest(in *StopPodSandboxRequest, out *v1_10.StopPodSandboxRequest, s conversion.Scope) error {
-	return autoConvert_v1_9_StopPodSandboxRequest_To_v1_10_StopPodSandboxRequest(in, out, s)
+// Convert_v1_9_StopPodSandboxRequest_To_v1_12_StopPodSandboxRequest is an autogenerated conversion function.
+func Convert_v1_9_StopPodSandboxRequest_To_v1_12_StopPodSandboxRequest(in *StopPodSandboxRequest, out *v1_12.StopPodSandboxRequest, s conversion.Scope) error {
+	return autoConvert_v1_9_StopPodSandboxRequest_To_v1_12_StopPodSandboxRequest(in, out, s)
 }
 
-func autoConvert_v1_10_StopPodSandboxRequest_To_v1_9_StopPodSandboxRequest(in *v1_10.StopPodSandboxRequest, out *StopPodSandboxRequest, s conversion.Scope) error {
+func autoConvert_v1_12_StopPodSandboxRequest_To_v1_9_StopPodSandboxRequest(in *v1_12.StopPodSandboxRequest, out *StopPodSandboxRequest, s conversion.Scope) error {
 	out.PodSandboxId = in.PodSandboxId
 	return nil
 }
 
-// Convert_v1_10_StopPodSandboxRequest_To_v1_9_StopPodSandboxRequest is an autogenerated conversion function.
-func Convert_v1_10_StopPodSandboxRequest_To_v1_9_StopPodSandboxRequest(in *v1_10.StopPodSandboxRequest, out *StopPodSandboxRequest, s conversion.Scope) error {
-	return autoConvert_v1_10_StopPodSandboxRequest_To_v1_9_StopPodSandboxRequest(in, out, s)
+// Convert_v1_12_StopPodSandboxRequest_To_v1_9_StopPodSandboxRequest is an autogenerated conversion function.
+func Convert_v1_12_StopPodSandboxRequest_To_v1_9_StopPodSandboxRequest(in *v1_12.StopPodSandboxRequest, out *StopPodSandboxRequest, s conversion.Scope) error {
+	return autoConvert_v1_12_StopPodSandboxRequest_To_v1_9_StopPodSandboxRequest(in, out, s)
 }
 
-func autoConvert_v1_9_StopPodSandboxResponse_To_v1_10_StopPodSandboxResponse(in *StopPodSandboxResponse, out *v1_10.StopPodSandboxResponse, s conversion.Scope) error {
+func autoConvert_v1_9_StopPodSandboxResponse_To_v1_12_StopPodSandboxResponse(in *StopPodSandboxResponse, out *v1_12.StopPodSandboxResponse, s conversion.Scope) error {
 	return nil
 }
 
-// Convert_v1_9_StopPodSandboxResponse_To_v1_10_StopPodSandboxResponse is an autogenerated conversion function.
-func Convert_v1_9_StopPodSandboxResponse_To_v1_10_StopPodSandboxResponse(in *StopPodSandboxResponse, out *v1_10.StopPodSandboxResponse, s conversion.Scope) error {
-	return autoConvert_v1_9_StopPodSandboxResponse_To_v1_10_StopPodSandboxResponse(in, out, s)
+// Convert_v1_9_StopPodSandboxResponse_To_v1_12_StopPodSandboxResponse is an autogenerated conversion function.
+func Convert_v1_9_StopPodSandboxResponse_To_v1_12_StopPodSandboxResponse(in *StopPodSandboxResponse, out *v1_12.StopPodSandboxResponse, s conversion.Scope) error {
+	return autoConvert_v1_9_StopPodSandboxResponse_To_v1_12_StopPodSandboxResponse(in, out, s)
 }
 
-func autoConvert_v1_10_StopPodSandboxResponse_To_v1_9_StopPodSandboxResponse(in *v1_10.StopPodSandboxResponse, out *StopPodSandboxResponse, s conversion.Scope) error {
+func autoConvert_v1_12_StopPodSandboxResponse_To_v1_9_StopPodSandboxResponse(in *v1_12.StopPodSandboxResponse, out *StopPodSandboxResponse, s conversion.Scope) error {
 	return nil
 }
 
-// Convert_v1_10_StopPodSandboxResponse_To_v1_9_StopPodSandboxResponse is an autogenerated conversion function.
-func Convert_v1_10_StopPodSandboxResponse_To_v1_9_StopPodSandboxResponse(in *v1_10.StopPodSandboxResponse, out *StopPodSandboxResponse, s conversion.Scope) error {
-	return autoConvert_v1_10_StopPodSandboxResponse_To_v1_9_StopPodSandboxResponse(in, out, s)
+// Convert_v1_12_StopPodSandboxResponse_To_v1_9_StopPodSandboxResponse is an autogenerated conversion function.
+func Convert_v1_12_StopPodSandboxResponse_To_v1_9_StopPodSandboxResponse(in *v1_12.StopPodSandboxResponse, out *StopPodSandboxResponse, s conversion.Scope) error {
+	return autoConvert_v1_12_StopPodSandboxResponse_To_v1_9_StopPodSandboxResponse(in, out, s)
 }
 
-func autoConvert_v1_9_UInt64Value_To_v1_10_UInt64Value(in *UInt64Value, out *v1_10.UInt64Value, s conversion.Scope) error {
+func autoConvert_v1_9_UInt64Value_To_v1_12_UInt64Value(in *UInt64Value, out *v1_12.UInt64Value, s conversion.Scope) error {
 	out.Value = in.Value
 	return nil
 }
 
-// Convert_v1_9_UInt64Value_To_v1_10_UInt64Value is an autogenerated conversion function.
-func Convert_v1_9_UInt64Value_To_v1_10_UInt64Value(in *UInt64Value, out *v1_10.UInt64Value, s conversion.Scope) error {
-	return autoConvert_v1_9_UInt64Value_To_v1_10_UInt64Value(in, out, s)
+// Convert_v1_9_UInt64Value_To_v1_12_UInt64Value is an autogenerated conversion function.
+func Convert_v1_9_UInt64Value_To_v1_12_UInt64Value(in *UInt64Value, out *v1_12.UInt64Value, s conversion.Scope) error {
+	return autoConvert_v1_9_UInt64Value_To_v1_12_UInt64Value(in, out, s)
 }
 
-func autoConvert_v1_10_UInt64Value_To_v1_9_UInt64Value(in *v1_10.UInt64Value, out *UInt64Value, s conversion.Scope) error {
+func autoConvert_v1_12_UInt64Value_To_v1_9_UInt64Value(in *v1_12.UInt64Value, out *UInt64Value, s conversion.Scope) error {
 	out.Value = in.Value
 	return nil
 }
 
-// Convert_v1_10_UInt64Value_To_v1_9_UInt64Value is an autogenerated conversion function.
-func Convert_v1_10_UInt64Value_To_v1_9_UInt64Value(in *v1_10.UInt64Value, out *UInt64Value, s conversion.Scope) error {
-	return autoConvert_v1_10_UInt64Value_To_v1_9_UInt64Value(in, out, s)
+// Convert_v1_12_UInt64Value_To_v1_9_UInt64Value is an autogenerated conversion function.
+func Convert_v1_12_UInt64Value_To_v1_9_UInt64Value(in *v1_12.UInt64Value, out *UInt64Value, s conversion.Scope) error {
+	return autoConvert_v1_12_UInt64Value_To_v1_9_UInt64Value(in, out, s)
 }
 
-func autoConvert_v1_9_UpdateContainerResourcesRequest_To_v1_10_UpdateContainerResourcesRequest(in *UpdateContainerResourcesRequest, out *v1_10.UpdateContainerResourcesRequest, s conversion.Scope) error {
+func autoConvert_v1_9_UpdateContainerResourcesRequest_To_v1_12_UpdateContainerResourcesRequest(in *UpdateContainerResourcesRequest, out *v1_12.UpdateContainerResourcesRequest, s conversion.Scope) error {
 	out.ContainerId = in.ContainerId
 	if in.Linux != nil {
 		in, out := &in.Linux, &out.Linux
-		*out = new(v1_10.LinuxContainerResources)
-		if err := Convert_v1_9_LinuxContainerResources_To_v1_10_LinuxContainerResources(*in, *out, s); err != nil {
+		*out = new(v1_12.LinuxContainerResources)
+		if err := Convert_v1_9_LinuxContainerResources_To_v1_12_LinuxContainerResources(*in, *out, s); err != nil {
 			return err
 		}
 	} else {
@@ -3469,17 +3467,17 @@ func autoConvert_v1_9_UpdateContainerResourcesRequest_To_v1_10_UpdateContainerRe
 	return nil
 }
 
-// Convert_v1_9_UpdateContainerResourcesRequest_To_v1_10_UpdateContainerResourcesRequest is an autogenerated conversion function.
-func Convert_v1_9_UpdateContainerResourcesRequest_To_v1_10_UpdateContainerResourcesRequest(in *UpdateContainerResourcesRequest, out *v1_10.UpdateContainerResourcesRequest, s conversion.Scope) error {
-	return autoConvert_v1_9_UpdateContainerResourcesRequest_To_v1_10_UpdateContainerResourcesRequest(in, out, s)
+// Convert_v1_9_UpdateContainerResourcesRequest_To_v1_12_UpdateContainerResourcesRequest is an autogenerated conversion function.
+func Convert_v1_9_UpdateContainerResourcesRequest_To_v1_12_UpdateContainerResourcesRequest(in *UpdateContainerResourcesRequest, out *v1_12.UpdateContainerResourcesRequest, s conversion.Scope) error {
+	return autoConvert_v1_9_UpdateContainerResourcesRequest_To_v1_12_UpdateContainerResourcesRequest(in, out, s)
 }
 
-func autoConvert_v1_10_UpdateContainerResourcesRequest_To_v1_9_UpdateContainerResourcesRequest(in *v1_10.UpdateContainerResourcesRequest, out *UpdateContainerResourcesRequest, s conversion.Scope) error {
+func autoConvert_v1_12_UpdateContainerResourcesRequest_To_v1_9_UpdateContainerResourcesRequest(in *v1_12.UpdateContainerResourcesRequest, out *UpdateContainerResourcesRequest, s conversion.Scope) error {
 	out.ContainerId = in.ContainerId
 	if in.Linux != nil {
 		in, out := &in.Linux, &out.Linux
 		*out = new(LinuxContainerResources)
-		if err := Convert_v1_10_LinuxContainerResources_To_v1_9_LinuxContainerResources(*in, *out, s); err != nil {
+		if err := Convert_v1_12_LinuxContainerResources_To_v1_9_LinuxContainerResources(*in, *out, s); err != nil {
 			return err
 		}
 	} else {
@@ -3488,34 +3486,34 @@ func autoConvert_v1_10_UpdateContainerResourcesRequest_To_v1_9_UpdateContainerRe
 	return nil
 }
 
-// Convert_v1_10_UpdateContainerResourcesRequest_To_v1_9_UpdateContainerResourcesRequest is an autogenerated conversion function.
-func Convert_v1_10_UpdateContainerResourcesRequest_To_v1_9_UpdateContainerResourcesRequest(in *v1_10.UpdateContainerResourcesRequest, out *UpdateContainerResourcesRequest, s conversion.Scope) error {
-	return autoConvert_v1_10_UpdateContainerResourcesRequest_To_v1_9_UpdateContainerResourcesRequest(in, out, s)
+// Convert_v1_12_UpdateContainerResourcesRequest_To_v1_9_UpdateContainerResourcesRequest is an autogenerated conversion function.
+func Convert_v1_12_UpdateContainerResourcesRequest_To_v1_9_UpdateContainerResourcesRequest(in *v1_12.UpdateContainerResourcesRequest, out *UpdateContainerResourcesRequest, s conversion.Scope) error {
+	return autoConvert_v1_12_UpdateContainerResourcesRequest_To_v1_9_UpdateContainerResourcesRequest(in, out, s)
 }
 
-func autoConvert_v1_9_UpdateContainerResourcesResponse_To_v1_10_UpdateContainerResourcesResponse(in *UpdateContainerResourcesResponse, out *v1_10.UpdateContainerResourcesResponse, s conversion.Scope) error {
+func autoConvert_v1_9_UpdateContainerResourcesResponse_To_v1_12_UpdateContainerResourcesResponse(in *UpdateContainerResourcesResponse, out *v1_12.UpdateContainerResourcesResponse, s conversion.Scope) error {
 	return nil
 }
 
-// Convert_v1_9_UpdateContainerResourcesResponse_To_v1_10_UpdateContainerResourcesResponse is an autogenerated conversion function.
-func Convert_v1_9_UpdateContainerResourcesResponse_To_v1_10_UpdateContainerResourcesResponse(in *UpdateContainerResourcesResponse, out *v1_10.UpdateContainerResourcesResponse, s conversion.Scope) error {
-	return autoConvert_v1_9_UpdateContainerResourcesResponse_To_v1_10_UpdateContainerResourcesResponse(in, out, s)
+// Convert_v1_9_UpdateContainerResourcesResponse_To_v1_12_UpdateContainerResourcesResponse is an autogenerated conversion function.
+func Convert_v1_9_UpdateContainerResourcesResponse_To_v1_12_UpdateContainerResourcesResponse(in *UpdateContainerResourcesResponse, out *v1_12.UpdateContainerResourcesResponse, s conversion.Scope) error {
+	return autoConvert_v1_9_UpdateContainerResourcesResponse_To_v1_12_UpdateContainerResourcesResponse(in, out, s)
 }
 
-func autoConvert_v1_10_UpdateContainerResourcesResponse_To_v1_9_UpdateContainerResourcesResponse(in *v1_10.UpdateContainerResourcesResponse, out *UpdateContainerResourcesResponse, s conversion.Scope) error {
+func autoConvert_v1_12_UpdateContainerResourcesResponse_To_v1_9_UpdateContainerResourcesResponse(in *v1_12.UpdateContainerResourcesResponse, out *UpdateContainerResourcesResponse, s conversion.Scope) error {
 	return nil
 }
 
-// Convert_v1_10_UpdateContainerResourcesResponse_To_v1_9_UpdateContainerResourcesResponse is an autogenerated conversion function.
-func Convert_v1_10_UpdateContainerResourcesResponse_To_v1_9_UpdateContainerResourcesResponse(in *v1_10.UpdateContainerResourcesResponse, out *UpdateContainerResourcesResponse, s conversion.Scope) error {
-	return autoConvert_v1_10_UpdateContainerResourcesResponse_To_v1_9_UpdateContainerResourcesResponse(in, out, s)
+// Convert_v1_12_UpdateContainerResourcesResponse_To_v1_9_UpdateContainerResourcesResponse is an autogenerated conversion function.
+func Convert_v1_12_UpdateContainerResourcesResponse_To_v1_9_UpdateContainerResourcesResponse(in *v1_12.UpdateContainerResourcesResponse, out *UpdateContainerResourcesResponse, s conversion.Scope) error {
+	return autoConvert_v1_12_UpdateContainerResourcesResponse_To_v1_9_UpdateContainerResourcesResponse(in, out, s)
 }
 
-func autoConvert_v1_9_UpdateRuntimeConfigRequest_To_v1_10_UpdateRuntimeConfigRequest(in *UpdateRuntimeConfigRequest, out *v1_10.UpdateRuntimeConfigRequest, s conversion.Scope) error {
+func autoConvert_v1_9_UpdateRuntimeConfigRequest_To_v1_12_UpdateRuntimeConfigRequest(in *UpdateRuntimeConfigRequest, out *v1_12.UpdateRuntimeConfigRequest, s conversion.Scope) error {
 	if in.RuntimeConfig != nil {
 		in, out := &in.RuntimeConfig, &out.RuntimeConfig
-		*out = new(v1_10.RuntimeConfig)
-		if err := Convert_v1_9_RuntimeConfig_To_v1_10_RuntimeConfig(*in, *out, s); err != nil {
+		*out = new(v1_12.RuntimeConfig)
+		if err := Convert_v1_9_RuntimeConfig_To_v1_12_RuntimeConfig(*in, *out, s); err != nil {
 			return err
 		}
 	} else {
@@ -3524,16 +3522,16 @@ func autoConvert_v1_9_UpdateRuntimeConfigRequest_To_v1_10_UpdateRuntimeConfigReq
 	return nil
 }
 
-// Convert_v1_9_UpdateRuntimeConfigRequest_To_v1_10_UpdateRuntimeConfigRequest is an autogenerated conversion function.
-func Convert_v1_9_UpdateRuntimeConfigRequest_To_v1_10_UpdateRuntimeConfigRequest(in *UpdateRuntimeConfigRequest, out *v1_10.UpdateRuntimeConfigRequest, s conversion.Scope) error {
-	return autoConvert_v1_9_UpdateRuntimeConfigRequest_To_v1_10_UpdateRuntimeConfigRequest(in, out, s)
+// Convert_v1_9_UpdateRuntimeConfigRequest_To_v1_12_UpdateRuntimeConfigRequest is an autogenerated conversion function.
+func Convert_v1_9_UpdateRuntimeConfigRequest_To_v1_12_UpdateRuntimeConfigRequest(in *UpdateRuntimeConfigRequest, out *v1_12.UpdateRuntimeConfigRequest, s conversion.Scope) error {
+	return autoConvert_v1_9_UpdateRuntimeConfigRequest_To_v1_12_UpdateRuntimeConfigRequest(in, out, s)
 }
 
-func autoConvert_v1_10_UpdateRuntimeConfigRequest_To_v1_9_UpdateRuntimeConfigRequest(in *v1_10.UpdateRuntimeConfigRequest, out *UpdateRuntimeConfigRequest, s conversion.Scope) error {
+func autoConvert_v1_12_UpdateRuntimeConfigRequest_To_v1_9_UpdateRuntimeConfigRequest(in *v1_12.UpdateRuntimeConfigRequest, out *UpdateRuntimeConfigRequest, s conversion.Scope) error {
 	if in.RuntimeConfig != nil {
 		in, out := &in.RuntimeConfig, &out.RuntimeConfig
 		*out = new(RuntimeConfig)
-		if err := Convert_v1_10_RuntimeConfig_To_v1_9_RuntimeConfig(*in, *out, s); err != nil {
+		if err := Convert_v1_12_RuntimeConfig_To_v1_9_RuntimeConfig(*in, *out, s); err != nil {
 			return err
 		}
 	} else {
@@ -3542,63 +3540,50 @@ func autoConvert_v1_10_UpdateRuntimeConfigRequest_To_v1_9_UpdateRuntimeConfigReq
 	return nil
 }
 
-// Convert_v1_10_UpdateRuntimeConfigRequest_To_v1_9_UpdateRuntimeConfigRequest is an autogenerated conversion function.
-func Convert_v1_10_UpdateRuntimeConfigRequest_To_v1_9_UpdateRuntimeConfigRequest(in *v1_10.UpdateRuntimeConfigRequest, out *UpdateRuntimeConfigRequest, s conversion.Scope) error {
-	return autoConvert_v1_10_UpdateRuntimeConfigRequest_To_v1_9_UpdateRuntimeConfigRequest(in, out, s)
+// Convert_v1_12_UpdateRuntimeConfigRequest_To_v1_9_UpdateRuntimeConfigRequest is an autogenerated conversion function.
+func Convert_v1_12_UpdateRuntimeConfigRequest_To_v1_9_UpdateRuntimeConfigRequest(in *v1_12.UpdateRuntimeConfigRequest, out *UpdateRuntimeConfigRequest, s conversion.Scope) error {
+	return autoConvert_v1_12_UpdateRuntimeConfigRequest_To_v1_9_UpdateRuntimeConfigRequest(in, out, s)
 }
 
-func autoConvert_v1_9_UpdateRuntimeConfigResponse_To_v1_10_UpdateRuntimeConfigResponse(in *UpdateRuntimeConfigResponse, out *v1_10.UpdateRuntimeConfigResponse, s conversion.Scope) error {
+func autoConvert_v1_9_UpdateRuntimeConfigResponse_To_v1_12_UpdateRuntimeConfigResponse(in *UpdateRuntimeConfigResponse, out *v1_12.UpdateRuntimeConfigResponse, s conversion.Scope) error {
 	return nil
 }
 
-// Convert_v1_9_UpdateRuntimeConfigResponse_To_v1_10_UpdateRuntimeConfigResponse is an autogenerated conversion function.
-func Convert_v1_9_UpdateRuntimeConfigResponse_To_v1_10_UpdateRuntimeConfigResponse(in *UpdateRuntimeConfigResponse, out *v1_10.UpdateRuntimeConfigResponse, s conversion.Scope) error {
-	return autoConvert_v1_9_UpdateRuntimeConfigResponse_To_v1_10_UpdateRuntimeConfigResponse(in, out, s)
+// Convert_v1_9_UpdateRuntimeConfigResponse_To_v1_12_UpdateRuntimeConfigResponse is an autogenerated conversion function.
+func Convert_v1_9_UpdateRuntimeConfigResponse_To_v1_12_UpdateRuntimeConfigResponse(in *UpdateRuntimeConfigResponse, out *v1_12.UpdateRuntimeConfigResponse, s conversion.Scope) error {
+	return autoConvert_v1_9_UpdateRuntimeConfigResponse_To_v1_12_UpdateRuntimeConfigResponse(in, out, s)
 }
 
-func autoConvert_v1_10_UpdateRuntimeConfigResponse_To_v1_9_UpdateRuntimeConfigResponse(in *v1_10.UpdateRuntimeConfigResponse, out *UpdateRuntimeConfigResponse, s conversion.Scope) error {
+func autoConvert_v1_12_UpdateRuntimeConfigResponse_To_v1_9_UpdateRuntimeConfigResponse(in *v1_12.UpdateRuntimeConfigResponse, out *UpdateRuntimeConfigResponse, s conversion.Scope) error {
 	return nil
 }
 
-// Convert_v1_10_UpdateRuntimeConfigResponse_To_v1_9_UpdateRuntimeConfigResponse is an autogenerated conversion function.
-func Convert_v1_10_UpdateRuntimeConfigResponse_To_v1_9_UpdateRuntimeConfigResponse(in *v1_10.UpdateRuntimeConfigResponse, out *UpdateRuntimeConfigResponse, s conversion.Scope) error {
-	return autoConvert_v1_10_UpdateRuntimeConfigResponse_To_v1_9_UpdateRuntimeConfigResponse(in, out, s)
+// Convert_v1_12_UpdateRuntimeConfigResponse_To_v1_9_UpdateRuntimeConfigResponse is an autogenerated conversion function.
+func Convert_v1_12_UpdateRuntimeConfigResponse_To_v1_9_UpdateRuntimeConfigResponse(in *v1_12.UpdateRuntimeConfigResponse, out *UpdateRuntimeConfigResponse, s conversion.Scope) error {
+	return autoConvert_v1_12_UpdateRuntimeConfigResponse_To_v1_9_UpdateRuntimeConfigResponse(in, out, s)
 }
 
-func autoConvert_v1_9_VersionRequest_To_v1_10_VersionRequest(in *VersionRequest, out *v1_10.VersionRequest, s conversion.Scope) error {
+func autoConvert_v1_9_VersionRequest_To_v1_12_VersionRequest(in *VersionRequest, out *v1_12.VersionRequest, s conversion.Scope) error {
 	out.Version = in.Version
 	return nil
 }
 
-// Convert_v1_9_VersionRequest_To_v1_10_VersionRequest is an autogenerated conversion function.
-func Convert_v1_9_VersionRequest_To_v1_10_VersionRequest(in *VersionRequest, out *v1_10.VersionRequest, s conversion.Scope) error {
-	return autoConvert_v1_9_VersionRequest_To_v1_10_VersionRequest(in, out, s)
+// Convert_v1_9_VersionRequest_To_v1_12_VersionRequest is an autogenerated conversion function.
+func Convert_v1_9_VersionRequest_To_v1_12_VersionRequest(in *VersionRequest, out *v1_12.VersionRequest, s conversion.Scope) error {
+	return autoConvert_v1_9_VersionRequest_To_v1_12_VersionRequest(in, out, s)
 }
 
-func autoConvert_v1_10_VersionRequest_To_v1_9_VersionRequest(in *v1_10.VersionRequest, out *VersionRequest, s conversion.Scope) error {
+func autoConvert_v1_12_VersionRequest_To_v1_9_VersionRequest(in *v1_12.VersionRequest, out *VersionRequest, s conversion.Scope) error {
 	out.Version = in.Version
 	return nil
 }
 
-// Convert_v1_10_VersionRequest_To_v1_9_VersionRequest is an autogenerated conversion function.
-func Convert_v1_10_VersionRequest_To_v1_9_VersionRequest(in *v1_10.VersionRequest, out *VersionRequest, s conversion.Scope) error {
-	return autoConvert_v1_10_VersionRequest_To_v1_9_VersionRequest(in, out, s)
+// Convert_v1_12_VersionRequest_To_v1_9_VersionRequest is an autogenerated conversion function.
+func Convert_v1_12_VersionRequest_To_v1_9_VersionRequest(in *v1_12.VersionRequest, out *VersionRequest, s conversion.Scope) error {
+	return autoConvert_v1_12_VersionRequest_To_v1_9_VersionRequest(in, out, s)
 }
 
-func autoConvert_v1_9_VersionResponse_To_v1_10_VersionResponse(in *VersionResponse, out *v1_10.VersionResponse, s conversion.Scope) error {
-	out.Version = in.Version
-	out.RuntimeName = in.RuntimeName
-	out.RuntimeVersion = in.RuntimeVersion
-	out.RuntimeApiVersion = in.RuntimeApiVersion
-	return nil
-}
-
-// Convert_v1_9_VersionResponse_To_v1_10_VersionResponse is an autogenerated conversion function.
-func Convert_v1_9_VersionResponse_To_v1_10_VersionResponse(in *VersionResponse, out *v1_10.VersionResponse, s conversion.Scope) error {
-	return autoConvert_v1_9_VersionResponse_To_v1_10_VersionResponse(in, out, s)
-}
-
-func autoConvert_v1_10_VersionResponse_To_v1_9_VersionResponse(in *v1_10.VersionResponse, out *VersionResponse, s conversion.Scope) error {
+func autoConvert_v1_9_VersionResponse_To_v1_12_VersionResponse(in *VersionResponse, out *v1_12.VersionResponse, s conversion.Scope) error {
 	out.Version = in.Version
 	out.RuntimeName = in.RuntimeName
 	out.RuntimeVersion = in.RuntimeVersion
@@ -3606,7 +3591,20 @@ func autoConvert_v1_10_VersionResponse_To_v1_9_VersionResponse(in *v1_10.Version
 	return nil
 }
 
-// Convert_v1_10_VersionResponse_To_v1_9_VersionResponse is an autogenerated conversion function.
-func Convert_v1_10_VersionResponse_To_v1_9_VersionResponse(in *v1_10.VersionResponse, out *VersionResponse, s conversion.Scope) error {
-	return autoConvert_v1_10_VersionResponse_To_v1_9_VersionResponse(in, out, s)
+// Convert_v1_9_VersionResponse_To_v1_12_VersionResponse is an autogenerated conversion function.
+func Convert_v1_9_VersionResponse_To_v1_12_VersionResponse(in *VersionResponse, out *v1_12.VersionResponse, s conversion.Scope) error {
+	return autoConvert_v1_9_VersionResponse_To_v1_12_VersionResponse(in, out, s)
+}
+
+func autoConvert_v1_12_VersionResponse_To_v1_9_VersionResponse(in *v1_12.VersionResponse, out *VersionResponse, s conversion.Scope) error {
+	out.Version = in.Version
+	out.RuntimeName = in.RuntimeName
+	out.RuntimeVersion = in.RuntimeVersion
+	out.RuntimeApiVersion = in.RuntimeApiVersion
+	return nil
+}
+
+// Convert_v1_12_VersionResponse_To_v1_9_VersionResponse is an autogenerated conversion function.
+func Convert_v1_12_VersionResponse_To_v1_9_VersionResponse(in *v1_12.VersionResponse, out *VersionResponse, s conversion.Scope) error {
+	return autoConvert_v1_12_VersionResponse_To_v1_9_VersionResponse(in, out, s)
 }

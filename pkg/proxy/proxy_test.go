@@ -33,7 +33,7 @@ import (
 
 	proxytest "github.com/Mirantis/criproxy/pkg/proxy/testing"
 	"github.com/Mirantis/criproxy/pkg/runtimeapis"
-	v1_10 "github.com/Mirantis/criproxy/pkg/runtimeapis/v1_10"
+	v1_12 "github.com/Mirantis/criproxy/pkg/runtimeapis/v1_12"
 	runtimeapi "github.com/Mirantis/criproxy/pkg/runtimeapis/v1_9"
 	"github.com/Mirantis/criproxy/pkg/utils"
 )
@@ -132,7 +132,7 @@ func newProxyTester(t *testing.T, secondSocketSpec string, fakeCriServerMakers [
 		t.Fatalf("error parsing stream url: %v", err)
 	}
 	var interceptors []Interceptor
-	for _, criVersion := range []CRIVersion{&CRI19{}, &CRI110{}} {
+	for _, criVersion := range []CRIVersion{&CRI19{}, &CRI112{}} {
 		proxy, err := NewRuntimeProxy(criVersion, []string{fakeCriSocketPath1, secondSocketSpec}, connectionTimeoutForTests, streamUrl)
 		if err != nil {
 			t.Fatalf("failed to create runtime proxy: %v", err)
@@ -961,20 +961,20 @@ func verifyCRIProxy(t *testing.T, secondSocketSpec string, useNewCriVersionForPr
 		{
 			name:   "reopen container log 1 (1.10+)",
 			method: "/runtime.v1alpha2.RuntimeService/ReopenContainerLog",
-			in: &v1_10.ReopenContainerLogRequest{
+			in: &v1_12.ReopenContainerLogRequest{
 				ContainerId: containerId1,
 			},
-			resp:       &v1_10.ReopenContainerLogResponse{},
+			resp:       &v1_12.ReopenContainerLogResponse{},
 			journal:    []string{"1/runtime/ReopenContainerLog"},
 			newVersion: true,
 		},
 		{
 			name:   "reopen container log 2 (1.10+)",
 			method: "/runtime.v1alpha2.RuntimeService/ReopenContainerLog",
-			in: &v1_10.ReopenContainerLogRequest{
+			in: &v1_12.ReopenContainerLogRequest{
 				ContainerId: containerId2,
 			},
-			resp:       &v1_10.ReopenContainerLogResponse{},
+			resp:       &v1_12.ReopenContainerLogResponse{},
 			journal:    []string{"2/runtime/ReopenContainerLog"},
 			newVersion: true,
 		},
