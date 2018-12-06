@@ -26,7 +26,7 @@ import (
 	"time"
 
 	runtimeapi "github.com/Mirantis/criproxy/pkg/runtimeapis/v1_9"
-	"github.com/docker/distribution/digest"
+	digest "github.com/opencontainers/go-digest"
 	"golang.org/x/net/context"
 )
 

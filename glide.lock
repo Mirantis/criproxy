@@ -1,14 +1,10 @@
-hash: 408d36d6662371ae2a237aaaeab45dc813e8d69a7f63a6f217cc09c0da521fcb
-updated: 2018-05-17T21:04:00.476802652+03:00
+hash: fcb57397dab691dada5f00736960897e5065e886844543b840f05094dd824c1a
+updated: 2018-12-06T14:31:34.962964322+08:00
 imports:
-- name: github.com/docker/distribution
-  version: 48294d928ced5dd9b378f7fd7c6f5da3ff3f2c89
-  subpackages:
-  - digest
 - name: github.com/ghodss/yaml
   version: 0ca9ea5df5451ffdf184b4428c902747c2c11cd7
 - name: github.com/gogo/protobuf
-  version: c0656edd0d9eab7c66d1eb0c568f9039345796f7
+  version: 07eab6a8298cf32fac45cceaac59424f98421bbc
   subpackages:
   - gogoproto
   - proto
@@ -17,21 +13,32 @@ imports:
 - name: github.com/golang/glog
   version: 23def4e6c14b4da8ac2ed8007337bc5eb5007998
 - name: github.com/golang/protobuf
-  version: 8d92cf5fc15a4382f8964b08e1f42a75c0591aa3
+  version: 1d3f30b51784bec5aad268e59fd3c2fc1c2fe73f
   subpackages:
   - proto
+- name: github.com/opencontainers/go-digest
+  version: 279bed98673dd5bef374d3b6e4b09e2af76183bf
 - name: github.com/pmezard/go-difflib
   version: 792786c7400a136282c1664665ae0a8db921c6c2
   subpackages:
   - difflib
 - name: golang.org/x/net
-  version: 4876518f9e71663000c348837735820161a42df7
+  version: 351d144fa1fc0bd934e2408202be0c29f25e35a0
   subpackages:
   - context
+  - http/httpguts
   - http2
   - http2/hpack
+  - idna
   - internal/timeseries
   - trace
+- name: golang.org/x/text
+  version: 6f44c5a2ea40ee3593d98cdcc905cc1fdaa660e2
+  subpackages:
+  - secure/bidirule
+  - transform
+  - unicode/bidi
+  - unicode/norm
 - name: google.golang.org/grpc
   version: 777daa17ff9b5daef1cfdf915088a2ada3332bf0
   subpackages:
@@ -44,7 +51,7 @@ imports:
   - peer
   - transport
 - name: gopkg.in/yaml.v2
-  version: bef53efd0c76e49e6de55ead051f886bea7e9420
+  version: 51d6538a90f86fe93ac480b35f37b2be17fef232
 - name: k8s.io/apimachinery
   version: 19e3f5aa3adca672c153d324e6b7d82ff8935f03
   subpackages:
@@ -54,8 +61,11 @@ imports:
   - pkg/runtime/schema
   - pkg/util/errors
   - pkg/util/json
+  - pkg/util/naming
   - pkg/util/net
   - pkg/util/runtime
   - pkg/util/sets
   - third_party/forked/golang/reflect
+- name: k8s.io/klog
+  version: dd7c4a40589096d3e8a11c193d48d251dcc7da7c
 testImports: []
