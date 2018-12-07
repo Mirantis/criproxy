@@ -43,7 +43,7 @@ var (
 	streamPort    = flag.Int("streamPort", 11250, "streaming port of the default runtime")
 	streamUrl     = flag.String("streamUrl", "", "streaming url of the default runtime (-streamPort is ignored if this value is set)")
 	apiServerHost = flag.String("apiserver", "", "apiserver URL")
-	criVersions   = []proxy.CRIVersion{&proxy.CRI19{}, &proxy.CRI110{}}
+	criVersions   = []proxy.CRIVersion{&proxy.CRI19{}, &proxy.CRI112{}}
 )
 
 // runCriProxy starts CRI proxy

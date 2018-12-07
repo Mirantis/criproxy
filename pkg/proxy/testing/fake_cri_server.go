@@ -25,7 +25,7 @@ import (
 	"google.golang.org/grpc"
 
 	"github.com/Mirantis/criproxy/pkg/runtimeapis"
-	v1_10 "github.com/Mirantis/criproxy/pkg/runtimeapis/v1_10"
+	v1_12 "github.com/Mirantis/criproxy/pkg/runtimeapis/v1_12"
 	v1_9 "github.com/Mirantis/criproxy/pkg/runtimeapis/v1_9"
 )
 
@@ -117,16 +117,16 @@ func NewFakeCriServer110(journal Journal, streamUrl string) FakeCriServer {
 		FakeRuntimeServer110: NewFakeRuntimeServer110(NewPrefixJournal(journal, "runtime/"), streamUrl),
 		FakeImageServer110:   NewFakeImageServer110(NewPrefixJournal(journal, "image/")),
 	}
-	v1_10.RegisterRuntimeServiceServer(s.server, s)
-	v1_10.RegisterImageServiceServer(s.server, s)
+	v1_12.RegisterRuntimeServiceServer(s.server, s)
+	v1_12.RegisterImageServiceServer(s.server, s)
 	return s
 }
 
 func (s *FakeCriServer110) SetFakeContainerStats(containerId, containerName, imageFsUUID string) interface{} {
-	r := MakeFakeContainerStats110(containerId, &v1_10.ContainerMetadata{
+	r := MakeFakeContainerStats110(containerId, &v1_12.ContainerMetadata{
 		Name: "container1",
 	}, imageFsUUID)
-	s.FakeRuntimeServer110.SetFakeContainerStats([]*v1_10.ContainerStats{r})
+	s.FakeRuntimeServer110.SetFakeContainerStats([]*v1_12.ContainerStats{r})
 	out, err := runtimeapis.Downgrade(r)
 	if err != nil {
 		log.Fatalf("Downgrade %T: %v", r, err)
@@ -136,7 +136,7 @@ func (s *FakeCriServer110) SetFakeContainerStats(containerId, containerName, ima
 
 func (s *FakeCriServer110) SetFakeFilesystemUsage(imageFsUUID string) interface{} {
 	r := MakeFakeImageFsUsage110(imageFsUUID)
-	s.FakeImageServer110.SetFakeFilesystemUsage([]*v1_10.FilesystemUsage{r})
+	s.FakeImageServer110.SetFakeFilesystemUsage([]*v1_12.FilesystemUsage{r})
 	out, err := runtimeapis.Downgrade(r)
 	if err != nil {
 		log.Fatalf("Downgrade %T: %v", r, err)

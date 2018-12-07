@@ -1386,5 +1386,5 @@ func (c *CRI19) WrapObject(o interface{}) (CRIObject, CRIObject, error) {
 func (c *CRI19) ProtoPackage() string { return "runtime" }
 
 func (c *CRI19) UpgradesTo() CRIVersion {
-	return &CRI110{}
+	return &CRI112{}
 }
