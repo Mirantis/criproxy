@@ -23,8 +23,7 @@ import (
 	"regexp"
 	"strings"
 	"time"
-
-	"github.com/docker/distribution/digest"
+	digest "github.com/opencontainers/go-digest"
 	"github.com/ghodss/yaml"
 	"github.com/golang/glog"
 	"golang.org/x/net/context"
@@ -417,7 +416,7 @@ func (r *RuntimeProxy) createContainer(ctx context.Context, method string, req, 
 	}
 
 	// don't prefix image digests
-	if _, err := digest.ParseDigest(in.Image()); err != nil {
+	if _, err := digest.Parse(in.Image()); err != nil {
 		imageClient, unprefixedImage, err := r.clientForImage(in.Image(), false)
 		if err != nil {
 			return nil, err

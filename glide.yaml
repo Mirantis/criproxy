@@ -10,7 +10,7 @@ import:
   version: ~1.0.0
   subpackages:
   - difflib
-- package: github.com/docker/distribution
-  version: ^2.6.2
+- package: github.com/opencontainers/go-digest
+  version: ~v1.0.0-rc1
 - package: github.com/ghodss/yaml
   version: ^1.0.0

@@ -25,7 +25,7 @@ import (
 	"time"
 
 	runtimeapis "github.com/Mirantis/criproxy/pkg/runtimeapis"
-	"github.com/docker/distribution/digest"
+	digest  "github.com/opencontainers/go-digest"
 	"github.com/golang/glog"
 	"golang.org/x/net/context"
 	"google.golang.org/grpc"
@@ -253,7 +253,7 @@ func (c *clientBase) prefixContainer(unprefixedContainer Container) Container {
 	container.SetId(c.augmentId(unprefixedContainer.Id()))
 	container.SetPodSandboxId(c.augmentId(unprefixedContainer.PodSandboxId()))
 	// don't prefix digests
-	if _, err := digest.ParseDigest(unprefixedContainer.Image()); err != nil {
+	if _, err := digest.Parse(unprefixedContainer.Image()); err != nil {
 		container.SetImage(c.imageName(unprefixedContainer.Image()))
 	}
 	return container
@@ -275,7 +275,7 @@ func (c *clientBase) prefixImage(unprefixedImage Image) Image {
 	image := unprefixedImage.Copy()
 	// only prefix image id if it's not a digest
 	// so we don't get prefix/sha256:... which doesn't make sense
-	if _, err := digest.ParseDigest(image.Id()); err != nil {
+	if _, err := digest.Parse(image.Id()); err != nil {
 		image.SetId(c.imageName(image.Id()))
 	}
 	newRepoTags := make([]string, len(image.RepoTags()))
