@@ -23,9 +23,10 @@ import (
 	"regexp"
 	"strings"
 	"time"
-	digest "github.com/opencontainers/go-digest"
+
 	"github.com/ghodss/yaml"
 	"github.com/golang/glog"
+	digest "github.com/opencontainers/go-digest"
 	"golang.org/x/net/context"
 	"google.golang.org/grpc"
 )
@@ -44,6 +45,7 @@ type RuntimeProxy struct {
 	conn         *grpc.ClientConn
 	clients      []client
 	methodPrefix string
+	images       map[string]string
 }
 
 var _ Interceptor = &RuntimeProxy{}
@@ -65,6 +67,7 @@ func NewRuntimeProxy(criVersion CRIVersion, addrs []string, connectionTimout tim
 		criVersion:   criVersion,
 		streamUrl:    *streamUrl,
 		methodPrefix: fmt.Sprintf("/%s.", criVersion.ProtoPackage()),
+		images:       make(map[string]string),
 	}
 	for _, addr := range addrs {
 		r.clients = append(r.clients, newAutoClient(criVersion, addr, connectionTimout))
@@ -139,6 +142,20 @@ func (r *RuntimeProxy) Intercept(ctx context.Context, req interface{}, info *grp
 		glog.Infof("LEAVE: %s():\n%s", info.FullMethod, dump(resp))
 	}
 	return resp, nil
+}
+
+func (r *RuntimeProxy) getImageNameById(imageId string) string {
+	return r.images[imageId]
+}
+
+func (r *RuntimeProxy) setImageNameById(imageId, imageName string, overwrite bool) {
+	if _, ok := r.images[imageId]; !ok || overwrite {
+		r.images[imageId] = imageName
+	}
+}
+
+func (r *RuntimeProxy) deleteImageNameById(imageId string) {
+	delete(r.images, imageId)
 }
 
 func (r *RuntimeProxy) primaryClient() (client, error) {
@@ -425,6 +442,15 @@ func (r *RuntimeProxy) createContainer(ctx context.Context, method string, req, 
 			return nil, fmt.Errorf("criproxy: image %q is for a wrong runtime", in.Image())
 		}
 		in.SetImage(unprefixedImage)
+	} else {
+		// Image is a digest like
+		// sha256:6a92cd1fcdc8d8cdec60f33dda4db2cb1fcdcacf3410a8e05b3741f44a9b5998.
+		// Look up and set the name of the image instead, so the secondary runtime
+		// can also use it.
+		imageName := r.getImageNameById(in.Image())
+		if imageName != "" {
+			in.SetImage(imageName)
+		}
 	}
 
 	_, err = client.invokeWithErrorHandling(ctx, method, req, resp)
@@ -479,19 +505,33 @@ func (r *RuntimeProxy) handleImage(ctx context.Context, method string, req, resp
 	}
 	in.SetImage(unprefixed)
 
+	imageName := in.Image()
+
 	_, err = client.invokeWithErrorHandling(ctx, method, req, resp)
 	if err != nil {
 		return nil, err
 	}
 
 	if out, ok := resp.(ImageStatusResponse); ok && out.Image() != nil {
+		// ImageStatus
+		img := out.Image().(Image)
+		if len(img.RepoDigests()) > 0 {
+			imageName = img.RepoDigests()[0]
+		}
+		r.setImageNameById(img.Id(), imageName, true)
 		out.SetImage(client.addPrefix(out.Image()).(Image))
+		return resp, err
 	}
 
 	if out, ok := resp.(ImageObject); ok {
+		// PullImage
+		r.setImageNameById(out.Image(), imageName, false)
 		out.SetImage(client.imageName(out.Image()))
+		return resp, err
 	}
 
+	// RemoveImage
+	r.deleteImageNameById(in.Image())
 	return resp, err
 }
 
